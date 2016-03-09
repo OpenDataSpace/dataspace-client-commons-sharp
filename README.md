@@ -4,4 +4,4 @@
 
 ### License
 
-DataSpace Sync is Open Source software and licensed under the `GNU General Public License version 3 or later`. You are welcome to change and redistribute it under certain conditions. For more information see the `[LICENSE-GPLv3]` file.
+DataSpace Sync is Open Source software and licensed under the `GNU General Public License version 3 or later`. You are welcome to change and redistribute it under certain conditions. For more information see the [LICENSE-GPLv3](LICENSE-GPLv3) file.
