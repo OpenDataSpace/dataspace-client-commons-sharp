@@ -5,12 +5,18 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "DataSpace", "DataSpace\Data
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataSpace.Tests", "DataSpace.Tests\DataSpace.Tests.csproj", "{652A7CDD-D97A-4915-BB38-1188B88B4502}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotCMIS", "DotCMIS\DotCMIS\DotCMIS.csproj", "{529EF90F-A34C-4426-A4F9-65113AC23841}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{529EF90F-A34C-4426-A4F9-65113AC23841}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{529EF90F-A34C-4426-A4F9-65113AC23841}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{529EF90F-A34C-4426-A4F9-65113AC23841}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{529EF90F-A34C-4426-A4F9-65113AC23841}.Release|Any CPU.Build.0 = Release|Any CPU
 		{652A7CDD-D97A-4915-BB38-1188B88B4502}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{652A7CDD-D97A-4915-BB38-1188B88B4502}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{652A7CDD-D97A-4915-BB38-1188B88B4502}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -31,6 +31,17 @@
     <Compile Include="$(MSBuildThisFileDirectory)HashAlgorithm\SHA1Reuse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\Transmissions\TransmissionStatus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\Utils\PropertyUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Links\LinkExtenders.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Links\LinkType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authentication\IDisposableAuthProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authentication\PersistentNtlmAuthenticationProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authentication\PersistentStandardAuthenticationProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authentication\StandardAuthenticationProviderWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authentication\AuthenticationType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authentication\ICookieStorage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authentication\AuthProviderFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authentication\IAuthProviderFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authentication\InMemoryCookieStorage.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Common\" />
@@ -40,5 +51,6 @@
     <Folder Include="$(MSBuildThisFileDirectory)Common\Streams\" />
     <Folder Include="$(MSBuildThisFileDirectory)Common\Transmissions\" />
     <Folder Include="$(MSBuildThisFileDirectory)HashAlgorithm\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Authentication\" />
   </ItemGroup>
 </Project>

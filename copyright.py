@@ -6,7 +6,7 @@ cpy = open("copyright.template").read()
 for dirpath, dnames, fnames in os.walk("./"):
     for f in fnames:
         if (not ".git" in dirpath):
-            if (not "Extras" in dirpath):
+            if (not "DotCMIS" in dirpath):
                 if(f.endswith(".cs") and not(f.endswith("Designer.cs"))):
                     path = os.path.join(dirpath, f)
                     print (path)

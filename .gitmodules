@@ -1,0 +1,3 @@
+[submodule "DotCMIS"]
+	path = DotCMIS
+	url = https://github.com/OpenDataSpace/chemistry-dotcmis.git
