@@ -24,7 +24,7 @@ namespace DataSpace.Authentication {
     /// Authentication type.
     /// </summary>
     [Serializable]
-    public enum AuthenticationType {
+    public enum Type {
         /// <summary>
         /// The default auth mechanism is HTTP Basic Auth.
         /// </summary>

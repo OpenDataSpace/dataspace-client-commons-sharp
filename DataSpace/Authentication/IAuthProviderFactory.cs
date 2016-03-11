@@ -31,6 +31,6 @@ namespace DataSpace.Authentication {
         /// The auth provider.
         /// </returns>
         /// <param name='type'>Authentication type.</param>
-        IDisposableAuthProvider CreateAuthProvider(AuthenticationType type);
+        IDisposableAuthProvider CreateAuthProvider(Type type);
     }
 }

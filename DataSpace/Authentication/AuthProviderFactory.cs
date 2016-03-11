@@ -24,9 +24,9 @@ namespace DataSpace.Authentication {
     /// <summary>
     /// Auth provider factory.
     /// </summary>
-    public class AuthProviderFactory {
+    public class AuthProviderFactory : IAuthProviderFactory {
         private ICookieStorage cookieStorage;
-        private Uri url;
+        private Uri uri;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataSpace.Authentication.AuthProviderFactory"/> class.
@@ -42,7 +42,7 @@ namespace DataSpace.Authentication {
                 throw new ArgumentNullException("cookieStorage");
             }
 
-            this.url = url;
+            this.uri = url;
             this.cookieStorage = cookieStorage;
         }
 
@@ -53,14 +53,14 @@ namespace DataSpace.Authentication {
         /// The auth provider.
         /// </returns>
         /// <param name='type'>Authentication type.</param>
-        public IDisposableAuthProvider CreateAuthProvider(AuthenticationType type) {
+        public IDisposableAuthProvider CreateAuthProvider(Type type) {
             switch (type) {
-                case AuthenticationType.BASIC:
-                    return new PersistentStandardAuthenticationProvider(cookieStorage, url);
-                case AuthenticationType.KERBEROS:
-                    goto case AuthenticationType.NTLM;
-                case AuthenticationType.NTLM:
-                    return new PersistentNtlmAuthenticationProvider(cookieStorage, url);
+                case Type.BASIC:
+                    return new PersistentStandardAuthenticationProvider(cookieStorage, uri);
+                case Type.KERBEROS:
+                    goto case Type.NTLM;
+                case Type.NTLM:
+                    return new PersistentNtlmAuthenticationProvider(cookieStorage, uri);
                 default:
                     return new StandardAuthenticationProviderWrapper();
             }

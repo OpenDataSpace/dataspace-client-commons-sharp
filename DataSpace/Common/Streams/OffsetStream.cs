@@ -21,6 +21,8 @@ namespace DataSpace.Common.Streams {
     using System;
     using System.IO;
 
+    using DataSpace.Common.Utils;
+
     /// <summary>
     /// Offset stream provides the possibility to simulate a longer stream with a virtual empty space at the beginning with the size of offset.
     /// </summary>
@@ -76,7 +78,7 @@ namespace DataSpace.Common.Streams {
 
             set {
                 if (value < this.Offset) {
-                    throw new ArgumentOutOfRangeException("given position is out of range");
+                    throw new ArgumentOutOfRangeException("value", "given position is out of range");
                 }
 
                 this.Stream.Position = value - this.Offset;
@@ -102,7 +104,7 @@ namespace DataSpace.Common.Streams {
         /// <param name='value'>The new length.</param>
         public override void SetLength(long value) {
             if (value < this.Offset) {
-                throw new ArgumentOutOfRangeException(string.Format("Given length {0} is smaller than Offset {1}", value, this.Offset));
+                throw new ArgumentOutOfRangeException("value", string.Format("Given length {0} is smaller than Offset {1}", value, this.Offset));
             }
 
             this.Stream.SetLength(value - this.Offset);

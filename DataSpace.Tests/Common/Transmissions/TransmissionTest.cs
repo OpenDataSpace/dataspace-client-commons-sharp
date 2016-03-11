@@ -40,7 +40,7 @@ namespace Tests.Common.Transmissions {
             Assert.That(underTest.Type, Is.EqualTo(type));
             Assert.That(underTest.Path, Is.EqualTo(this.path));
             Assert.That(underTest.CachePath, Is.Null);
-            Assert.That(underTest.Status, Is.EqualTo(TransmissionStatus.Transmitting));
+            Assert.That(underTest.Status, Is.EqualTo(Status.Transmitting));
         }
 
         [Test, TestCaseSource("GetAllTypes")]
@@ -49,7 +49,7 @@ namespace Tests.Common.Transmissions {
             Assert.That(underTest.Type, Is.EqualTo(type));
             Assert.That(underTest.Path, Is.EqualTo(this.path));
             Assert.That(underTest.CachePath, Is.EqualTo(this.cache));
-            Assert.That(underTest.Status, Is.EqualTo(TransmissionStatus.Transmitting));
+            Assert.That(underTest.Status, Is.EqualTo(Status.Transmitting));
         }
 
         [Test, TestCaseSource("GetAllTypes")]
@@ -108,11 +108,11 @@ namespace Tests.Common.Transmissions {
         public void Pause() {
             var underTest = new Transmission(TransmissionType.DownloadNewFile, this.path);
             underTest.Pause();
-            Assert.That(underTest.Status == TransmissionStatus.Paused);
+            Assert.That(underTest.Status == Status.Paused);
         }
 
         [Test]
-        public void PauseAbortedTransmissionDoesNotChangeTheStatus([Values(TransmissionStatus.Aborting, TransmissionStatus.Aborted)]TransmissionStatus status) {
+        public void PauseAbortedTransmissionDoesNotChangeTheStatus([Values(Status.Aborting, Status.Aborted)]Status status) {
             var underTest = new Transmission(TransmissionType.DownloadNewFile, this.path);
             underTest.Status = status;
             underTest.Pause();
@@ -123,17 +123,17 @@ namespace Tests.Common.Transmissions {
         public void Resume() {
             var underTest = new Transmission(TransmissionType.DownloadNewFile, this.path);
             underTest.Resume();
-            Assert.That(underTest.Status == TransmissionStatus.Transmitting);
+            Assert.That(underTest.Status == Status.Transmitting);
             underTest.Pause();
             underTest.Resume();
-            Assert.That(underTest.Status == TransmissionStatus.Transmitting);
+            Assert.That(underTest.Status == Status.Transmitting);
 
             underTest.Abort();
             underTest.Resume();
-            Assert.That(underTest.Status == TransmissionStatus.Aborting);
-            underTest.Status = TransmissionStatus.Aborted;
+            Assert.That(underTest.Status == Status.Aborting);
+            underTest.Status = Status.Aborted;
             underTest.Resume();
-            Assert.That(underTest.Status == TransmissionStatus.Aborted);
+            Assert.That(underTest.Status == Status.Aborted);
         }
 
         [Test]
@@ -159,7 +159,7 @@ namespace Tests.Common.Transmissions {
             bool changed = false;
             underTest.PropertyChanged += (object sender, System.ComponentModel.PropertyChangedEventArgs e) => {
                 if (e.PropertyName == Property.NameOf((Transmission t) => t.Status)) {
-                    Assert.That((sender as Transmission).Status, Is.EqualTo(TransmissionStatus.Aborted));
+                    Assert.That((sender as Transmission).Status, Is.EqualTo(Status.Aborted));
                     changed = true;
                 }
             };

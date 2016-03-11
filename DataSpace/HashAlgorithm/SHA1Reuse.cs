@@ -83,10 +83,11 @@ namespace DataSpace.HashAlgorithm {
             while (type != null) {
                 foreach (var fieldInfo in type.GetFields(BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)) {
                     object value = fieldInfo.GetValue(source);
-                    if (value is Array) {
+                    Array array = value as Array;
+                    if (array != null) {
                         // Copy array
-                        var newValue = Array.CreateInstance(value.GetType().GetElementType(), ((Array)value).Length);
-                        Array.Copy((Array)value, newValue, newValue.Length);
+                        var newValue = Array.CreateInstance(array.GetType().GetElementType(), array.Length);
+                        Array.Copy(array, newValue, newValue.Length);
                         value = newValue;
                     } else if (value == null || value.GetType().IsPrimitive) {
                         // Ignore

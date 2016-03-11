@@ -54,7 +54,7 @@ namespace DataSpace.Common.Transmissions {
             this.abort.PropertyChanged += (object sender, PropertyChangedEventArgs e) => {
                 var a = sender as AbortableStream;
                 if (e.PropertyName == Property.NameOf(() => a.Exception)) {
-                    transmission.Status = TransmissionStatus.Aborted;
+                    transmission.Status = Status.Aborted;
                     transmission.FailedException = a.Exception;
                 }
             };
@@ -75,12 +75,12 @@ namespace DataSpace.Common.Transmissions {
             transmission.PropertyChanged += (object sender, PropertyChangedEventArgs e) => {
                 var t = sender as Transmission;
                 if (e.PropertyName == Property.NameOf(() => t.Status)) {
-                    if (t.Status == TransmissionStatus.Aborting) {
+                    if (t.Status == Status.Aborting) {
                         this.abort.Abort();
                         this.pause.Resume();
-                    } else if (t.Status == TransmissionStatus.Paused) {
+                    } else if (t.Status == Status.Paused) {
                         this.pause.Pause();
-                    } else if (t.Status == TransmissionStatus.Transmitting) {
+                    } else if (t.Status == Status.Transmitting) {
                         this.pause.Resume();
                     }
                 } else if (e.PropertyName == Property.NameOf(() => t.MaxBandwidth)) {
@@ -92,7 +92,7 @@ namespace DataSpace.Common.Transmissions {
                     }
                 }
             };
-            if (transmission.Status == TransmissionStatus.Aborting || transmission.Status == TransmissionStatus.Aborted) {
+            if (transmission.Status == Status.Aborting || transmission.Status == Status.Aborted) {
                 this.abort.Abort();
             }
 

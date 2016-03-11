@@ -28,9 +28,9 @@ namespace Tests.Common.Streams {
 
     using NUnit.Framework;
 
-    [TestFixture]
+    [TestFixture, Category("UnitTests"), Category("Streams")]
     public class AbortableStreamTest {
-        [Test, Category("Fast"), Category("Streams")]
+        [Test]
         public void ReadingStreamWithoutAbortionWorks() {
             var length = 1024 * 1024;
             var content = new byte[length];
@@ -42,7 +42,7 @@ namespace Tests.Common.Streams {
             }
         }
 
-        [Test, Category("Fast"), Category("Streams")]
+        [Test]
         public void WritingStreamWithoutAbortionWorks() {
             var length = 1024 * 1024;
             var content = new byte[length];
@@ -54,7 +54,7 @@ namespace Tests.Common.Streams {
             }
         }
 
-        [Test, Category("Fast"), Category("Streams")]
+        [Test]
         public void AbortReadIfAbortIsCalled() {
             byte[] content = new byte[1024];
             using (var stream = new Mock<MemoryStream>(content) { CallBase = true }.Object)
@@ -66,7 +66,22 @@ namespace Tests.Common.Streams {
             }
         }
 
-        [Test, Category("Fast"), Category("Streams")]
+        [Test]
+        public void AbortCanBeCalledMultipleTimes() {
+            byte[] content = new byte[1024];
+            using (var stream = new Mock<MemoryStream>(content) { CallBase = true }.Object)
+            using (var underTest = new AbortableStream(stream)) {
+                underTest.Abort();
+                Assert.Throws<AbortedException>(() => underTest.ReadByte());
+                underTest.Abort();
+                Mock.Get(stream).Verify(s => s.ReadByte(), Times.Never());
+                underTest.Abort();
+                Mock.Get(stream).Verify(s => s.Read(It.IsAny<byte[]>(), It.IsAny<int>(), It.IsAny<int>()), Times.Never());
+                underTest.Abort();
+            }
+        }
+
+        [Test]
         public void AbortWriteIfAbortIsCalled() {
             using (var inputStream = new MemoryStream(new byte[1024 * 1024 * 10]))
             using (var stream = new Mock<MemoryStream>() { CallBase = true }.Object)
@@ -78,7 +93,7 @@ namespace Tests.Common.Streams {
             }
         }
 
-        [Test, Category("Fast"), Category("Streams")]
+        [Test]
         public void NotificationSendOutOnAbortion() {
             bool notified = false;
             byte[] content = new byte[1024];

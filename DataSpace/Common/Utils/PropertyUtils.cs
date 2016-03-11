@@ -33,6 +33,10 @@ namespace DataSpace.Common.Utils {
         /// <param name="expr">Expression which points to a property.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
         public static string NameOf<T>(Expression<Func<T>> expr) {
+            if (expr == null) {
+                throw new ArgumentNullException("expr");
+            }
+
             return ((MemberExpression)expr.Body).Member.Name;
         }
 
@@ -46,6 +50,10 @@ namespace DataSpace.Common.Utils {
         /// <typeparam name="TModel">The 1st type parameter.</typeparam>
         /// <typeparam name="TProperty">The 2nd type parameter.</typeparam>
         public static string NameOf<TModel, TProperty>(Expression<Func<TModel, TProperty>> property) {
+            if (property == null) {
+                throw new ArgumentNullException("property");
+            }
+
             MemberExpression memberExpression = (MemberExpression)property.Body;
             return memberExpression.Member.Name;
         }

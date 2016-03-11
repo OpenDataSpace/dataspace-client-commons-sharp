@@ -21,6 +21,7 @@ namespace DataSpace.Common.Streams {
     using System;
     using System.ComponentModel;
     using System.IO;
+    using System.Threading;
 
     using DataSpace.Common.Utils;
 
@@ -28,9 +29,8 @@ namespace DataSpace.Common.Streams {
     /// Abortable stream wraps the given stream and add the possibility to abort the stream read and write by throwing an exception.
     /// </summary>
     public class AbortableStream : NotifyPropertyChangedStream {
-        private bool aborted;
+        private int aborted = 0;
         private AbortedException exception;
-        private object l = new object();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CmisSync.Lib.Streams.AbortableStream"/> class.
@@ -69,11 +69,9 @@ namespace DataSpace.Common.Streams {
         /// Count.
         /// </param>
         public override int Read(byte[] buffer, int offset, int count) {
-            lock(this.l) {
-                if (this.aborted) {
-                    this.Exception = new AbortedException();
-                    throw this.exception;
-                }
+            if (this.aborted > 0) {
+                this.Exception = new AbortedException();
+                throw this.exception;
             }
 
             return this.Stream.Read(buffer, offset, count);
@@ -92,11 +90,9 @@ namespace DataSpace.Common.Streams {
         /// Count.
         /// </param>
         public override void Write(byte[] buffer, int offset, int count) {
-            lock(this.l) {
-                if (this.aborted) {
-                    this.Exception = new AbortedException();
-                    throw this.exception;
-                }
+            if (this.aborted > 0) {
+                this.Exception = new AbortedException();
+                throw this.exception;
             }
 
             this.Stream.Write(buffer, offset, count);
@@ -106,9 +102,7 @@ namespace DataSpace.Common.Streams {
         /// Abort this instance.
         /// </summary>
         public void Abort() {
-            lock(this.l) {
-                this.aborted = true;
-            }
+            Interlocked.Increment(ref aborted);
         }
     }
 }

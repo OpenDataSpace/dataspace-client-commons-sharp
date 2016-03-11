@@ -21,7 +21,7 @@ namespace DataSpace.Common.Transmissions {
     /// <summary>
     /// Transmission status.
     /// </summary>
-    public enum TransmissionStatus {
+    public enum Status {
         /// <summary>
         /// Transmission is going on.
         /// </summary>

@@ -63,7 +63,7 @@ namespace DataSpace.Common.Transmissions {
         private readonly TransmissionType type;
         private string relativePath = string.Empty;
         private string repo = string.Empty;
-        private TransmissionStatus status;
+        private Status status;
         private long? length;
         private long? position;
         private long? bitsPerSecond;
@@ -227,7 +227,7 @@ namespace DataSpace.Common.Transmissions {
         /// Gets or sets the status of the transmission.
         /// </summary>
         /// <value>The status.</value>
-        public TransmissionStatus Status {
+        public Status Status {
             get {
                 return this.status;
             }
@@ -259,7 +259,7 @@ namespace DataSpace.Common.Transmissions {
                 if (this.failedException != value) {
                     this.failedException = value;
                     this.NotifyPropertyChanged(Property.NameOf(() => this.FailedException));
-                    this.Status = TransmissionStatus.Aborted;
+                    this.Status = Status.Aborted;
                 }
             }
         }
@@ -344,7 +344,7 @@ namespace DataSpace.Common.Transmissions {
         /// <value><c>true</c> if done; otherwise, <c>false</c>.</value>
         public bool Done {
             get {
-                return this.Status == TransmissionStatus.Aborted || this.Status == TransmissionStatus.Finished;
+                return this.Status == Status.Aborted || this.Status == Status.Finished;
             }
         }
 
@@ -361,8 +361,8 @@ namespace DataSpace.Common.Transmissions {
         /// Pause the transmission async.
         /// </summary>
         public void Pause() {
-            if (this.Status == TransmissionStatus.Transmitting) {
-                this.Status = TransmissionStatus.Paused;
+            if (this.Status == Status.Transmitting) {
+                this.Status = Status.Paused;
             }
         }
 
@@ -370,8 +370,8 @@ namespace DataSpace.Common.Transmissions {
         /// Resume the transmission async.
         /// </summary>
         public void Resume() {
-            if (this.Status == TransmissionStatus.Paused) {
-                this.Status = TransmissionStatus.Transmitting;
+            if (this.Status == Status.Paused) {
+                this.Status = Status.Transmitting;
             }
         }
 
@@ -379,8 +379,8 @@ namespace DataSpace.Common.Transmissions {
         /// Abort the transmission async.
         /// </summary>
         public void Abort() {
-            if (this.Status == TransmissionStatus.Paused || this.Status == TransmissionStatus.Transmitting) {
-                this.Status = TransmissionStatus.Aborting;
+            if (this.Status == Status.Paused || this.Status == Status.Transmitting) {
+                this.Status = Status.Aborting;
             }
         }
 
