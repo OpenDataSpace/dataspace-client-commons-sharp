@@ -34,10 +34,12 @@
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.3.2.0\lib\net45\nunit.framework.dll</HintPath>
+      <Package>nunit</Package>
     </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EmptyTest.cs" />
@@ -55,6 +57,9 @@
     <Compile Include="Common\Transmissions\TransmissionTest.cs" />
     <Compile Include="Common\Utils\PropertyUtilsTest.cs" />
     <Compile Include="Common\Crypto\ObfuscationTest.cs" />
+    <Compile Include="Common\Proxy\DefaultProxyTest.cs" />
+    <Compile Include="Toxiproxy\AuthenticationProviderWrapperTest.cs" />
+    <Compile Include="Toxiproxy\SessionFactoryTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -65,6 +70,8 @@
     <Folder Include="Common\Utils\" />
     <Folder Include="Common\Transmissions\" />
     <Folder Include="Common\Crypto\" />
+    <Folder Include="Common\Proxy\" />
+    <Folder Include="Toxiproxy\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DotCMIS\DotCMIS\DotCMIS.csproj">
@@ -74,6 +81,10 @@
     <ProjectReference Include="..\DataSpace\DataSpace.csproj">
       <Project>{558B5501-6944-4CC2-A830-0BBC25D7C848}</Project>
       <Name>DataSpace</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataSpace.Toxiproxy\DataSpace.Toxiproxy.csproj">
+      <Project>{0523AB5D-F59C-4611-8963-07C357927492}</Project>
+      <Name>DataSpace.Toxiproxy</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>
