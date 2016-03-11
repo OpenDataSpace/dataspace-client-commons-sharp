@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------
-// <copyright file="HttpProxyUtilsTest.cs" company="GRAU DATA AG">
+// <copyright file="DefaultProxyTest.cs" company="GRAU DATA AG">
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General private License as published by
@@ -29,7 +29,7 @@ namespace Tests.Common.Proxy {
     using NUnit.Framework;
 
     [TestFixture, Category("UnitTests")]
-    public class HttpProxyUtilsTest {
+    public class DefaultProxyTest {
         private ProxySettings settings;
 
         [SetUp]
