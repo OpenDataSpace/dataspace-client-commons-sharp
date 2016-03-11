@@ -19,9 +19,10 @@
 
 namespace Tests.Common.Utils {
     using System;
-    using NUnit.Framework;
 
     using DataSpace.Common.Utils;
+
+    using NUnit.Framework;
 
     [TestFixture, Category("UnitTests")]
     public class PropertyUtilsTest {

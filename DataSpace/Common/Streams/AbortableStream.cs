@@ -33,7 +33,7 @@ namespace DataSpace.Common.Streams {
         private AbortedException exception;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CmisSync.Lib.Streams.AbortableStream"/> class.
+        /// Initializes a new instance of the <see cref="DataSpace.Common.Streams.AbortableStream"/> class.
         /// </summary>
         /// <param name="s">Stream which should be abortable.</param>
         public AbortableStream(Stream s) : base(s) {
@@ -60,14 +60,15 @@ namespace DataSpace.Common.Streams {
         /// Read the specified buffer, offset and count.
         /// </summary>
         /// <param name='buffer'>
-        /// Buffer.
+        /// Buffer to be written into.
         /// </param>
         /// <param name='offset'>
-        /// Offset.
+        /// Offset inside the given buffer.
         /// </param>
         /// <param name='count'>
-        /// Count.
+        /// Count of bytes to be read.
         /// </param>
+        /// <returns>The count of read bytes.</returns>
         public override int Read(byte[] buffer, int offset, int count) {
             if (this.aborted > 0) {
                 this.Exception = new AbortedException();
@@ -81,13 +82,13 @@ namespace DataSpace.Common.Streams {
         /// Write the specified buffer, offset and count.
         /// </summary>
         /// <param name='buffer'>
-        /// Buffer.
+        /// Buffer to be written to stream.
         /// </param>
         /// <param name='offset'>
-        /// Offset.
+        /// Offset in the given buffer.
         /// </param>
         /// <param name='count'>
-        /// Count.
+        /// Count of bytes to be written to stream.
         /// </param>
         public override void Write(byte[] buffer, int offset, int count) {
             if (this.aborted > 0) {
@@ -102,7 +103,7 @@ namespace DataSpace.Common.Streams {
         /// Abort this instance.
         /// </summary>
         public void Abort() {
-            Interlocked.Increment(ref aborted);
+            Interlocked.Increment(ref this.aborted);
         }
     }
 }

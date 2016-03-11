@@ -166,9 +166,9 @@ namespace Tests.HashAlgorithm {
                     hash0.TransformBlock(data, 0, dataLength, data, 0);
                 }
 
-                using(var hash1 = hash0.Clone() as HashAlgorithm)
-                using(var hash2 = hash0.Clone() as HashAlgorithm)
-                using(var hash3 = hash0.Clone() as HashAlgorithm) {
+                using (var hash1 = hash0.Clone() as HashAlgorithm)
+                using (var hash2 = hash0.Clone() as HashAlgorithm)
+                using (var hash3 = hash0.Clone() as HashAlgorithm) {
                     sha1.TransformFinalBlock(data, dataLength, 0);
                     reuse.TransformFinalBlock(data, dataLength, 0);
                     hash0.TransformFinalBlock(data, dataLength, 0);

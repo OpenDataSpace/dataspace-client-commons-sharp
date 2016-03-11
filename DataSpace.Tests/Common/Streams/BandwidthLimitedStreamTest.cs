@@ -30,7 +30,7 @@ namespace Tests.Common.Streams {
 
     [TestFixture, Category("UnitTests"), Category("Streams")]
     public class BandwidthLimitedStreamTest {
-        private readonly int length = 1024 * 10 + 5;
+        private readonly int length = (1024 * 10) + 5;
         private byte[] buffer;
         private long limit = 1024;
 
