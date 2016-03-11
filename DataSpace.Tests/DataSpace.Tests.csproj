@@ -55,7 +55,6 @@
     <Compile Include="Common\Transmissions\TransmissionTest.cs" />
     <Compile Include="Common\Utils\PropertyUtilsTest.cs" />
   </ItemGroup>
-  <Import Project="..\DataSpace\DataSpace.projitems" Label="Shared" Condition="Exists('..\DataSpace\DataSpace.projitems')" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <None Include="packages.config" />
@@ -69,6 +68,10 @@
     <ProjectReference Include="..\DotCMIS\DotCMIS\DotCMIS.csproj">
       <Project>{529EF90F-A34C-4426-A4F9-65113AC23841}</Project>
       <Name>DotCMIS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataSpace\DataSpace.csproj">
+      <Project>{558B5501-6944-4CC2-A830-0BBC25D7C848}</Project>
+      <Name>DataSpace</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

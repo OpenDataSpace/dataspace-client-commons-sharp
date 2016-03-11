@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{558B5501-6944-4CC2-A830-0BBC25D7C848}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>DataSpace</RootNamespace>
+    <AssemblyName>DataSpace</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Authentication\AuthenticationType.cs" />
+    <Compile Include="Authentication\AuthProviderFactory.cs" />
+    <Compile Include="Authentication\IAuthProviderFactory.cs" />
+    <Compile Include="Authentication\ICookieStorage.cs" />
+    <Compile Include="Authentication\IDisposableAuthProvider.cs" />
+    <Compile Include="Authentication\InMemoryCookieStorage.cs" />
+    <Compile Include="Authentication\PersistentNtlmAuthenticationProvider.cs" />
+    <Compile Include="Authentication\PersistentStandardAuthenticationProvider.cs" />
+    <Compile Include="Authentication\StandardAuthenticationProviderWrapper.cs" />
+    <Compile Include="Common\Streams\AbortableStream.cs" />
+    <Compile Include="Common\Streams\AbortedException.cs" />
+    <Compile Include="Common\Streams\BandwidthLimitedStream.cs" />
+    <Compile Include="Common\Streams\BandwidthNotifyingStream.cs" />
+    <Compile Include="Common\Streams\ChunkedStream.cs" />
+    <Compile Include="Common\Streams\ForwardReadingStream.cs" />
+    <Compile Include="Common\Streams\NonClosingHashStream.cs" />
+    <Compile Include="Common\Streams\NotifyPropertyChangedStream.cs" />
+    <Compile Include="Common\Streams\OffsetStream.cs" />
+    <Compile Include="Common\Streams\PausableStream.cs" />
+    <Compile Include="Common\Streams\ProgressStream.cs" />
+    <Compile Include="Common\Streams\StreamConvenienceExtensions.cs" />
+    <Compile Include="Common\Streams\StreamWrapper.cs" />
+    <Compile Include="Common\Transmissions\ITransmissionAggregator.cs" />
+    <Compile Include="Common\Transmissions\ITransmissionFactory.cs" />
+    <Compile Include="Common\Transmissions\Transmission.cs" />
+    <Compile Include="Common\Transmissions\TransmissionStatus.cs" />
+    <Compile Include="Common\Transmissions\TransmissionStream.cs" />
+    <Compile Include="Common\Utils\PropertyUtils.cs" />
+    <Compile Include="Common\Utils\StringUtils.cs" />
+    <Compile Include="HashAlgorithm\IReusableHashAlgorithm.cs" />
+    <Compile Include="HashAlgorithm\SHA1Reuse.cs" />
+    <Compile Include="Links\LinkExtenders.cs" />
+    <Compile Include="Links\LinkType.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Authentication\" />
+    <Folder Include="Common\" />
+    <Folder Include="HashAlgorithm\" />
+    <Folder Include="Links\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DotCMIS\DotCMIS\DotCMIS.csproj">
+      <Project>{529EF90F-A34C-4426-A4F9-65113AC23841}</Project>
+      <Name>DotCMIS</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>
