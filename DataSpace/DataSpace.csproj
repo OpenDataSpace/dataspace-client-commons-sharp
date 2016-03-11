@@ -32,6 +32,7 @@
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -68,6 +69,11 @@
     <Compile Include="Links\LinkType.cs" />
     <Compile Include="Authentication\Type.cs" />
     <Compile Include="Common\Transmissions\Status.cs" />
+    <Compile Include="Common\Proxy\ProxySettings.cs" />
+    <Compile Include="Common\Proxy\Type.cs" />
+    <Compile Include="Common\Serialization\XmlUri.cs" />
+    <Compile Include="Common\Crypto\Obfuscation.cs" />
+    <Compile Include="Common\Proxy\DefaultProxy.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -75,6 +81,9 @@
     <Folder Include="Common\" />
     <Folder Include="HashAlgorithm\" />
     <Folder Include="Links\" />
+    <Folder Include="Common\Proxy\" />
+    <Folder Include="Common\Serialization\" />
+    <Folder Include="Common\Crypto\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
