@@ -118,6 +118,10 @@ namespace DataSpace.Common.Settings.Connection.W32
     internal class ConfigurationSectionLoader
     {
         /// <summary>
+        /// the Logger  object
+        /// </summary>
+        private static readonly log4net.ILog _logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        /// <summary>
         /// Contructor
         /// </summary>
         /// <param name="ConfigFilePath">Full path to Configuration file</param>
@@ -154,12 +158,38 @@ namespace DataSpace.Common.Settings.Connection.W32
                 configMap.ExeConfigFilename = _ConfigFilePath;
                 _Config = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
             }
-            ConfigurationSection Section = _Config.GetSection(SectionName);
+            ConfigurationSection Section = null;
+            try
+            {
+                // try to get our section -- can except in case of version diff or something else
+                // if section does not exist no exception is thrown an returns zero 
+                Section = _Config.GetSection(SectionName);
+            }
+            catch (ConfigurationErrorsException eConf)
+            {
+                _logger.ErrorFormat("{0} -- Failed to load Section '{1}' - Exception: {2}", System.Reflection.MethodBase.GetCurrentMethod().Name, SectionName , eConf.Message);
+                // assume it already exists  -> delete it
+                _Config.Sections.Remove(SectionName);
+            }
+            catch (Exception e)
+            {
+                // something else .. log it and eat it
+                _logger.ErrorFormat("{0} -- Failed to load Section {1} - Exception: {2}", System.Reflection.MethodBase.GetCurrentMethod().Name, SectionName, e.Message);
+            };
+
             if(Section == null)
             {
                 // Config without our section -> create and add it
-                Section = (ConfigurationSection)Activator.CreateInstance(StoreSectionType);
-                _Config.Sections.Add(SectionName,Section);
+                try
+                {
+                    Section = (ConfigurationSection)Activator.CreateInstance(StoreSectionType);
+                    _Config.Sections.Add(SectionName, Section);
+                }
+                catch (Exception e)
+                {
+                    _logger.ErrorFormat("{0} -- Failed to create Section {1} - Exception: {2}", System.Reflection.MethodBase.GetCurrentMethod().Name, SectionName, e.Message);
+                    throw;
+                }
             }
             return Section;
         }
