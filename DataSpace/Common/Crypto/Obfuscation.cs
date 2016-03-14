@@ -80,7 +80,7 @@ namespace DataSpace.Common.Crypto {
 
             // Encrypt the data using DataProtectionScope.CurrentUser. The result can be decrypted
             //  only by the same current user.
-            byte[] crypt = ProtectedData.Protect(data, GetCryptoKey(), DataProtectionScope.CurrentUser);
+            byte[] crypt = ProtectedData.Protect(data, GetObfuscationKey(), DataProtectionScope.CurrentUser);
             return Convert.ToBase64String(crypt, Base64FormattingOptions.None);
             #endif
         }
@@ -98,7 +98,7 @@ namespace DataSpace.Common.Crypto {
                 byte[] data = Convert.FromBase64String(value);
 
                 // Decrypt the data using DataProtectionScope.CurrentUser.
-                byte[] uncrypt = ProtectedData.Unprotect(data, GetCryptoKey(), DataProtectionScope.CurrentUser);
+                byte[] uncrypt = ProtectedData.Unprotect(data, GetObfuscationKey(), DataProtectionScope.CurrentUser);
                 return System.Text.Encoding.UTF8.GetString(uncrypt);
             #endif
         }
