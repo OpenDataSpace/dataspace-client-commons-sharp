@@ -60,6 +60,8 @@
     <Compile Include="Common\Proxy\DefaultProxyTest.cs" />
     <Compile Include="Toxiproxy\AuthenticationProviderWrapperTest.cs" />
     <Compile Include="Toxiproxy\SessionFactoryTest.cs" />
+    <Compile Include="Utils\WithConfiguredDotCMISLogging.cs" />
+    <Compile Include="Utils\WithConfiguredLog4Net.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -72,6 +74,7 @@
     <Folder Include="Common\Crypto\" />
     <Folder Include="Common\Proxy\" />
     <Folder Include="Toxiproxy\" />
+    <Folder Include="Utils\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DotCMIS\DotCMIS\DotCMIS.csproj">

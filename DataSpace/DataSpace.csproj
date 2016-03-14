@@ -75,6 +75,7 @@
     <Compile Include="Common\Serialization\XmlUri.cs" />
     <Compile Include="Common\Crypto\Obfuscation.cs" />
     <Compile Include="Common\Proxy\DefaultProxy.cs" />
+    <Compile Include="Logging\DotCMISLogListener.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -85,6 +86,7 @@
     <Folder Include="Common\Proxy\" />
     <Folder Include="Common\Serialization\" />
     <Folder Include="Common\Crypto\" />
+    <Folder Include="Logging\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
