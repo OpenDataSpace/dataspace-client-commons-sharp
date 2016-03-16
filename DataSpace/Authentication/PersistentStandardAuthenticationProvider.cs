@@ -25,14 +25,10 @@ namespace DataSpace.Authentication {
 
     using DotCMIS.Binding;
 
-    using log4net;
-
     /// <summary>
     /// Persistent standard authentication provider.
     /// </summary>
     public class PersistentStandardAuthenticationProvider : DotCMIS.Binding.StandardAuthenticationProvider, IDisposableAuthProvider {
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(PersistentStandardAuthenticationProvider));
-
         private ICookieStorage storage;
         private bool disposed;
         private Uri url;
@@ -104,7 +100,6 @@ namespace DataSpace.Authentication {
                     try {
                         this.storage.Cookies = this.Cookies.GetCookies(this.url);
                     } catch (Exception e) {
-                        Logger.Debug(string.Format("Failed to save session cookies of \"{0}\" in db", this.url.AbsolutePath), e);
                     }
                 }
 
