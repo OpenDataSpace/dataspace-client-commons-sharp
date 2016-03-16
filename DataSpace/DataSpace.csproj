@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -32,10 +32,23 @@
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Security" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Crypto\SecureStringExtForString.cs" />
+    <Compile Include="Common\Settings\Connection\AccountSettings.cs" />
+    <Compile Include="Common\Settings\Connection\ConnectionSettingsFactory.cs" />
+    <Compile Include="Common\Settings\Connection\CredentialManager.cs" />
+    <Compile Include="Common\Settings\Connection\IAccountSettings.cs" />
+    <Compile Include="Common\Settings\Connection\IAccountSettingsFactory.cs" />
+    <Compile Include="Common\Settings\Connection\IConnectionSettingsFactory.cs" />
+    <Compile Include="Common\Settings\Connection\IProxySettings.cs" />
+    <Compile Include="Common\Settings\Connection\IProxySettingsFactory.cs" />
+    <Compile Include="Common\Settings\Connection\ISettingsPersist.cs" />
+    <Compile Include="Common\Settings\Connection\ProxyConfigSection.cs" />
+    <Compile Include="Common\Settings\Connection\ProxySettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Authentication\AuthProviderFactory.cs" />
     <Compile Include="Authentication\IAuthProviderFactory.cs" />
@@ -79,16 +92,7 @@
     <Compile Include="Common\Transmissions\TransmissionType.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <Folder Include="Authentication\" />
-    <Folder Include="Common\" />
-    <Folder Include="HashAlgorithm\" />
-    <Folder Include="Links\" />
-    <Folder Include="Common\Proxy\" />
-    <Folder Include="Common\Serialization\" />
-    <Folder Include="Common\Crypto\" />
-    <Folder Include="Logging\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
