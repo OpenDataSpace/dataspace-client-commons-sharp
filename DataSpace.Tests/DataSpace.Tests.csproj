@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -42,6 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Settings\Connection\AccountSettingsTest.cs" />
+    <Compile Include="Common\Settings\Connection\ProxySettingsTests.cs" />
     <Compile Include="EmptyTest.cs" />
     <Compile Include="HashAlgorithm\SHA1ReuseTest.cs" />
     <Compile Include="Common\Streams\AbortableStreamTest.cs" />
@@ -63,16 +65,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <None Include="log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Common\" />
-    <Folder Include="Common\Utils\" />
-    <Folder Include="Common\Transmissions\" />
-    <Folder Include="Common\Crypto\" />
-    <Folder Include="Common\Proxy\" />
-    <Folder Include="Toxiproxy\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\DotCMIS\DotCMIS\DotCMIS.csproj">
       <Project>{529EF90F-A34C-4426-A4F9-65113AC23841}</Project>
@@ -86,5 +84,8 @@
       <Project>{0523AB5D-F59C-4611-8963-07C357927492}</Project>
       <Name>DataSpace.Toxiproxy</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
 </Project>
