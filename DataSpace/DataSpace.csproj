@@ -68,6 +68,7 @@
     <Compile Include="Links\LinkType.cs" />
     <Compile Include="Authentication\Type.cs" />
     <Compile Include="Common\Transmissions\Status.cs" />
+    <Compile Include="Common\Transmissions\TransmissionType.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
