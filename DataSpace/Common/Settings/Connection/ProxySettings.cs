@@ -6,7 +6,7 @@ using System.Linq;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
-
+using DataSpace.Common.Utils;
 
 namespace DataSpace.Common.Settings.Connection.W32
 {
@@ -29,7 +29,7 @@ namespace DataSpace.Common.Settings.Connection.W32
             _ProxyAccount.PropertyChanged += (sender, e) =>
             {
                 // filter out "IsDirty"; preventing double notification
-                if (string.Compare("IsDirty", e.PropertyName) != 0)
+                if (string.Compare(Property.NameOf((AccountSettings  t) => t.IsDirty), e.PropertyName) != 0)
                     OnPropertyChanged(e.PropertyName);
             };
         }
@@ -104,7 +104,7 @@ namespace DataSpace.Common.Settings.Connection.W32
                     if (_IsDirty != value)
                     {
                         _IsDirty = value;
-                        OnPropertyChanged("IsDirty");
+                        OnPropertyChanged(Property.NameOf(() => this.IsDirty));
                     } 
                 }
             }
@@ -127,7 +127,7 @@ namespace DataSpace.Common.Settings.Connection.W32
                     if (_NeedLogin != value)
                     {
                         _NeedLogin = value;
-                        OnPropertyChanged("NeedLogin");
+                        OnPropertyChanged(Property.NameOf(() => this.NeedLogin));
                     } 
                 }
             }
@@ -160,7 +160,7 @@ namespace DataSpace.Common.Settings.Connection.W32
                     if (_ProxyType != value)
                     {
                         _ProxyType = value;
-                        OnPropertyChanged("ProxyType");
+                        OnPropertyChanged(Property.NameOf(() => this.ProxyType));
                     } 
                 }
             }
@@ -192,8 +192,8 @@ namespace DataSpace.Common.Settings.Connection.W32
         {
             if (PropertyChanged != null)
                 PropertyChanged.Invoke(this, new PropertyChangedEventArgs(property));
-            //all Property changes trigger "IsDirty = true" exept "IsDirty" itself 
-            if (string.Compare(property, "IsDirty") != 0)
+            //all Property changes should trigger "IsDirty = true" exept "IsDirty" itself 
+            if (string.Compare(property,Property.NameOf(() => this.IsDirty)) != 0)
                 IsDirty = true;
         }
         public void Delete()

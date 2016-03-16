@@ -7,6 +7,7 @@ using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using DataSpace.Common.Crypto;
+using DataSpace.Common.Utils;
 
 namespace DataSpace.Common.Settings.Connection.W32
 {
@@ -92,7 +93,7 @@ namespace DataSpace.Common.Settings.Connection.W32
                     if (_Password.ConvertToUnsecureString().CompareTo(value.ConvertToUnsecureString()) != 0)
                     {
                         _Password = value.Copy();
-                        OnPropertyChanged("Password");
+                        OnPropertyChanged(Property.NameOf(() => this.Password));
                     }
                 }
             }
@@ -119,7 +120,7 @@ namespace DataSpace.Common.Settings.Connection.W32
                     if (string.Compare(_Url, value) != 0)
                     {
                         _Url = value;
-                        OnPropertyChanged("Url");
+                        OnPropertyChanged(Property.NameOf(() => this.Url));
                     }
                 }
             }
@@ -144,7 +145,7 @@ namespace DataSpace.Common.Settings.Connection.W32
                     if (_UserName.CompareTo(value) != 0)
                     {
                         _UserName = value;
-                        OnPropertyChanged("UserName");
+                        OnPropertyChanged(Property.NameOf(() => this.UserName));
                     }
                 }
             }
@@ -166,7 +167,7 @@ namespace DataSpace.Common.Settings.Connection.W32
                     if (_IsDirty != value)
                     {
                         _IsDirty = value;
-                        OnPropertyChanged("IsDirty");
+                        OnPropertyChanged(Property.NameOf(() => this.IsDirty));
                     }
                 }
             }
@@ -181,8 +182,8 @@ namespace DataSpace.Common.Settings.Connection.W32
         {
             if (PropertyChanged != null)
                 PropertyChanged.Invoke(this, new PropertyChangedEventArgs(property));
-            //all Property changes trigger "IsDirty = true" exept "IsDirty" itself 
-            if (string.Compare(property, "IsDirty") != 0)
+            //all Property changes should trigger "IsDirty = true" exept "IsDirty" itself 
+            if (string.Compare(property, Property.NameOf(() => this.IsDirty)) != 0)
                 IsDirty = true;
         }
         /// <summary>
