@@ -12,6 +12,7 @@ namespace Tests.Common.Settings.Connection
     using DataSpace.Common.Settings.Connection;
     using DataSpace.Common.Settings.Connection.W32;
     using DataSpace.Common.Crypto;
+    using DataSpace.Common.Utils;
     using System.ComponentModel;
 
     [TestFixture]
@@ -95,10 +96,10 @@ namespace Tests.Common.Settings.Connection
             Assert.That(underTest.Password.ConvertToUnsecureString(), Is.EqualTo(_Password));
 
             Assert.That(ReceivedEvents.Count, Is.EqualTo(4));
-            Assert.That(ReceivedEvents[0], Is.EqualTo("Url"));
-            Assert.That(ReceivedEvents[1], Is.EqualTo("IsDirty"));
-            Assert.That(ReceivedEvents[2], Is.EqualTo("UserName"));
-            Assert.That(ReceivedEvents[3], Is.EqualTo("Password"));
+            Assert.That(ReceivedEvents[0], Is.EqualTo(Property.NameOf((IAccountSettings a) => a.Url)));
+            Assert.That(ReceivedEvents[1], Is.EqualTo(Property.NameOf((IAccountSettings a) => a.IsDirty)));
+            Assert.That(ReceivedEvents[2], Is.EqualTo(Property.NameOf((IAccountSettings a) => a.UserName)));
+            Assert.That(ReceivedEvents[3], Is.EqualTo(Property.NameOf((IAccountSettings a) => a.Password)));
         }
         [Test]
         public void Load_TriggersEvent()

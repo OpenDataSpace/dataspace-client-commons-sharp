@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using DataSpace.Common.Settings.Connection;
 using System.ComponentModel;
 using DataSpace.Common.Crypto;
+using DataSpace.Common.Utils;
 
 namespace Tests.Common.Settings.Connection
 {
@@ -141,13 +142,13 @@ namespace Tests.Common.Settings.Connection
             Assert.AreEqual(_UserName, ProxSet.UserName);
             Assert.AreEqual(_Password, ProxSet.Password.ConvertToUnsecureString());
 
-            Assert.AreEqual(6, ReceivedEvents.Count);
-            Assert.AreEqual("ProxyType", ReceivedEvents[0]);
-            Assert.AreEqual("IsDirty", ReceivedEvents[1]);
-            Assert.AreEqual("NeedLogin", ReceivedEvents[2]);
-            Assert.AreEqual("Url", ReceivedEvents[3]);
-            Assert.AreEqual("UserName", ReceivedEvents[4]);
-            Assert.AreEqual("Password", ReceivedEvents[5]);
+            Assert.AreEqual(6, ReceivedEvents.Count);               
+            Assert.AreEqual(Property.NameOf((IProxySettings a) => a.ProxyType), ReceivedEvents[0]);        
+            Assert.AreEqual(Property.NameOf((IProxySettings a) => a.IsDirty), ReceivedEvents[1]);          
+            Assert.AreEqual(Property.NameOf((IProxySettings a) => a.NeedLogin), ReceivedEvents[2]);        
+            Assert.AreEqual(Property.NameOf((IProxySettings a) => a.Url), ReceivedEvents[3]);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+            Assert.AreEqual(Property.NameOf((IProxySettings a) => a.UserName), ReceivedEvents[4]);
+            Assert.AreEqual(Property.NameOf((IProxySettings a) => a.Password), ReceivedEvents[5]);
 
         }
         [Test]
