@@ -28,33 +28,6 @@ namespace DataSpace.Common.Transmissions {
     using DataSpace.Common.Utils;
 
     /// <summary>
-    /// File transmission types.
-    /// </summary>
-    public enum TransmissionType {
-        /// <summary>
-        /// A new file is uploaded
-        /// </summary>
-        UploadNewFile,
-
-        /// <summary>
-        /// A locally modified file is uploaded
-        /// </summary>
-        UploadModifiedFile,
-
-        /// <summary>
-        /// A new remote file is downloaded
-        /// </summary>
-        DownloadNewFile,
-
-        /// <summary>
-        /// A remotely modified file is downloaded
-        /// </summary>
-        DownloadModifiedFile
-    }
-
-
-
-    /// <summary>
     /// File transmission event.
     /// This event should be queued only once. The progress will not be reported on the queue.
     /// Interested entities should add themselfs as TransmissionEventHandler on the event TransmissionStatus to get informed about the progress.

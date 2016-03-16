@@ -23,8 +23,6 @@ namespace DataSpace.Authentication {
 
     using DotCMIS.Binding;
 
-    using log4net;
-
     // TODO Refactore this class because it is a simple copy of PersistentStandardAuthenticationProvider
     // => Extract methods and call them instead of the duplicated code
 
@@ -32,8 +30,6 @@ namespace DataSpace.Authentication {
     /// Persistent ntlm authentication provider.
     /// </summary>
     public class PersistentNtlmAuthenticationProvider : NtlmAuthenticationProvider, IDisposableAuthProvider {
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(PersistentStandardAuthenticationProvider));
-
         private ICookieStorage storage;
         private bool disposed;
         private Uri url;
@@ -117,7 +113,6 @@ namespace DataSpace.Authentication {
                     try {
                         this.storage.Cookies = this.Cookies.GetCookies(this.url);
                     } catch (Exception e) {
-                        Logger.Debug(string.Format("Failed to save session cookies of \"{0}\" in db", this.url.AbsolutePath), e);
                     }
                 }
 

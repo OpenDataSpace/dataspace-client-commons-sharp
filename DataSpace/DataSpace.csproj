@@ -76,6 +76,7 @@
     <Compile Include="Common\Crypto\Obfuscation.cs" />
     <Compile Include="Common\Proxy\DefaultProxy.cs" />
     <Compile Include="Logging\DotCMISLogListener.cs" />
+    <Compile Include="Common\Transmissions\TransmissionType.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
