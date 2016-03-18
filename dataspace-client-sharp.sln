@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio Express 2012 for Windows Desktop
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataSpace.Tests", "DataSpace.Tests\DataSpace.Tests.csproj", "{652A7CDD-D97A-4915-BB38-1188B88B4502}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotCMIS", "DotCMIS\DotCMIS\DotCMIS.csproj", "{529EF90F-A34C-4426-A4F9-65113AC23841}"
@@ -11,16 +11,21 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataSpace.Moq", "DataSpace.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataSpace.Toxiproxy", "DataSpace.Toxiproxy\DataSpace.Toxiproxy.csproj", "{0523AB5D-F59C-4611-8963-07C357927492}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{9DA1A10D-352E-40AA-8B08-CBB7D93F03EA}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0523AB5D-F59C-4611-8963-07C357927492}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0523AB5D-F59C-4611-8963-07C357927492}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0523AB5D-F59C-4611-8963-07C357927492}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0523AB5D-F59C-4611-8963-07C357927492}.Release|Any CPU.Build.0 = Release|Any CPU
+		{652A7CDD-D97A-4915-BB38-1188B88B4502}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{652A7CDD-D97A-4915-BB38-1188B88B4502}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{652A7CDD-D97A-4915-BB38-1188B88B4502}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{652A7CDD-D97A-4915-BB38-1188B88B4502}.Release|Any CPU.Build.0 = Release|Any CPU
 		{529EF90F-A34C-4426-A4F9-65113AC23841}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{529EF90F-A34C-4426-A4F9-65113AC23841}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{529EF90F-A34C-4426-A4F9-65113AC23841}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -29,14 +34,17 @@ Global
 		{558B5501-6944-4CC2-A830-0BBC25D7C848}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{558B5501-6944-4CC2-A830-0BBC25D7C848}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{558B5501-6944-4CC2-A830-0BBC25D7C848}.Release|Any CPU.Build.0 = Release|Any CPU
-		{652A7CDD-D97A-4915-BB38-1188B88B4502}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{652A7CDD-D97A-4915-BB38-1188B88B4502}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{652A7CDD-D97A-4915-BB38-1188B88B4502}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{652A7CDD-D97A-4915-BB38-1188B88B4502}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D9193160-3BC7-495F-A64C-7C8399CCCCF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D9193160-3BC7-495F-A64C-7C8399CCCCF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9193160-3BC7-495F-A64C-7C8399CCCCF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9193160-3BC7-495F-A64C-7C8399CCCCF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0523AB5D-F59C-4611-8963-07C357927492}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0523AB5D-F59C-4611-8963-07C357927492}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0523AB5D-F59C-4611-8963-07C357927492}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0523AB5D-F59C-4611-8963-07C357927492}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
