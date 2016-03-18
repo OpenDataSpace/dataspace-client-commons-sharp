@@ -213,5 +213,9 @@ namespace DataSpace.Common.Settings.Connection.W32
         }
         private string _ConfigFilePath = string.Empty;
         private Configuration _Config = null;
+
+        public Configuration Configuration {
+            get { return _Config; }
+        }
     }
 }

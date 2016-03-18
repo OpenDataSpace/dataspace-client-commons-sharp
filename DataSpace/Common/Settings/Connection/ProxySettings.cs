@@ -222,12 +222,12 @@ namespace DataSpace.Common.Settings.Connection.W32
             lock (_Lock)
             {
                 // find our Section in Collection and delete it
-                StoredSection.CurrentConfiguration.Sections.Remove(StoredSection.SectionInformation.SectionName);
+                Loader.Configuration.Sections.Remove(StoredSection.SectionInformation.SectionName);
 
                 // delete the Accountinformation part
                 _ProxyAccount.Delete();
                 // save changes
-                StoredSection.CurrentConfiguration.Save();
+                Loader.Configuration.Save();
                 // reinit our properties
                 ProxyType = ProxyType.None;
                 NeedLogin = false;
@@ -290,7 +290,7 @@ namespace DataSpace.Common.Settings.Connection.W32
 
             ProxyConfigSection StoredSection = (ProxyConfigSection)Loader.GetSection(SectionName, typeof(ProxyConfigSection));
             // store if changes were pending or no config file is present
-            if (IsDirty || StoredSection.CurrentConfiguration.HasFile == false)
+            if (IsDirty || Loader.Configuration.HasFile == false)
             {
                 // transfer local properties to section object and save Configuration
                 lock (_Lock)
@@ -298,7 +298,7 @@ namespace DataSpace.Common.Settings.Connection.W32
                     // use backing field values to prevent autoupdate
                     StoredSection.ProxyType = _ProxyType;
                     StoredSection.NeedLogin = _NeedLogin;
-                    StoredSection.CurrentConfiguration.Save();
+                    Loader.Configuration.Save();
                     // save the Accountinformation part
                     _ProxyAccount.Save();
                     // update refresh time 
