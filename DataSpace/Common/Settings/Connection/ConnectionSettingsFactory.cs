@@ -33,12 +33,16 @@ namespace DataSpace.Common.Settings.Connection.W32
         /// <summary>
         /// Configuration filepath for all filebased shared Configparts
         /// </summary>
-        public static string ConfigFilePath { get; set; } = ConnectionSettingsFactory.BuildUserConfigPath("GrauData", "DataSpace", "SharedConfig", ConfigurationUserLevel.PerUserRoamingAndLocal);
+        public static string ConfigFilePath { get; set; }
         /// <summary>
         /// the only one AccountSettings object
         /// </summary>
         private static AccountSettings _AccountSettings;
         private static object AccLock = new object();
+
+        static ConnectionSettingsFactory() {
+            ConfigFilePath = ConnectionSettingsFactory.BuildUserConfigPath("GrauData", "DataSpace", "SharedConfig", ConfigurationUserLevel.PerUserRoamingAndLocal);
+        }
 
         public IAccountSettings AccountSettings {
             get {
