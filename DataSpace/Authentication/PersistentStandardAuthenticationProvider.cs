@@ -99,7 +99,7 @@ namespace DataSpace.Authentication {
                     // Dispose managed resources.
                     try {
                         this.storage.Cookies = this.Cookies.GetCookies(this.url);
-                    } catch (Exception e) {
+                    } catch (Exception) {
                     }
                 }
 
