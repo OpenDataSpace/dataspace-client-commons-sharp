@@ -30,20 +30,20 @@ using DataSpace.Common.Utils;
 
 namespace Tests.Common.Settings.Connection
 {
-    [TestFixture()]
+    [TestFixture]
     public class ProxySettingsTest
     {
         private string _Url = "test.url.com";
         private string _UserName = "TestName";
         private string _Password = "TestPassword";
 
-        [OneTimeSetUp]
+        [TestFixtureSetUp]
         public void Init()
         {
             // calling a logger function triggers reading attributed log4Net settings
             log4net.LogManager.GetLogger(typeof(ProxySettings));
         }
-        [Test()]
+        [Test]
         public void Constructor()
         {
             IProxySettings ProxSet = new ProxySettings();

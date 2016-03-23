@@ -40,8 +40,8 @@ namespace Tests.Common.Settings.Connection
         private string _UserName = "TestName";
         private string _Password = "TestPassword";
 
-        [OneTimeSetUp]
-        public void Init()
+        [TestFixtureSetUp]
+        public static void Init()
         {
             // calling a logger function triggers reading attributed log4Net settings (see comment above)
             log4net.LogManager.GetLogger(typeof(AccountSettings));
