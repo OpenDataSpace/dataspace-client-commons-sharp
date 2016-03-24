@@ -33,7 +33,7 @@
       <HintPath>..\packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.6.4\lib\net45\nunit.framework.dll</HintPath>
+      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
       <Package>nunit</Package>
     </Reference>
     <Reference Include="log4net">
@@ -64,6 +64,7 @@
     <Compile Include="Toxiproxy\SessionFactoryTest.cs" />
     <Compile Include="Utils\WithConfiguredDotCMISLogging.cs" />
     <Compile Include="Utils\WithConfiguredLog4Net.cs" />
+    <Compile Include="Common\Settings\Connection\AccountSettingsFactoryTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
