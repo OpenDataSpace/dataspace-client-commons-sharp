@@ -16,8 +16,9 @@
 //
 // </copyright>
 //-----------------------------------------------------------------------
+
 ﻿namespace DataSpace.Common.Settings.Connection {
-	public interface IProxySettingsFactory {
-		IProxySettings ProxySettings { get; }
-	}
+    public interface IProxySettingsFactory {
+        IProxySettings ProxySettings { get; }
+    }
 }

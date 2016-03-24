@@ -16,23 +16,23 @@
 //
 // </copyright>
 //-----------------------------------------------------------------------
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Configuration;
-using System.Linq;
-using System.Security;
-using System.Text;
-using System.Threading.Tasks;
-using DataSpace.Common.Utils;
 
-namespace DataSpace.Common.Settings.Connection.W32
-{
+namespace DataSpace.Common.Settings.Connection.W32 {
+    ﻿using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Configuration;
+    using System.Linq;
+    using System.Security;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using DataSpace.Common.Utils;
+
     /// <summary>
     /// Read/Store DataSpace Proxy information in Windows Credential Store / Config File
     /// </summary>
-    public class ProxySettings : IProxySettings, IProxySettingsRead
-    {
+    public class ProxySettings : IProxySettings, IProxySettingsRead {
         /// <summary>
         /// the Logger  object
         /// </summary>
@@ -40,47 +40,43 @@ namespace DataSpace.Common.Settings.Connection.W32
         /// <summary>
         /// Constructor
         /// </summary>
-        public ProxySettings()
-        {
+        public ProxySettings() {
             // catch property change events and relay them 
             // we can do this because we have identical property names
-            _ProxyAccount.PropertyChanged += (sender, e) =>
-            {
+            _ProxyAccount.PropertyChanged += (sender, e) => {
                 // filter out "IsDirty"; preventing double notification
-                if (string.Compare(Property.NameOf((AccountSettings  t) => t.IsDirty), e.PropertyName) != 0)
+                if (string.Compare(Property.NameOf((AccountSettings  t) => t.IsDirty), e.PropertyName) != 0) {
                     OnPropertyChanged(e.PropertyName);
+                }
             };
         }
+
         private TimeSpan _PropsRefreshSpan = new TimeSpan(0, 2, 0);
         /// <summary>
         /// Span between automatic Property refresh from Config file / store
         /// on external property reads
         /// ! 0 disables auto refresh
         /// </summary>
-        public TimeSpan PropsRefreshSpan
-        {
-            get
-            {
-                lock (_Lock)
-                {
+        public TimeSpan PropsRefreshSpan {
+            get {
+                lock (_Lock) {
                     return _PropsRefreshSpan;
                 }
             }
 
-            set
-            {
-                lock (_Lock)
-                {
+            set {
+                lock (_Lock) {
                     // disable refresh?
-                    if (value != new TimeSpan(0))
-                    {
+                    if (value != new TimeSpan(0)) {
                         //no; minimum 5 seconds
                         value = value > new TimeSpan(0, 0, 5) ? value : new TimeSpan(0, 0, 5);
                     }
+
                     _PropsRefreshSpan = value;
                 }
             }
         }
+
         /// <summary>
         /// Time of last load/save call
         /// </summary>
@@ -92,8 +88,7 @@ namespace DataSpace.Common.Settings.Connection.W32
         /// <summary>
         /// Proxy Account login data 
         /// </summary>
-        private AccountSettings _ProxyAccount = new AccountSettings("DataSpaceProxy@")
-        {
+        private AccountSettings _ProxyAccount = new AccountSettings("DataSpaceProxy@") {
             // disable auto refresh -- we trigger it manually
             PropsRefreshSpan = new TimeSpan(0)
         };
@@ -106,96 +101,81 @@ namespace DataSpace.Common.Settings.Connection.W32
         /// </summary>
         internal string SectionName = "";
         private bool _IsDirty = false;
-        public bool IsDirty
-        {
-            get
-            {
-                lock (_Lock)
-                {
+        public bool IsDirty {
+            get {
+                lock (_Lock) {
                     return _IsDirty; 
                 }
             }
-            private set
-            {
-                lock (_Lock)
-                {
-                    if (_IsDirty != value)
-                    {
+
+            private set {
+                lock (_Lock) {
+                    if (_IsDirty != value) {
                         _IsDirty = value;
                         OnPropertyChanged(Property.NameOf(() => this.IsDirty));
                     } 
                 }
             }
         }
+
         private bool _NeedLogin = false;
-        public bool NeedLogin
-        {
-            get
-            {
-                lock (_Lock)
-                {
+        public bool NeedLogin {
+            get {
+                lock (_Lock) {
                     RefreshProps();
                     return _NeedLogin; 
                 }
             }
-            set
-            {
-                lock (_Lock)
-                {
-                    if (_NeedLogin != value)
-                    {
+
+            set {
+                lock (_Lock) {
+                    if (_NeedLogin != value) {
                         _NeedLogin = value;
                         OnPropertyChanged(Property.NameOf(() => this.NeedLogin));
                     } 
                 }
             }
         }
-        public SecureString Password
-        {
-            get
-            {
+
+        public SecureString Password {
+            get {
                 RefreshProps();
                 return _ProxyAccount.Password;
             }
+
             set { _ProxyAccount.Password = value; }
         }
 
         ProxyType _ProxyType = ProxyType.None;
-        public ProxyType ProxyType
-        {
-            get
-            {
-                lock (_Lock)
-                {
+        public ProxyType ProxyType {
+            get {
+                lock (_Lock) {
                     RefreshProps();
                     return _ProxyType; 
                 }
             }
-            set
-            {
-                lock (_Lock)
-                {
-                    if (_ProxyType != value)
-                    {
+
+            set {
+                lock (_Lock) {
+                    if (_ProxyType != value) {
                         _ProxyType = value;
                         OnPropertyChanged(Property.NameOf(() => this.ProxyType));
                     } 
                 }
             }
         }
-        public string Url
-        {
-            get
-            {
+
+        public string Url {
+            get {
                 RefreshProps();
                 return _ProxyAccount.Url;
             }
+
             set { _ProxyAccount.Url = value; }
         }
-        public string UserName
-        {
-            get
-            {
+
+        public string UserName {
+            get {
                 RefreshProps();
                 return _ProxyAccount.UserName;
             }
@@ -206,21 +186,22 @@ namespace DataSpace.Common.Settings.Connection.W32
         public event EventHandler SettingsLoaded = delegate { };
         public event EventHandler SettingsSaved = delegate { };
 
-        private void OnPropertyChanged(string property)
-        {
-            if (PropertyChanged != null)
+        private void OnPropertyChanged(string property) {
+            if (PropertyChanged != null) {
                 PropertyChanged.Invoke(this, new PropertyChangedEventArgs(property));
+            }
+
             //all Property changes should trigger "IsDirty = true" exept "IsDirty" itself 
-            if (string.Compare(property,Property.NameOf(() => this.IsDirty)) != 0)
+            if (string.Compare(property,Property.NameOf(() => this.IsDirty)) != 0) {
                 IsDirty = true;
+            }
         }
-        public void Delete()
-        {
+
+        public void Delete() {
             // get the Configfile Section object
             ConfigurationSectionLoader Loader = new ConfigurationSectionLoader(GetConfigFilePath());
             ProxyConfigSection StoredSection = (ProxyConfigSection)Loader.GetSection(SectionName, typeof(ProxyConfigSection));
-            lock (_Lock)
-            {
+            lock (_Lock) {
                 // find our Section in Collection and delete it
                 Loader.Configuration.Sections.Remove(StoredSection.SectionInformation.SectionName);
 
@@ -240,8 +221,7 @@ namespace DataSpace.Common.Settings.Connection.W32
             SettingsSaved.Invoke(this,new EventArgs());
         }
 
-        public void Load()
-        {
+        public void Load() {
             // get the Configfile Section object
             ConfigurationSectionLoader Loader = new ConfigurationSectionLoader(GetConfigFilePath());
             ProxyConfigSection StoredSection = (ProxyConfigSection)Loader.GetSection(SectionName,typeof(ProxyConfigSection));
@@ -251,25 +231,21 @@ namespace DataSpace.Common.Settings.Connection.W32
             ProxyType NewProxyType = ProxyType.None;
             bool NewNeedLogin = false;
 
-            if (StoredSection.ElementInformation.Errors.Count == 0)
-            {
+            if (StoredSection.ElementInformation.Errors.Count == 0) {
                 // retrieve the data from Configfile
                 NewProxyType = StoredSection.ProxyType;
                 NewNeedLogin = StoredSection.NeedLogin;
-            }
-            else
-            {
+            } else {
                 _logger.WarnFormat("Found {0} Errors in Configuration.", StoredSection.ElementInformation.Errors.Count);
-                foreach (var err in StoredSection.ElementInformation.Errors)
-                {
+                foreach (var err in StoredSection.ElementInformation.Errors) {
                     _logger.Warn(err.ToString());
                 }
+
                 _logger.Warn("Using default Configuration.");
             }
 
 
-            lock (_Lock)
-            {
+            lock (_Lock) {
                 // update refresh time and Properties
                 _LastRefreshTime = DateTime.Now;
                 ProxyType = NewProxyType;
@@ -279,22 +255,18 @@ namespace DataSpace.Common.Settings.Connection.W32
                 IsDirty = false;
             }
 
-
             SettingsLoaded.Invoke(this, new EventArgs());
         }
 
-        public void Save()
-        {
+        public void Save() {
             // get the Configfile Section object
             ConfigurationSectionLoader Loader = new ConfigurationSectionLoader(GetConfigFilePath());
 
             ProxyConfigSection StoredSection = (ProxyConfigSection)Loader.GetSection(SectionName, typeof(ProxyConfigSection));
             // store if changes were pending or no config file is present
-            if (IsDirty || Loader.Configuration.HasFile == false)
-            {
+            if (IsDirty || Loader.Configuration.HasFile == false) {
                 // transfer local properties to section object and save Configuration
-                lock (_Lock)
-                {
+                lock (_Lock) {
                     // use backing field values to prevent autoupdate
                     StoredSection.ProxyType = _ProxyType;
                     StoredSection.NeedLogin = _NeedLogin;
@@ -307,24 +279,28 @@ namespace DataSpace.Common.Settings.Connection.W32
                     IsDirty = false; 
                 }
             }
+
             SettingsSaved.Invoke(this, new EventArgs());
         }
+
         /// <summary>
         /// triggers a load operation if object is not in edit mode and 
         /// and load is more then <c>PropsRefreshSpan</c> ago
         /// </summary>
-        private void RefreshProps()
-        {
-            lock (_Lock)
-            {
+        private void RefreshProps() {
+            lock (_Lock) {
                 // is disabled? 
-                if (PropsRefreshSpan == new TimeSpan(0))
+                if (PropsRefreshSpan == new TimeSpan(0)) {
                     return; // yes
+                }
+
                 // Don't try loading if config path delegate isn't set
                 if (GetConfigFilePath != null &&
                     IsDirty == false && 
                     (DateTime.Now - _LastRefreshTime > PropsRefreshSpan))
+                {
                     Load();
+                }
             }
         }
 

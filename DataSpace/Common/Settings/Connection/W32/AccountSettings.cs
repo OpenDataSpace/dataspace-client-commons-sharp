@@ -16,67 +16,29 @@
 //
 // </copyright>
 //-----------------------------------------------------------------------
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Configuration;
-using System.Linq;
-using System.Security;
-using System.Text;
-using System.Threading.Tasks;
-using DataSpace.Common.Crypto;
-using DataSpace.Common.Utils;
 
-namespace DataSpace.Common.Settings.Connection.W32
-{
+namespace DataSpace.Common.Settings.Connection.W32 {
+    ﻿using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Configuration;
+    using System.Linq;
+    using System.Security;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using DataSpace.Common.Crypto;
+    using DataSpace.Common.Utils;
+
     /// <summary>
     /// Read/Store Account information in Windows Credential Store
     /// </summary>
-    public class AccountSettings : IAccountSettingsRead, IAccountSettings
-    {
+    public class AccountSettings : IAccountSettingsRead, IAccountSettings {
         /// <summary>
         /// the Logger  object
         /// </summary>
         private static readonly log4net.ILog _logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="UrlPrefix">optional Url Prefix to differentiate Account types</param>
-        public AccountSettings(string UrlPrefix = "")
-        {
-            this.UrlPrefix = UrlPrefix;
-            this.UrlPrefix.Trim();
-        }
-        private TimeSpan _PropsRefreshSpan = new TimeSpan(0, 2, 0);
-        /// <summary>
-        /// Span between automatic Property refresh from store
-        /// on external property reads
-        /// ! 0 disables refresh
-        /// </summary>
-        public TimeSpan PropsRefreshSpan
-        {
-            get
-            {
-                lock (_Lock)
-                {
-                    return _PropsRefreshSpan; 
-                }
-            }
 
-            set
-            {
-                lock (_Lock)
-                {
-                    // disable refresh?
-                    if (value != new TimeSpan(0))
-                    {
-                        //no; minimum 5 seconds
-                        value = value > new TimeSpan(0, 0, 5) ? value : new TimeSpan(0, 0, 5);
-                    }
-                    _PropsRefreshSpan = value;
-                }
-            }
-        }
         /// <summary>
         /// Time of last load/save call
         /// </summary>
@@ -85,105 +47,130 @@ namespace DataSpace.Common.Settings.Connection.W32
         /// Multithreading lock object
         /// </summary>
         private object _Lock = new object();
+
+        private TimeSpan _PropsRefreshSpan = new TimeSpan(0, 2, 0);
+
+        private SecureString _Password = new SecureString();
+
+        // url loaded from credential store -- needed for delete operation when Url changes occure
+        private string _LoadedUrl = string.Empty;
+        private string _Url = string.Empty;
+        private string _UserName = string.Empty;
+        private bool _IsDirty = false;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler SettingsLoaded = delegate { };
+        public event EventHandler SettingsSaved = delegate { };
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="UrlPrefix">optional Url Prefix to differentiate Account types</param>
+        public AccountSettings(string UrlPrefix = "") {
+            this.UrlPrefix = UrlPrefix;
+            this.UrlPrefix.Trim();
+        }
+
+        /// <summary>
+        /// Span between automatic Property refresh from store
+        /// on external property reads
+        /// ! 0 disables refresh
+        /// </summary>
+        public TimeSpan PropsRefreshSpan {
+            get {
+                lock (_Lock) {
+                    return _PropsRefreshSpan; 
+                }
+            }
+
+            set {
+                lock (_Lock) {
+                    // disable refresh?
+                    if (value != new TimeSpan(0)) {
+                        //no; minimum 5 seconds
+                        value = value > new TimeSpan(0, 0, 5) ? value : new TimeSpan(0, 0, 5);
+                    }
+                    _PropsRefreshSpan = value;
+                }
+            }
+        }
+
         /// <summary>
         /// Prefix used for saved Urls
         /// </summary>
-        public string UrlPrefix
-        {
+        public string UrlPrefix {
             get; private set;
         }
-        private SecureString _Password = new SecureString();
-        public SecureString Password
-        {
-            get
-            {
-                lock (_Lock)
-                {
+
+        public SecureString Password {
+            get {
+                lock (_Lock) {
                     RefreshProps();
                     return _Password.Copy();
                 }
             }
-            set
-            {
-                lock (_Lock)
-                {
+
+            set {
+                lock (_Lock) {
                     value = value ?? new SecureString();
-                    if (_Password.ConvertToUnsecureString().CompareTo(value.ConvertToUnsecureString()) != 0)
-                    {
+                    if (_Password.ConvertToUnsecureString().CompareTo(value.ConvertToUnsecureString()) != 0) {
                         _Password = value.Copy();
                         OnPropertyChanged(Property.NameOf(() => this.Password));
                     }
                 }
             }
         }
-        // url loaded from credential store -- needed for delete operation when Url changes occure
-        private string _LoadedUrl = string.Empty;
-        private string _Url = string.Empty;
-        public string Url
-        {
-            get
-            {
-                lock (_Lock)
-                {
+
+        public string Url {
+            get {
+                lock (_Lock) {
                     RefreshProps();
                     return _Url;
                 }
             }
-            set
-            {
-                lock (_Lock)
-                {
+
+            set {
+                lock (_Lock) {
                     value = value ?? string.Empty;
                     value.Trim();
-                    if (string.Compare(_Url, value) != 0)
-                    {
+                    if (string.Compare(_Url, value) != 0) {
                         _Url = value;
                         OnPropertyChanged(Property.NameOf(() => this.Url));
                     }
                 }
             }
         }
-        private string _UserName = string.Empty;
-        public string UserName
-        {
-            get
-            {
-                lock (_Lock)
-                {
+
+        public string UserName {
+            get {
+                lock (_Lock) {
                     RefreshProps();
                     return _UserName;
                 }
             }
-            set
-            {
-                lock (_Lock)
-                {
+
+            set {
+                lock (_Lock) {
                     value = value ?? string.Empty;
                     value.Trim();
-                    if (_UserName.CompareTo(value) != 0)
-                    {
+                    if (_UserName.CompareTo(value) != 0) {
                         _UserName = value;
                         OnPropertyChanged(Property.NameOf(() => this.UserName));
                     }
                 }
             }
         }
-        bool _IsDirty = false;
-        public bool IsDirty
-        {
-            get
-            {
-                lock (_Lock)
-                {
+
+        public bool IsDirty {
+            get {
+                lock (_Lock) {
                     return _IsDirty;
                 }
             }
-            private set
-            {
-                lock (_Lock)
-                {
-                    if (_IsDirty != value)
-                    {
+
+            private set {
+                lock (_Lock) {
+                    if (_IsDirty != value) {
                         _IsDirty = value;
                         OnPropertyChanged(Property.NameOf(() => this.IsDirty));
                     }
@@ -191,24 +178,10 @@ namespace DataSpace.Common.Settings.Connection.W32
             }
         }
 
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        public event EventHandler SettingsLoaded = delegate { };
-        public event EventHandler SettingsSaved = delegate { };
-
-        private void OnPropertyChanged(string property)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(property));
-            //all Property changes should trigger "IsDirty = true" exept "IsDirty" itself 
-            if (string.Compare(property, Property.NameOf(() => this.IsDirty)) != 0)
-                IsDirty = true;
-        }
         /// <summary>
         /// Loads Accountinformation from secure OS Credential Store
         /// </summary>
-        public void Load()
-        {
+        public void Load() {
             // load all Credentials with matching Prefix
             IList<Credential> AccountsList = CredentialManager.EnumerateCrendentials(UrlPrefix + "*");
             // using local variables -- so we can keep the following lock block short
@@ -217,25 +190,23 @@ namespace DataSpace.Common.Settings.Connection.W32
             string NewUserName = string.Empty;
             SecureString NewPassword = new SecureString();
             // find first credential with correct prefix and Type -> use it
-            foreach (var item in AccountsList)
-            {
-                if (item.CredentialType == CredentialType.Generic)
-                {
+            foreach (var item in AccountsList) {
+                if (item.CredentialType == CredentialType.Generic) {
                     // remove prefix part for easy usage and
                     string NewUrlForTest = item.ApplicationName.Substring(UrlPrefix.Length);
                     // kill 'whitespace only' urls
-                    if (string.IsNullOrWhiteSpace(NewUrlForTest))
-                    {
+                    if (string.IsNullOrWhiteSpace(NewUrlForTest)) {
                         CredentialManager.Delete(item.ApplicationName);
                         _logger.WarnFormat("Deleted whitespace corrupted account information -> '{0}'", item.ApplicationName);
                         continue;
                     }
+
                     // only log additional account informations
-                    if (bFound)
-                    {
+                    if (bFound) {
                         _logger.WarnFormat("Found more then one matching account information -> '{0}'", item.ApplicationName);
                         continue;
                     }
+
                     NewUrl = NewUrlForTest;
                     NewUserName = item.UserName;
                     NewPassword = new SecureString().Init(item.Password);
@@ -244,8 +215,7 @@ namespace DataSpace.Common.Settings.Connection.W32
                 }
             }
 
-            lock (_Lock)
-            {
+            lock (_Lock) {
                 // update refresh time and Properties
                 _LastRefreshTime = DateTime.Now;
                 // store loaded url for potential delete operation
@@ -266,52 +236,46 @@ namespace DataSpace.Common.Settings.Connection.W32
         /// <summary>
         /// Saves Accountinformation to secure OS Credential Store
         /// </summary>
-        public void Save()
-        {
-            lock (_Lock)
-            {
+        public void Save() {
+            lock (_Lock) {
                 // Save if Props were changed
-                if (IsDirty)
-                {
+                if (IsDirty) {
                     //difference between stored and object url?
-                    if (_LoadedUrl.CompareTo(_Url) != 0 && _LoadedUrl.Length != 0)
-                    {
+                    if (_LoadedUrl.CompareTo(_Url) != 0 && _LoadedUrl.Length != 0) {
                         // yes; delete first and store then (if we don't we produce a new entry!)
                         CredentialManager.Delete(UrlPrefix + _LoadedUrl);
                     }
 
                     //new Url empty?
-                    if (string.IsNullOrWhiteSpace(_Url))
-                    {
+                    if (string.IsNullOrWhiteSpace(_Url)) {
                         //yes;  we already deleted the old entry, so we only have to reset the props
                         Url = string.Empty;
                         UserName = string.Empty;
                         Password = new SecureString();
                         _LoadedUrl = string.Empty;
-                    }
-                    else
-                    {
+                    } else {
                         // no; decorate url with Prefix and store data in credential store
                         CredentialManager.WriteCredential(UrlPrefix + _Url, _UserName, _Password.ConvertToUnsecureString());
                         //update stored url as preparation for next url change
                         _LoadedUrl = _Url;
                     }
+
                     // update the refreh time
                     _LastRefreshTime = DateTime.Now;
                     // Signal  clean saved state
                     IsDirty = false;
                 } 
             }
+
             // fire saved Event
             SettingsSaved.Invoke(this, new EventArgs());
         }
+
         /// <summary>
         /// Deletes Accountinformation from secure OS Credential Store
         /// </summary>
-        public void Delete()
-        {
-            lock (_Lock)
-            {
+        public void Delete() {
+            lock (_Lock) {
                 // delete the decoreted Url based entry in OS store 
                 // use the _LoadedUrl for deletion! (if we don't, Url may have been changed and not saved and we delete the wrong / nothing)
                 CredentialManager.Delete(UrlPrefix + _LoadedUrl);
@@ -325,23 +289,35 @@ namespace DataSpace.Common.Settings.Connection.W32
 
                 IsDirty = false; 
             }
+
             // fire saved Event
             SettingsSaved.Invoke(this, new EventArgs());
         }
+
         /// <summary>
         /// triggers a load operation if object is not in edit mode and 
         /// and load is more then <c>PropsRefreshSpan</c> ago
         /// </summary>
-        private void RefreshProps()
-        {
-            lock (_Lock)
-            {
+        private void RefreshProps() {
+            lock (_Lock) {
                 // is disabled? 
-                if (PropsRefreshSpan == new TimeSpan(0))
+                if (PropsRefreshSpan == new TimeSpan(0)) {
                     return; // yes
+                }
 
-                if (IsDirty == false && (DateTime.Now - _LastRefreshTime > PropsRefreshSpan))
+                if (IsDirty == false && (DateTime.Now - _LastRefreshTime > PropsRefreshSpan)) {
                     Load();
+                }
+            }
+        }
+
+        private void OnPropertyChanged(string property) {
+            if (PropertyChanged != null) {
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(property));
+            }
+            //all Property changes should trigger "IsDirty = true" exept "IsDirty" itself 
+            if (string.Compare(property, Property.NameOf(() => this.IsDirty)) != 0) {
+                IsDirty = true;
             }
         }
     }
