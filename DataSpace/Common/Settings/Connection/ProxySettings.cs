@@ -303,6 +303,5 @@ namespace DataSpace.Common.Settings.Connection.W32 {
                 }
             }
         }
-
     }
 }

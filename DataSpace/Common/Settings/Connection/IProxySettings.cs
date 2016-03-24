@@ -18,7 +18,6 @@
 //-----------------------------------------------------------------------
 
 namespace DataSpace.Common.Settings.Connection {
-    ﻿using System;
     using System.Security;
 
     /// <summary>

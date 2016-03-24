@@ -18,8 +18,6 @@
 //-----------------------------------------------------------------------
 ﻿
 namespace DataSpace.Common.Settings.Connection {
-    using System;
-
     /// <summary>
     /// Proxytype Enumeration
     /// </summary>
