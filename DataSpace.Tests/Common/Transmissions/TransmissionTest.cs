@@ -183,7 +183,7 @@ namespace Tests.Common.Transmissions {
             }
         }
 
-        public Array GetAllTypes() {
+        public static Array GetAllTypes() {
             return Enum.GetValues(typeof(TransmissionType));
         }
     }
