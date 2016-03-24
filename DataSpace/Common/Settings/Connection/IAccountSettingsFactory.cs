@@ -16,9 +16,9 @@
 //
 // </copyright>
 //-----------------------------------------------------------------------
-﻿namespace DataSpace.Common.Settings.Connection
-{
+
+﻿namespace DataSpace.Common.Settings.Connection {
     public interface IAccountSettingsFactory {
-		IAccountSettings AccountSettings { get; }
-	}
+        IAccountSettings AccountSettings { get; }
+    }
 }
