@@ -102,4 +102,9 @@
       <Name>DotCMIS</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Common\Settings\Connection\W32\" />
+    <Folder Include="Common\Settings\Connection\MacOS\" />
+    <Folder Include="Common\Settings\Connection\Linux\" />
+  </ItemGroup>
 </Project>
