@@ -39,7 +39,6 @@
   <ItemGroup>
     <Compile Include="Common\Crypto\SecureStringExtForString.cs" />
     <Compile Include="Common\Settings\Connection\ConnectionSettingsFactory.cs" />
-    <Compile Include="Common\Settings\Connection\CredentialManager.cs" />
     <Compile Include="Common\Settings\Connection\IAccountSettings.cs" />
     <Compile Include="Common\Settings\Connection\IAccountSettingsFactory.cs" />
     <Compile Include="Common\Settings\Connection\IConnectionSettingsFactory.cs" />
@@ -91,6 +90,10 @@
     <Compile Include="Common\Transmissions\TransmissionType.cs" />
     <Compile Include="Common\Settings\Connection\W32\AccountSettings.cs" />
     <Compile Include="Common\Settings\Connection\ProxyType.cs" />
+    <Compile Include="Common\Settings\Connection\Linux\AccountSettings.cs" />
+    <Compile Include="Common\Settings\Connection\MacOS\AccountSettings.cs" />
+    <Compile Include="Common\Settings\Connection\W32\CredentialManager.cs" />
+    <Compile Include="Common\Settings\Connection\AccountSettingsFactory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

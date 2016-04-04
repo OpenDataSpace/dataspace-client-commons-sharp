@@ -35,7 +35,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         /// <summary>
         /// the only one AccountSettings object
         /// </summary>
-        private static AccountSettings _AccountSettings;
+        private static IAccountSettings _AccountSettings;
         private static object AccLock = new object();
 
         static ConnectionSettingsFactory() {
@@ -62,7 +62,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
             if (_AccountSettings == null) {
                 lock (AccLock) {
                     if (_AccountSettings == null) {
-                        _AccountSettings = new AccountSettings("DataSpace@");
+                        _AccountSettings = new AccountSettingsFactory("DataSpace@").AccountSettings;
                         _AccountSettings.Load();
                     }
                 }

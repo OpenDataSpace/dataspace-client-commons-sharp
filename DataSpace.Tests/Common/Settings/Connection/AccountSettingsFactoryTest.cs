@@ -26,9 +26,11 @@ namespace Tests.Common.Settings.Connection {
 
     [TestFixture]
     public class AccountSettingsFactoryTest {
-        [Test, Ignore("TODO")]
+        [Test]
         public void CreateInstance() {
-            //IAccountSettingsFactory underTest = new AccountSettingsFactory();
+            IAccountSettingsFactory underTest = new AccountSettingsFactory();
+            var account = underTest.AccountSettings;
+            Assert.That(account, Is.Not.Null);
         }
     }
 }

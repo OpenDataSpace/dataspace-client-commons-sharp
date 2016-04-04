@@ -88,10 +88,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         /// <summary>
         /// Proxy Account login data 
         /// </summary>
-        private AccountSettings _ProxyAccount = new AccountSettings("DataSpaceProxy@") {
-            // disable auto refresh -- we trigger it manually
-            PropsRefreshSpan = new TimeSpan(0)
-        };
+        private IAccountSettings _ProxyAccount = new AccountSettingsFactory("DataSpaceProxy@").AccountSettings;
         /// <summary>
         /// delegate -- must retrieve the config file loction
         /// </summary>
