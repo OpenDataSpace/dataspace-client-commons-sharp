@@ -16,8 +16,7 @@
 //
 // </copyright>
 //-----------------------------------------------------------------------
-﻿// teach log4 net to use this settings (other ways like app.config are difficult because of using integrated test host)
-[assembly: log4net.Config.XmlConfigurator(ConfigFile = @"Log4Net.config", Watch = true)]
+
 namespace Tests.Common.Settings.Connection {
     using System;
     using System.Collections.Generic;
@@ -28,27 +27,29 @@ namespace Tests.Common.Settings.Connection {
     using System.Threading.Tasks;
 
     using DataSpace.Common.Crypto;
+    using DataSpace.Common.Settings;
     using DataSpace.Common.Settings.Connection;
     using DataSpace.Common.Settings.Connection.W32;
     using DataSpace.Common.Utils;
+    using DataSpace.Tests.Utils;
 
     using NUnit.Framework;
 
     [TestFixture]
-    public class AccountSettingsTest {
+    public class AccountSettingsTest : WithConfiguredLog4Net {
         private string _Url = "test.url.com";
         private string _UserName = "TestName";
         private string _Password = "TestPassword";
+        private Configuration configuration;
 
-        [TestFixtureSetUp]
-        public static void Init() {
-            // calling a logger function triggers reading attributed log4Net settings (see comment above)
-            log4net.LogManager.GetLogger(typeof(AccountSettingsTest));
+        [SetUp]
+        public void SetUp() {
+            configuration = new ConfigurationLoader(new UserConfigPathBuilder{ Company = "UnitTest" }.CreatePath()).Configuration;
         }
 
         [Test]
         public void Constructor() {
-            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance();
+            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("", configuration);
             // Assert
             Assert.That(underTest.IsDirty, Is.False);
             Assert.That(underTest.Url, Is.EqualTo(string.Empty));
