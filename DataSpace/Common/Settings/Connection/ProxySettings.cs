@@ -189,7 +189,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
             }
 
             //all Property changes should trigger "IsDirty = true" exept "IsDirty" itself 
-            if (string.Compare(property,Property.NameOf(() => this.IsDirty)) != 0) {
+            if (string.Compare(property, Property.NameOf(() => this.IsDirty)) != 0) {
                 IsDirty = true;
             }
         }
@@ -215,13 +215,13 @@ namespace DataSpace.Common.Settings.Connection.W32 {
                 IsDirty = false; 
             }
 
-            SettingsSaved.Invoke(this,new EventArgs());
+            SettingsSaved.Invoke(this, new EventArgs());
         }
 
         public void Load() {
             // get the Configfile Section object
             ConfigurationSectionLoader Loader = new ConfigurationSectionLoader(GetConfigFilePath());
-            ProxyConfigSection StoredSection = (ProxyConfigSection)Loader.GetSection(SectionName,typeof(ProxyConfigSection));
+            ProxyConfigSection StoredSection = (ProxyConfigSection)Loader.GetSection(SectionName, typeof(ProxyConfigSection));
 
             // using local variables -- so we can keep the following lock block short
             // initialize with fallback values
