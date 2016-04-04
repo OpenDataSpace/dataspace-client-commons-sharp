@@ -90,12 +90,13 @@
     <Compile Include="Common\Transmissions\TransmissionType.cs" />
     <Compile Include="Common\Settings\Connection\W32\AccountSettings.cs" />
     <Compile Include="Common\Settings\Connection\ProxyType.cs" />
-    <Compile Include="Common\Settings\Connection\Linux\AccountSettings.cs" />
     <Compile Include="Common\Settings\Connection\MacOS\AccountSettings.cs" />
     <Compile Include="Common\Settings\Connection\W32\CredentialManager.cs" />
     <Compile Include="Common\Settings\Connection\AccountSettingsFactory.cs" />
     <Compile Include="Common\Settings\ConfigurationLoader.cs" />
     <Compile Include="Common\Settings\UserConfigPathBuilder.cs" />
+    <Compile Include="Common\Settings\Connection\Generic\AccountSettings.cs" />
+    <Compile Include="Common\Settings\Connection\Generic\AccountSettingsSection.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
@@ -111,6 +112,6 @@
   <ItemGroup>
     <Folder Include="Common\Settings\Connection\W32\" />
     <Folder Include="Common\Settings\Connection\MacOS\" />
-    <Folder Include="Common\Settings\Connection\Linux\" />
+    <Folder Include="Common\Settings\Connection\Generic\" />
   </ItemGroup>
 </Project>

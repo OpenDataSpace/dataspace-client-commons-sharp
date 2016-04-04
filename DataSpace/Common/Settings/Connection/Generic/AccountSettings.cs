@@ -30,34 +30,13 @@ namespace DataSpace.Common.Settings.Connection.Generic {
     /// <summary>
     /// Read/Store Account information in Windows Credential Store
     /// </summary>
-    public class AccountSettings : ConfigurationSection, IAccountSettingsRead, IAccountSettings {
+    public class AccountSettings : IAccountSettingsRead, IAccountSettings {
         private Configuration parent;
         private string configPath;
         public event PropertyChangedEventHandler PropertyChanged;
         public event EventHandler SettingsLoaded = delegate { };
         public event EventHandler SettingsSaved = delegate { };
 
-        [ConfigurationProperty("Url", DefaultValue = "", IsRequired = true)]
-        public string Url {
-            get { return (string)this[Property.NameOf(() => this.Url)]; }
-            set { this [Property.NameOf(() => this.Url)] = value; }
-        }
-
-        [ConfigurationProperty("UserName", DefaultValue = "", IsRequired = true)]
-        public string UserName {
-            get { return (string)this[Property.NameOf(() => this.UserName)]; }
-            set { this [Property.NameOf(() => this.UserName)] = value; }
-        }
-
-        [ConfigurationProperty("Password", IsRequired = false)]
-        public SecureString Password {
-            get {
-                var obfuscatedPassword = (string)this[Property.NameOf(() => this.Password)];
-                return new SecureString().Init(obfuscatedPassword == null ? obfuscatedPassword : obfuscatedPassword.Deobfuscate());
-            }
-
-            set { this [Property.NameOf(() => this.Password)] = value.ConvertToUnsecureString().Obfuscate(); }
-        }
 
         public AccountSettings(string urlPrefix, Configuration parent) {
             if (parent == null) {
@@ -70,7 +49,7 @@ namespace DataSpace.Common.Settings.Connection.Generic {
 
         public bool IsDirty {
             get {
-                return this.IsModified();
+                return false;
             }
         }
 
