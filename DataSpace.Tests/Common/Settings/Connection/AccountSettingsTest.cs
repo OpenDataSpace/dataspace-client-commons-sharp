@@ -59,7 +59,7 @@ namespace Tests.Common.Settings.Connection {
 
         [Test]
         public void PropertyGetSet() {
-            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance();
+            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("", configuration);
             // act
             underTest.Url = _Url;
             underTest.UserName = _UserName;
