@@ -88,7 +88,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         /// <summary>
         /// Proxy Account login data 
         /// </summary>
-        private IAccountSettings _ProxyAccount = new AccountSettingsFactory("DataSpaceProxy@").AccountSettings;
+        private IAccountSettings _ProxyAccount = new AccountSettingsFactory().CreateInstance("DataSpaceProxy@");
         /// <summary>
         /// delegate -- must retrieve the config file loction
         /// </summary>

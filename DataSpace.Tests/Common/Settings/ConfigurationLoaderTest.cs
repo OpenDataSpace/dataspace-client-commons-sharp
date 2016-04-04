@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------
-// <copyright file="AccountSettingsFactoryTest.cs" company="GRAU DATA AG">
+// <copyright file="ConfigurationLoaderTest.cs" company="GRAU DATA AG">
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General private License as published by
@@ -17,21 +17,22 @@
 // </copyright>
 //-----------------------------------------------------------------------
 ﻿
-namespace Tests.Common.Settings.Connection {
+namespace Tests.Common.Settings {
     using System;
-    using System.Configuration;
+    using System.IO;
 
-    using DataSpace.Common.Settings.Connection;
+    using DataSpace.Common.Settings;
+    using DataSpace.Tests.Utils;
 
     using NUnit.Framework;
 
     [TestFixture]
-    public class AccountSettingsFactoryTest {
+    public class ConfigurationLoaderTest : WithConfiguredLog4Net {
         [Test]
-        public void CreateInstance() {
-            IAccountSettingsFactory underTest = new AccountSettingsFactory();
-            var account = underTest.CreateInstance("", null);
-            Assert.That(account, Is.Not.Null);
+        public void ConfigLoader() {
+            string configPath = new UserConfigPathBuilder{ FileName = Guid.NewGuid().ToString() }.CreatePath();
+            ConfigurationLoader underTest = new ConfigurationLoader(Path.GetFullPath(configPath));
+            Assert.That(underTest.Configuration, Is.Not.Null);
         }
     }
 }

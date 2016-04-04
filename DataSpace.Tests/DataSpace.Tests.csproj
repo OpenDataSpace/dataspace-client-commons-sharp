@@ -40,6 +40,7 @@
       <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Settings\Connection\AccountSettingsTest.cs" />
@@ -65,6 +66,8 @@
     <Compile Include="Utils\WithConfiguredDotCMISLogging.cs" />
     <Compile Include="Utils\WithConfiguredLog4Net.cs" />
     <Compile Include="Common\Settings\Connection\AccountSettingsFactoryTest.cs" />
+    <Compile Include="Common\Settings\ConfigurationLoaderTest.cs" />
+    <Compile Include="Common\Settings\UserConfigPathBuilderTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

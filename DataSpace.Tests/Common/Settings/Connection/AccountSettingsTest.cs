@@ -22,6 +22,7 @@ namespace Tests.Common.Settings.Connection {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Configuration;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
@@ -47,7 +48,7 @@ namespace Tests.Common.Settings.Connection {
 
         [Test]
         public void Constructor() {
-            IAccountSettings underTest = new AccountSettingsFactory().AccountSettings;
+            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance();
             // Assert
             Assert.That(underTest.IsDirty, Is.False);
             Assert.That(underTest.Url, Is.EqualTo(string.Empty));
@@ -57,7 +58,7 @@ namespace Tests.Common.Settings.Connection {
 
         [Test]
         public void PropertyGetSet() {
-            IAccountSettings underTest = new AccountSettingsFactory().AccountSettings;
+            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance();
             // act
             underTest.Url = _Url;
             underTest.UserName = _UserName;

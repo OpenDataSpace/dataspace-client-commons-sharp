@@ -94,6 +94,8 @@
     <Compile Include="Common\Settings\Connection\MacOS\AccountSettings.cs" />
     <Compile Include="Common\Settings\Connection\W32\CredentialManager.cs" />
     <Compile Include="Common\Settings\Connection\AccountSettingsFactory.cs" />
+    <Compile Include="Common\Settings\ConfigurationLoader.cs" />
+    <Compile Include="Common\Settings\UserConfigPathBuilder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

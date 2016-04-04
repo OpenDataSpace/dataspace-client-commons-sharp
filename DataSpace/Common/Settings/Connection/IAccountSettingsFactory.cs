@@ -18,7 +18,9 @@
 //-----------------------------------------------------------------------
 
 ﻿namespace DataSpace.Common.Settings.Connection {
+    using System.Configuration;
+
     public interface IAccountSettingsFactory {
-        IAccountSettings AccountSettings { get; }
+        IAccountSettings CreateInstance(string urlPrefix, Configuration parent);
     }
 }

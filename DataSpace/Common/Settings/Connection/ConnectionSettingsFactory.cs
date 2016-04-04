@@ -62,7 +62,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
             if (_AccountSettings == null) {
                 lock (AccLock) {
                     if (_AccountSettings == null) {
-                        _AccountSettings = new AccountSettingsFactory("DataSpace@").AccountSettings;
+                        _AccountSettings = new AccountSettingsFactory().CreateInstance("DataSpace@");
                         _AccountSettings.Load();
                     }
                 }
@@ -182,7 +182,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
                 _logger.ErrorFormat("{0} -- Failed to load Section {1} - Exception: {2}", System.Reflection.MethodBase.GetCurrentMethod().Name, SectionName, e.Message);
             };
 
-            if(Section == null) {
+            if (Section == null) {
                 // Config without our section -> create and add it
                 try {
                     Section = (ConfigurationSection)Activator.CreateInstance(StoreSectionType);

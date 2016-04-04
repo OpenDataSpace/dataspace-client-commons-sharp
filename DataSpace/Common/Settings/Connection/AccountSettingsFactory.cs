@@ -16,28 +16,20 @@
 //
 // </copyright>
 //-----------------------------------------------------------------------
+
 ﻿namespace DataSpace.Common.Settings.Connection {
     using System;
-    public class AccountSettingsFactory : IAccountSettingsFactory {
-        private IAccountSettings account;
-        public AccountSettingsFactory(string urlPrefix = "") {
-            var os = Environment.OSVersion;
-            switch (os.Platform) {
-                case PlatformID.Unix:
-                    account = new Generic.AccountSettings();
-                    break;
-                case PlatformID.MacOSX:
-                    account = new MacOS.AccountSettings(urlPrefix);
-                    break;
-                default:
-                    account = new W32.AccountSettings(urlPrefix);
-                    break;
-            }
-        }
+    using System.Configuration;
 
-        public IAccountSettings AccountSettings {
-            get {
-                return this.account;
+    public class AccountSettingsFactory : IAccountSettingsFactory {
+        public IAccountSettings CreateInstance(string urlPrefix = "", Configuration parent = null) {
+            switch (Environment.OSVersion.Platform) {
+                case PlatformID.Unix:
+                    return new Generic.AccountSettings(urlPrefix, parent);
+                case PlatformID.MacOSX:
+                    return new MacOS.AccountSettings(urlPrefix);
+                default:
+                    return new W32.AccountSettings(urlPrefix);
             }
         }
     }

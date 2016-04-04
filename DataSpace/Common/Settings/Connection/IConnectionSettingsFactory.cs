@@ -18,6 +18,8 @@
 //-----------------------------------------------------------------------
 
 ﻿namespace DataSpace.Common.Settings.Connection {
-    public interface IConnectionSettingsFactory : IAccountSettingsFactory, IProxySettingsFactory {
+    public interface IConnectionSettingsFactory {
+        IAccountSettings AccountSettings { get; }
+        IProxySettings ProxySettings { get; }
     }
 }
