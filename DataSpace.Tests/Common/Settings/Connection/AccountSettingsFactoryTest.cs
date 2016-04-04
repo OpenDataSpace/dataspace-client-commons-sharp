@@ -21,6 +21,7 @@ namespace Tests.Common.Settings.Connection {
     using System;
     using System.Configuration;
 
+    using DataSpace.Common.Settings;
     using DataSpace.Common.Settings.Connection;
 
     using NUnit.Framework;
@@ -30,7 +31,8 @@ namespace Tests.Common.Settings.Connection {
         [Test]
         public void CreateInstance() {
             IAccountSettingsFactory underTest = new AccountSettingsFactory();
-            var account = underTest.CreateInstance("", null);
+            var config = new ConfigurationLoader(new UserConfigPathBuilder(){FileName = Guid.NewGuid().ToString()}.CreatePath()).Configuration;
+            var account = underTest.CreateInstance("", config);
             Assert.That(account, Is.Not.Null);
         }
     }
