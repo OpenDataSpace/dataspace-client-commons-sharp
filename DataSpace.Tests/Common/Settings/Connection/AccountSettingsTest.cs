@@ -18,48 +18,46 @@
 //-----------------------------------------------------------------------
 ﻿// teach log4 net to use this settings (other ways like app.config are difficult because of using integrated test host)
 [assembly: log4net.Config.XmlConfigurator(ConfigFile = @"Log4Net.config", Watch = true)]
-
-namespace Tests.Common.Settings.Connection
-{
-    using NUnit.Framework;
+namespace Tests.Common.Settings.Connection {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+
+    using DataSpace.Common.Crypto;
     using DataSpace.Common.Settings.Connection;
     using DataSpace.Common.Settings.Connection.W32;
-    using DataSpace.Common.Crypto;
     using DataSpace.Common.Utils;
-    using System.ComponentModel;
+
+    using NUnit.Framework;
 
     [TestFixture]
-    public class AccountSettingsTest
-    {
+    public class AccountSettingsTest {
         private string _Url = "test.url.com";
         private string _UserName = "TestName";
         private string _Password = "TestPassword";
 
         [TestFixtureSetUp]
-        public static void Init()
-        {
+        public static void Init() {
             // calling a logger function triggers reading attributed log4Net settings (see comment above)
-            log4net.LogManager.GetLogger(typeof(AccountSettings));
+            log4net.LogManager.GetLogger(typeof(AccountSettingsTest));
         }
+
         [Test]
-        public void Constructor()
-        {
-            IAccountSettings underTest = new AccountSettings();
+        public void Constructor() {
+            IAccountSettings underTest = new AccountSettingsFactory().AccountSettings;
             // Assert
             Assert.That(underTest.IsDirty, Is.False);
             Assert.That(underTest.Url, Is.EqualTo(string.Empty));
             Assert.That(underTest.UserName, Is.EqualTo(string.Empty));
             Assert.That(underTest.Password.ConvertToUnsecureString(), Is.EqualTo(string.Empty));
         }
+
         [Test]
-        public void PropertyGetSet()
-        {
-            IAccountSettings underTest = new AccountSettings();
+        public void PropertyGetSet() {
+            IAccountSettings underTest = new AccountSettingsFactory().AccountSettings;
             // act
             underTest.Url = _Url;
             underTest.UserName = _UserName;
@@ -69,11 +67,10 @@ namespace Tests.Common.Settings.Connection
             Assert.AreEqual(_UserName, underTest.UserName);
             Assert.AreEqual(_Password, underTest.Password.ConvertToUnsecureString());
             Assert.AreEqual(true, underTest.IsDirty);
-
         }
+
         [Test]
-        public void Read_Write()
-        {
+        public void Read_Write() {
             IAccountSettings underTest = new ConnectionSettingsFactory().AccountSettings;
             underTest.Url = _Url;
             underTest.UserName = _UserName;
@@ -82,8 +79,7 @@ namespace Tests.Common.Settings.Connection
         }
 
         [Test]
-        public void CreateNew()
-        {
+        public void CreateNew() {
             IAccountSettings underTest = new ConnectionSettingsFactory().AccountSettings;
             underTest.Url = _Url;
             underTest.UserName = _UserName;
@@ -92,14 +88,12 @@ namespace Tests.Common.Settings.Connection
         }
 
         [Test]
-        public void Check_OnPropertyChanged_Success()
-        {
+        public void Check_OnPropertyChanged_Success() {
             IAccountSettings underTest = new AccountSettings();
 
             List<string> ReceivedEvents = new List<string>();
 
-            underTest.PropertyChanged += delegate (object sender, PropertyChangedEventArgs args)
-            {
+            underTest.PropertyChanged += delegate (object sender, PropertyChangedEventArgs args) {
                 ReceivedEvents.Add(args.PropertyName);
             };
             // Act
@@ -119,14 +113,13 @@ namespace Tests.Common.Settings.Connection
             Assert.That(ReceivedEvents[2], Is.EqualTo(Property.NameOf((IAccountSettings a) => a.UserName)));
             Assert.That(ReceivedEvents[3], Is.EqualTo(Property.NameOf((IAccountSettings a) => a.Password)));
         }
+
         [Test]
-        public void Load_TriggersEvent()
-        {
+        public void Load_TriggersEvent() {
             IAccountSettings AccSet = new ConnectionSettingsFactory().AccountSettings;
             // Load Event Handler
             bool IsTriggered = false;
-            AccSet.SettingsLoaded += (sender, arg) =>
-            {
+            AccSet.SettingsLoaded += (sender, arg) => {
                 IsTriggered = true;
             };
 
@@ -135,14 +128,13 @@ namespace Tests.Common.Settings.Connection
 
             Assert.AreEqual(true, IsTriggered);
         }
+
         [Test]
-        public void Save_TriggersEvent()
-        {
+        public void Save_TriggersEvent() {
             IAccountSettings AccSet = new ConnectionSettingsFactory().AccountSettings;
             // Save Event Handler
             bool IsTriggered = false;
-            AccSet.SettingsSaved += (sender, arg) =>
-            {
+            AccSet.SettingsSaved += (sender, arg) => {
                 IsTriggered = true;
             };
             // Save 
@@ -151,10 +143,8 @@ namespace Tests.Common.Settings.Connection
             Assert.AreEqual(true, IsTriggered);
         }
 
-        [Test]
-        [NUnit.Framework.Category("Slow")]
-        public void PropGet_TriggersLoad()
-        {
+        [Test, NUnit.Framework.Category("Slow")]
+        public void PropGet_TriggersLoad() {
             //prep
             IAccountSettings AccSet = new ConnectionSettingsFactory().AccountSettings;
             // clear dirty flag
@@ -162,8 +152,7 @@ namespace Tests.Common.Settings.Connection
             AccountSettings AccSetObj = AccSet as AccountSettings;
             AccSetObj.PropsRefreshSpan = new TimeSpan(0, 0, 5);
             bool IsTriggered = false;
-            AccSet.SettingsLoaded += (sender, arg) =>
-            {
+            AccSet.SettingsLoaded += (sender, arg) => {
                 IsTriggered = true;
             };
             // act
@@ -174,12 +163,10 @@ namespace Tests.Common.Settings.Connection
             Assert.AreEqual(true, IsTriggered);
             // house keeping
             AccSetObj.PropsRefreshSpan = new TimeSpan(0, 2, 0);
-
         }
-        [Test]
-        [NUnit.Framework.Category("Slow")]
-        public void PropGet_NoTriggersLoadInRefreshSpan()
-        {
+
+        [Test, NUnit.Framework.Category("Slow")]
+        public void PropGet_NoTriggersLoadInRefreshSpan() {
             // prep
             IAccountSettings AccSet = new ConnectionSettingsFactory().AccountSettings;
             // clear dirty flag
@@ -187,8 +174,7 @@ namespace Tests.Common.Settings.Connection
             AccountSettings AccSetObj = AccSet as AccountSettings;
             AccSetObj.PropsRefreshSpan = new TimeSpan(0, 2, 0);
             bool IsTriggered = false;
-            AccSet.SettingsLoaded += (sender, arg) =>
-            {
+            AccSet.SettingsLoaded += (sender, arg) => {
                 IsTriggered = true;
             };
             // act
@@ -198,10 +184,9 @@ namespace Tests.Common.Settings.Connection
             // assert
             Assert.AreEqual(false, IsTriggered);
         }
-        [Test]
-        [NUnit.Framework.Category("Slow")]
-        public void PropGet_NoTriggersLoadDisabled()
-        {
+
+        [Test, NUnit.Framework.Category("Slow")]
+        public void PropGet_NoTriggersLoadDisabled() {
             // prep
             IAccountSettings AccSet = new ConnectionSettingsFactory().AccountSettings;
             // clear dirty flag
@@ -212,8 +197,7 @@ namespace Tests.Common.Settings.Connection
             // set disabled
             AccSetObj.PropsRefreshSpan = new TimeSpan(0, 0, 0);
             bool IsTriggered = false;
-            AccSet.SettingsLoaded += (sender, arg) =>
-            {
+            AccSet.SettingsLoaded += (sender, arg) => {
                 IsTriggered = true;
             };
             // act
@@ -225,10 +209,9 @@ namespace Tests.Common.Settings.Connection
             // house keeping
             AccSetObj.PropsRefreshSpan = new TimeSpan(0, 2, 0);
         }
-        [Test]
-        [NUnit.Framework.Category("Slow")]
-        public void PropGet_NoTriggersLoadEditMode()
-        {
+
+        [Test, NUnit.Framework.Category("Slow")]
+        public void PropGet_NoTriggersLoadEditMode() {
             // prep
             IAccountSettings AccSet = new ConnectionSettingsFactory().AccountSettings;
             // clear dirty flag
@@ -237,8 +220,7 @@ namespace Tests.Common.Settings.Connection
             // set 5 sec timer
             AccSetObj.PropsRefreshSpan = new TimeSpan(0, 5, 0);
             bool IsTriggered = false;
-            AccSet.SettingsLoaded += (sender, arg) =>
-            {
+            AccSet.SettingsLoaded += (sender, arg) => {
                 IsTriggered = true;
             };
             // act
