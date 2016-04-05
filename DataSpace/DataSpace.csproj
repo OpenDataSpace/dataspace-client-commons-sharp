@@ -97,6 +97,7 @@
     <Compile Include="Common\Settings\UserConfigPathBuilder.cs" />
     <Compile Include="Common\Settings\Connection\Generic\AccountSettings.cs" />
     <Compile Include="Common\Settings\Connection\Generic\AccountSettingsSection.cs" />
+    <Compile Include="Common\Settings\ConfigurationConvenienceExtender.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

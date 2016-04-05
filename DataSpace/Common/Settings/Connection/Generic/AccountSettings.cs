@@ -33,10 +33,11 @@ namespace DataSpace.Common.Settings.Connection.Generic {
     public class AccountSettings : IAccountSettingsRead, IAccountSettings {
         private Configuration parent;
         private string configPath;
+        private bool isDirty;
+        private AccountSettingsSection section;
         public event PropertyChangedEventHandler PropertyChanged;
         public event EventHandler SettingsLoaded = delegate { };
         public event EventHandler SettingsSaved = delegate { };
-
 
         public AccountSettings(string urlPrefix, Configuration parent) {
             if (parent == null) {
@@ -49,17 +50,79 @@ namespace DataSpace.Common.Settings.Connection.Generic {
 
         public bool IsDirty {
             get {
-                return false;
+                return this.isDirty;
+            }
+
+            private set {
+                if (this.isDirty != value) {
+                    this.isDirty = value;
+                    OnPropertyChanged(Property.NameOf(() => this.IsDirty));
+                }
+            }
+        }
+
+        public string Url {
+            get {
+                return this.section.Url;
+            }
+
+            set {
+                if (!this.section.Url.Equals(value)) {
+                    this.section.Url = value;
+                    OnPropertyChanged(Property.NameOf(() => this.Url));
+                }
+            }
+        }
+        public string UserName {
+            get {
+                return section.UserName;
+            }
+
+            set {
+                if (!this.section.UserName.Equals(value)) {
+                    this.section.UserName = value;
+                    OnPropertyChanged(Property.NameOf(() => this.UserName));
+                }
+            }
+        }
+
+        public SecureString Password {
+            get {
+                return new SecureString().Init(this.section.Password);
+            }
+
+            set {
+                if (!this.section.Password.Equals(value.ConvertToUnsecureString())) {
+                    this.section.Password = value.ConvertToUnsecureString();
+                    OnPropertyChanged(Property.NameOf(() => this.Password));
+                }
             }
         }
 
         public void Load() {
-            this.parent.GetSection(this.configPath);
+            this.section = this.parent.GetOrCreateSection<AccountSettingsSection>(this.configPath);
+            SettingsLoaded.Invoke(this, new EventArgs());
+            this.IsDirty = false;
         }
 
         public void Save() {
+            this.parent.Save();
+            SettingsSaved.Invoke(this, new EventArgs());
+            this.IsDirty = false;
         }
 
-        public void Delete() {}
+        public void Delete() {
+            this.parent.Sections.Remove(this.configPath);
+            this.parent.Save();
+            this.IsDirty = false;
+        }
+
+        private void OnPropertyChanged(string property) {
+            if (PropertyChanged != null) {
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(property));
+            }
+
+            this.IsDirty = true;
+        }
     }
 }

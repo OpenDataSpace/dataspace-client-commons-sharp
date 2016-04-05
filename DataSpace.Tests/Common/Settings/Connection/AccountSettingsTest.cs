@@ -22,6 +22,7 @@ namespace Tests.Common.Settings.Connection {
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Configuration;
+    using System.IO;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
@@ -29,7 +30,6 @@ namespace Tests.Common.Settings.Connection {
     using DataSpace.Common.Crypto;
     using DataSpace.Common.Settings;
     using DataSpace.Common.Settings.Connection;
-    using DataSpace.Common.Settings.Connection.W32;
     using DataSpace.Common.Utils;
     using DataSpace.Tests.Utils;
 
@@ -47,9 +47,17 @@ namespace Tests.Common.Settings.Connection {
             configuration = new ConfigurationLoader(new UserConfigPathBuilder{ Company = "UnitTest" }.CreatePath()).Configuration;
         }
 
+        [TearDown]
+        public void CleanUp() {
+            if (configuration.HasFile) {
+                File.Delete(configuration.FilePath);
+            }
+        }
+
         [Test]
         public void Constructor() {
-            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("", configuration);
+            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", configuration);
+            underTest.Load();
             // Assert
             Assert.That(underTest.IsDirty, Is.False);
             Assert.That(underTest.Url, Is.EqualTo(string.Empty));
@@ -59,30 +67,39 @@ namespace Tests.Common.Settings.Connection {
 
         [Test]
         public void PropertyGetSet() {
-            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("", configuration);
+            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", configuration);
+            underTest.Load();
             // act
             underTest.Url = _Url;
             underTest.UserName = _UserName;
             underTest.Password = new System.Security.SecureString().Init(_Password);
             // assert
-            Assert.AreEqual(_Url, underTest.Url);
-            Assert.AreEqual(_UserName, underTest.UserName);
-            Assert.AreEqual(_Password, underTest.Password.ConvertToUnsecureString());
-            Assert.AreEqual(true, underTest.IsDirty);
+            Assert.That(underTest.Url, Is.EqualTo(_Url));
+            Assert.That(underTest.UserName, Is.EqualTo(_UserName));
+            Assert.That(underTest.Password.ConvertToUnsecureString(), Is.EqualTo(_Password));
+            Assert.That(underTest.IsDirty, Is.True);
         }
 
         [Test]
-        public void Read_Write() {
-            IAccountSettings underTest = new ConnectionSettingsFactory().AccountSettings;
+        public void WriteAndRead() {
+            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", configuration);
+            underTest.Load();
             underTest.Url = _Url;
             underTest.UserName = _UserName;
             underTest.Password = new System.Security.SecureString().Init(_Password);
             underTest.Save();
+
+            underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", configuration);
+            underTest.Load();
+            Assert.That(underTest.Password.ConvertToUnsecureString(), Is.EqualTo(_Password));
+            Assert.That(underTest.Url, Is.EqualTo(_Url));
+            Assert.That(underTest.UserName, Is.EqualTo(_UserName));
         }
 
         [Test]
         public void CreateNew() {
-            IAccountSettings underTest = new ConnectionSettingsFactory().AccountSettings;
+            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", configuration);
+            underTest.Load();
             underTest.Url = _Url;
             underTest.UserName = _UserName;
             underTest.Password = new System.Security.SecureString().Init(_Password);
@@ -91,8 +108,8 @@ namespace Tests.Common.Settings.Connection {
 
         [Test]
         public void Check_OnPropertyChanged_Success() {
-            IAccountSettings underTest = new AccountSettings();
-
+            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", configuration);
+            underTest.Load();
             List<string> ReceivedEvents = new List<string>();
 
             underTest.PropertyChanged += delegate (object sender, PropertyChangedEventArgs args) {
@@ -118,123 +135,32 @@ namespace Tests.Common.Settings.Connection {
 
         [Test]
         public void Load_TriggersEvent() {
-            IAccountSettings AccSet = new ConnectionSettingsFactory().AccountSettings;
+            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", configuration);
+
             // Load Event Handler
             bool IsTriggered = false;
-            AccSet.SettingsLoaded += (sender, arg) => {
+            underTest.SettingsLoaded += (sender, arg) => {
                 IsTriggered = true;
             };
 
             // Load 
-            AccSet.Load();
+            underTest.Load();
 
-            Assert.AreEqual(true, IsTriggered);
+            Assert.That(IsTriggered, Is.True);
         }
 
         [Test]
         public void Save_TriggersEvent() {
-            IAccountSettings AccSet = new ConnectionSettingsFactory().AccountSettings;
+            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", configuration);
             // Save Event Handler
             bool IsTriggered = false;
-            AccSet.SettingsSaved += (sender, arg) => {
+            underTest.SettingsSaved += (sender, arg) => {
                 IsTriggered = true;
             };
             // Save 
-            AccSet.Save();
+            underTest.Save();
 
-            Assert.AreEqual(true, IsTriggered);
-        }
-
-        [Test, NUnit.Framework.Category("Slow")]
-        public void PropGet_TriggersLoad() {
-            //prep
-            IAccountSettings AccSet = new ConnectionSettingsFactory().AccountSettings;
-            // clear dirty flag
-            AccSet.Load();
-            AccountSettings AccSetObj = AccSet as AccountSettings;
-            AccSetObj.PropsRefreshSpan = new TimeSpan(0, 0, 5);
-            bool IsTriggered = false;
-            AccSet.SettingsLoaded += (sender, arg) => {
-                IsTriggered = true;
-            };
-            // act
-            string Url = AccSet.Url;
-            System.Threading.Thread.Sleep(5020);
-            Url = AccSet.Url;
-            // assert
-            Assert.AreEqual(true, IsTriggered);
-            // house keeping
-            AccSetObj.PropsRefreshSpan = new TimeSpan(0, 2, 0);
-        }
-
-        [Test, NUnit.Framework.Category("Slow")]
-        public void PropGet_NoTriggersLoadInRefreshSpan() {
-            // prep
-            IAccountSettings AccSet = new ConnectionSettingsFactory().AccountSettings;
-            // clear dirty flag
-            AccSet.Load();
-            AccountSettings AccSetObj = AccSet as AccountSettings;
-            AccSetObj.PropsRefreshSpan = new TimeSpan(0, 2, 0);
-            bool IsTriggered = false;
-            AccSet.SettingsLoaded += (sender, arg) => {
-                IsTriggered = true;
-            };
-            // act
-            string Url = AccSet.Url;
-            System.Threading.Thread.Sleep(1000);
-            Url = AccSet.Url;
-            // assert
-            Assert.AreEqual(false, IsTriggered);
-        }
-
-        [Test, NUnit.Framework.Category("Slow")]
-        public void PropGet_NoTriggersLoadDisabled() {
-            // prep
-            IAccountSettings AccSet = new ConnectionSettingsFactory().AccountSettings;
-            // clear dirty flag
-            AccSet.Load();
-            AccountSettings AccSetObj = AccSet as AccountSettings;
-            // set 5 sec timer
-            AccSetObj.PropsRefreshSpan = new TimeSpan(0, 5, 0);
-            // set disabled
-            AccSetObj.PropsRefreshSpan = new TimeSpan(0, 0, 0);
-            bool IsTriggered = false;
-            AccSet.SettingsLoaded += (sender, arg) => {
-                IsTriggered = true;
-            };
-            // act
-            string Url = AccSet.Url;
-            System.Threading.Thread.Sleep(5020);
-            Url = AccSet.Url;
-            // assert
-            Assert.AreEqual(false, IsTriggered);
-            // house keeping
-            AccSetObj.PropsRefreshSpan = new TimeSpan(0, 2, 0);
-        }
-
-        [Test, NUnit.Framework.Category("Slow")]
-        public void PropGet_NoTriggersLoadEditMode() {
-            // prep
-            IAccountSettings AccSet = new ConnectionSettingsFactory().AccountSettings;
-            // clear dirty flag
-            AccSet.Load();
-            AccountSettings AccSetObj = AccSet as AccountSettings;
-            // set 5 sec timer
-            AccSetObj.PropsRefreshSpan = new TimeSpan(0, 5, 0);
-            bool IsTriggered = false;
-            AccSet.SettingsLoaded += (sender, arg) => {
-                IsTriggered = true;
-            };
-            // act
-            string Url = AccSet.Url;
-            // modify -> go in Edit mode
-            AccSet.Url = Url + "!";
-            System.Threading.Thread.Sleep(5020);
-            Url = AccSet.Url;
-            // assert
-            Assert.AreEqual(false, IsTriggered);
-            // house keeping
-            AccSetObj.PropsRefreshSpan = new TimeSpan(0, 2, 0);
+            Assert.That(IsTriggered, Is.True);
         }
     }
 }

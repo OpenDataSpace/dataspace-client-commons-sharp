@@ -62,7 +62,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
             if (_AccountSettings == null) {
                 lock (AccLock) {
                     if (_AccountSettings == null) {
-                        _AccountSettings = new AccountSettingsFactory().CreateInstance("DataSpace@", new ConfigurationLoader(ConfigFilePath).Configuration);
+                        _AccountSettings = new AccountSettingsFactory().CreateInstance("DataSpace", new ConfigurationLoader(ConfigFilePath).Configuration);
                         _AccountSettings.Load();
                     }
                 }

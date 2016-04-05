@@ -29,7 +29,7 @@
                 case PlatformID.MacOSX:
                     return new MacOS.AccountSettings(urlPrefix);
                 default:
-                    return new W32.AccountSettings(urlPrefix);
+                    return new W32.AccountSettings(urlPrefix + "@");
             }
         }
     }

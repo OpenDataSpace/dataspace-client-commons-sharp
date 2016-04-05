@@ -55,41 +55,6 @@ namespace DataSpace.Common.Settings {
             Configuration = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
         }
 
-        /// <summary>
-        /// Reads or Creates ConfigurationSection derived objects
-        /// </summary>
-        /// <param name="SectionName">Name Tag in <code>Configuration.Sections</code></param>
-        /// <param name="StoreSectionType">ConfigurationSection derived Type for load/save operations</param>
-        /// <returns></returns>
-        public ConfigurationSection GetSection(string SectionName, Type StoreSectionType) {
-            ConfigurationSection Section = null;
-            try {
-                // try to get our section -- can except in case of version diff or something else
-                // if section does not exist no exception is thrown an returns zero 
-                Section = Configuration.GetSection(SectionName);
-            } catch (ConfigurationErrorsException eConf) {
-                _logger.ErrorFormat("{0} -- Failed to load Section '{1}' - Exception: {2}", System.Reflection.MethodBase.GetCurrentMethod().Name, SectionName, eConf.Message);
-                // assume it already exists  -> delete it
-                Configuration.Sections.Remove(SectionName);
-            } catch (Exception e) {
-                // something else .. log it and eat it
-                _logger.ErrorFormat("{0} -- Failed to load Section {1} - Exception: {2}", System.Reflection.MethodBase.GetCurrentMethod().Name, SectionName, e.Message);
-            }
-
-            if (Section == null) {
-                // Config without our section -> create and add it
-                try {
-                    Section = (ConfigurationSection)Activator.CreateInstance(StoreSectionType);
-                    Configuration.Sections.Add(SectionName, Section);
-                } catch (Exception e) {
-                    _logger.ErrorFormat("{0} -- Failed to create Section {1} - Exception: {2}", System.Reflection.MethodBase.GetCurrentMethod().Name, SectionName, e.Message);
-                    throw;
-                }
-            }
-
-            return Section;
-        }
-
         public Configuration Configuration {
             get; private set;
         }
