@@ -17,7 +17,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 ﻿
-#if ! __MonoCS__
 namespace Tests.Common.Settings.Connection.W32 {
     using System;
 
@@ -27,6 +26,9 @@ namespace Tests.Common.Settings.Connection.W32 {
     using NUnit.Framework;
 
     [TestFixture]
+#if __MonoCS__
+    [Ignore("IGNORED ON MONO")]
+#endif
     public class W32ProxySettingsTest {
         [Test, NUnit.Framework.Category("Slow")]
         public void PropGet_TriggersLoad() {
@@ -121,4 +123,3 @@ namespace Tests.Common.Settings.Connection.W32 {
         }
     }
 }
-#endif

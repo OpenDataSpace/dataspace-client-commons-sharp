@@ -35,19 +35,16 @@ namespace Tests.Common.Settings.Connection.W32 {
 
     using NUnit.Framework;
 
-    [TestFixture]
-#if  __MonoCS__
-    [Ignore("IGNORED ON MONO")]
+#if __MonoCS__
+        [Ignore("IGNORED ON MONO")]
 #endif
+    [TestFixture]
     public class W32AccountSettingsTest : WithConfiguredLog4Net {
-        private string _Url = "test.url.com";
-        private string _UserName = "TestName";
-        private string _Password = "TestPassword";
         private Configuration configuration;
 
         [SetUp]
         public void SetUp() {
-            configuration = new ConfigurationLoader(new UserConfigPathBuilder{ Company = "UnitTest" }.CreatePath()).Configuration;
+            configuration = new ConfigurationLoader(new UserConfigPathBuilder{ Company = "UnitTest" }).Configuration;
         }
 
         [Test, NUnit.Framework.Category("Slow")]
