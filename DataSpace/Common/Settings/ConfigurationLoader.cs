@@ -26,15 +26,10 @@ namespace DataSpace.Common.Settings {
     /// </summary>
     public class ConfigurationLoader {
         /// <summary>
-        /// the Logger  object
-        /// </summary>
-        private static readonly log4net.ILog _logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-        /// <summary>
         /// Contructor
         /// </summary>
         /// <param name="ConfigFilePath">Full path to Configuration file</param>
-        public ConfigurationLoader(string configFilePath) {
+        public ConfigurationLoader(IUserConfigPathBuilder configFilePath) {
             // Über ConfigurationManager.OpenMappedExeConfiguration(ExeConfigurationFileMap)
             // können Konfigurationsdateien ins selbst fegeleten Pfaden geladen werden
 
@@ -51,7 +46,7 @@ namespace DataSpace.Common.Settings {
             // siehe auch default Belegung von ConnectionSettingsFactory.BuildUserConfigPath
             ExeConfigurationFileMap configMap = new ExeConfigurationFileMap();
             // if _ConfigFilePath hdoes not exist, it will be automaticly created at first save operation
-            configMap.ExeConfigFilename = configFilePath;
+            configMap.ExeConfigFilename = configFilePath.CreatePath();
             Configuration = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
         }
 

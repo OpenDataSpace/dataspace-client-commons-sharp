@@ -18,7 +18,9 @@
 //-----------------------------------------------------------------------
 
 ﻿namespace DataSpace.Common.Settings.Connection {
+    using System.Configuration;
+
     public interface IProxySettingsFactory {
-        IProxySettings CreateInstance(string urlPrefix);
+        IProxySettings GetInstance(Configuration config);
     }
 }

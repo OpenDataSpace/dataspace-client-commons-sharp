@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------
-// <copyright file="ConfigurationLoaderTest.cs" company="GRAU DATA AG">
+// <copyright file="ProxySettingsFactory.cs" company="GRAU DATA AG">
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General private License as published by
@@ -17,22 +17,27 @@
 // </copyright>
 //-----------------------------------------------------------------------
 ﻿
-namespace Tests.Common.Settings {
+namespace DataSpace.Common.Settings.Connection {
     using System;
-    using System.IO;
+    using System.Configuration;
 
-    using DataSpace.Common.Settings;
-    using DataSpace.Tests.Utils;
+    public class ProxySettingsFactory : IProxySettingsFactory {
+        public ProxySettingsFactory() {
+        }
 
-    using NUnit.Framework;
+        public IProxySettings GetInstance(Configuration config) {
+            if (config == null) {
+                throw new ArgumentNullException("config");
+            }
 
-    [TestFixture]
-    public class ConfigurationLoaderTest : WithConfiguredLog4Net {
-        [Test]
-        public void ConfigLoader() {
-            var configPath = new UserConfigPathBuilder{ FileName = Guid.NewGuid().ToString() };
-            ConfigurationLoader underTest = new ConfigurationLoader(configPath);
-            Assert.That(underTest.Configuration, Is.Not.Null);
+            switch (Environment.OSVersion.Platform) {
+                case PlatformID.Unix:
+                    return new Generic.ProxySettings(config);
+                case PlatformID.MacOSX:
+                    return new MacOS.ProxySettings(config);
+                default:
+                    return new W32.ProxySettings();
+            }
         }
     }
 }

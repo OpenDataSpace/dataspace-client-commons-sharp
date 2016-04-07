@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------
-// <copyright file="ConfigurationLoaderTest.cs" company="GRAU DATA AG">
+// <copyright file="IUserConfigPathBuilder.cs" company="GRAU DATA AG">
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General private License as published by
@@ -17,22 +17,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 ﻿
-namespace Tests.Common.Settings {
-    using System;
-    using System.IO;
-
-    using DataSpace.Common.Settings;
-    using DataSpace.Tests.Utils;
-
-    using NUnit.Framework;
-
-    [TestFixture]
-    public class ConfigurationLoaderTest : WithConfiguredLog4Net {
-        [Test]
-        public void ConfigLoader() {
-            var configPath = new UserConfigPathBuilder{ FileName = Guid.NewGuid().ToString() };
-            ConfigurationLoader underTest = new ConfigurationLoader(configPath);
-            Assert.That(underTest.Configuration, Is.Not.Null);
-        }
+namespace DataSpace.Common.Settings {
+    public interface IUserConfigPathBuilder {
+        string CreatePath();
     }
 }

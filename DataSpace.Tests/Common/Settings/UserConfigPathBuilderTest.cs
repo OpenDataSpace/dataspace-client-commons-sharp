@@ -21,6 +21,7 @@ namespace Tests.Common.Settings {
     using System;
     using System.Collections.Generic;
     using System.Configuration;
+    using System.IO;
 
     using DataSpace.Common.Settings;
     using DataSpace.Tests.Utils;
@@ -49,11 +50,12 @@ namespace Tests.Common.Settings {
             [Values("GrauData", "Generic Company")]string company)
         {
             var fileName = Guid.NewGuid().ToString();
-            var underTest = new UserConfigPathBuilder() { SettingsType = type, Company = company, Product = product, FileName = fileName };
+            IUserConfigPathBuilder underTest = new UserConfigPathBuilder() { SettingsType = type, Company = company, Product = product, FileName = fileName };
             var path = underTest.CreatePath();
             Assert.That(path, Contains.Substring(company));
             Assert.That(path, Contains.Substring(product));
             Assert.That(path, Contains.Substring(fileName + ".config"));
+            Assert.That(path, Is.EqualTo(Path.GetFullPath(path)));
         }
     }
 }
