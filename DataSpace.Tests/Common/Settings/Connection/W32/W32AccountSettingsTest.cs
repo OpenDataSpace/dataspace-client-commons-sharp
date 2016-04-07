@@ -42,7 +42,7 @@ namespace Tests.Common.Settings.Connection.W32 {
 
         [SetUp]
         public void SetUp() {
-            configuration = new ConfigurationLoader(new UserConfigPathBuilder{ Company = "UnitTest" }.CreatePath()).Configuration;
+            configuration = new ConfigurationLoader(new UserConfigPathBuilder{ Company = "UnitTest" }).Configuration;
         }
 
         [Test, NUnit.Framework.Category("Slow")]
