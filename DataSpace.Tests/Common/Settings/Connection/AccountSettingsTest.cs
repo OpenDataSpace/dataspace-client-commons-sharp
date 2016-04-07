@@ -44,7 +44,7 @@ namespace Tests.Common.Settings.Connection {
 
         [SetUp]
         public void SetUp() {
-            configuration = new ConfigurationLoader(new UserConfigPathBuilder{ Company = "UnitTest" }.CreatePath()).Configuration;
+            configuration = new ConfigurationLoader(new UserConfigPathBuilder{ FileName = Guid.NewGuid().ToString() }).Configuration;
         }
 
         [TearDown]

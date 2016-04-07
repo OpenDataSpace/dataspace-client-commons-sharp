@@ -17,18 +17,17 @@
 // </copyright>
 //-----------------------------------------------------------------------
 ﻿// Information about this assembly is defined by the following attributes.
-// Change them to the values specific to your project.
 
 using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
 [assembly: AssemblyTitle("DataSpace")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("DataSpace client library")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("GRAU DATA AG")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("tlorentzen")]
+[assembly: AssemblyCopyright("GRAU DATA AG")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

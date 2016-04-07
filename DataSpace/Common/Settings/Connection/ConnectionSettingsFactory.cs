@@ -31,7 +31,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         /// <summary>
         /// Configuration filepath for all filebased shared Configparts
         /// </summary>
-        public static string ConfigFilePath { get; set; }
+        public static IUserConfigPathBuilder ConfigFilePath { get; set; }
         /// <summary>
         /// the only one AccountSettings object
         /// </summary>
@@ -39,7 +39,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         private static object AccLock = new object();
 
         static ConnectionSettingsFactory() {
-            ConfigFilePath = ConnectionSettingsFactory.BuildUserConfigPath("GrauData", "DataSpace", "SharedConfig", ConfigurationUserLevel.PerUserRoamingAndLocal);
+            ConfigFilePath = new UserConfigPathBuilder{ Company = "GrauData", Product = "DataSpace", FileName = "SharedConfig", SettingsType = ConfigurationUserLevel.PerUserRoamingAndLocal };
         }
 
         public IAccountSettings AccountSettings {
@@ -86,7 +86,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
                     if (_ProxySettings == null) {
                         _ProxySettings = new ProxySettings() {
                             SectionName = "ProxySettings",
-                            GetConfigFilePath = () => { return ConnectionSettingsFactory.ConfigFilePath; }
+                            GetConfigFilePath = () => { return ConfigFilePath.CreatePath(); }
                         };
                         _ProxySettings.Load();
                     }

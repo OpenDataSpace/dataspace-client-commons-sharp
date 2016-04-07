@@ -17,30 +17,30 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace DataSpace.Common.Settings.Connection.W32 {
+namespace DataSpace.Common.Settings.Connection.Generic {
     using System.Configuration;
+
+    using DataSpace.Common.Crypto;
     using DataSpace.Common.Utils;
 
     /// <summary>
     /// Define a custom configuration section containing proxy settings
     /// </summary>
-    internal class ProxyConfigSection : ConfigurationSection {
-        /// <summary>
-        /// Proxy Type
-        /// </summary>
-        [ConfigurationProperty("ProxyType", DefaultValue = ProxyType.None, IsRequired = true)]
-        public ProxyType ProxyType {
-            get { return (ProxyType)this[Property.NameOf(() => this.ProxyType)]; }
-            set { this [Property.NameOf(() => this.ProxyType)] = value; }
+    internal class ProxyConfigSection : AbstractProxyConfigSection {
+        [ConfigurationProperty("UserName", DefaultValue = "", IsRequired = true)]
+        public string UserName {
+            get { return (string)this[Property.NameOf(() => this.UserName)]; }
+            set { this [Property.NameOf(() => this.UserName)] = value; }
         }
 
-        /// <summary>
-        /// Are credentials required to use custom proxy
-        /// </summary>
-        [ConfigurationProperty("NeedLogin", DefaultValue = false, IsRequired = false)]
-        public bool NeedLogin {
-            get { return (bool)this[Property.NameOf(() => this.NeedLogin)]; }
-            set { this [Property.NameOf(() => this.NeedLogin)] = value; }
+        [ConfigurationProperty("Password", DefaultValue = "", IsRequired = true)]
+        public string Password {
+            get {
+                var obfuscatedPassword = (string)this[Property.NameOf(() => this.Password)];
+                return string.IsNullOrEmpty(obfuscatedPassword) ? string.Empty : obfuscatedPassword.Deobfuscate();
+            }
+
+            set { this [Property.NameOf(() => this.Password)] = value.Obfuscate(); }
         }
     }
 }

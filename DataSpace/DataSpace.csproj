@@ -45,8 +45,6 @@
     <Compile Include="Common\Settings\Connection\IProxySettings.cs" />
     <Compile Include="Common\Settings\Connection\IProxySettingsFactory.cs" />
     <Compile Include="Common\Settings\Connection\ISettingsPersist.cs" />
-    <Compile Include="Common\Settings\Connection\ProxyConfigSection.cs" />
-    <Compile Include="Common\Settings\Connection\ProxySettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Authentication\AuthProviderFactory.cs" />
     <Compile Include="Authentication\IAuthProviderFactory.cs" />
@@ -98,6 +96,14 @@
     <Compile Include="Common\Settings\Connection\Generic\AccountSettings.cs" />
     <Compile Include="Common\Settings\Connection\Generic\AccountSettingsSection.cs" />
     <Compile Include="Common\Settings\ConfigurationConvenienceExtender.cs" />
+    <Compile Include="Common\Settings\IUserConfigPathBuilder.cs" />
+    <Compile Include="Common\Settings\Connection\ProxySettingsFactory.cs" />
+    <Compile Include="Common\Settings\Connection\W32\ProxySettings.cs" />
+    <Compile Include="Common\Settings\Connection\W32\ProxyConfigSection.cs" />
+    <Compile Include="Common\Settings\Connection\Generic\ProxySettings.cs" />
+    <Compile Include="Common\Settings\Connection\Generic\ProxyConfigSection.cs" />
+    <Compile Include="Common\Settings\Connection\MacOS\ProxySettings.cs" />
+    <Compile Include="Common\Settings\Connection\AbstractProxyConfigSection.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

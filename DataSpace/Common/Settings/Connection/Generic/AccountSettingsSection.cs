@@ -47,6 +47,5 @@ namespace DataSpace.Common.Settings.Connection.Generic {
 
             set { this [Property.NameOf(() => this.Password)] = value.Obfuscate(); }
         }
-
     }
 }

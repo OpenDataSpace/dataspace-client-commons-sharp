@@ -22,7 +22,7 @@ namespace DataSpace.Common.Settings {
     using System.IO;
     using System.Configuration;
 
-    public class UserConfigPathBuilder {
+    public class UserConfigPathBuilder : IUserConfigPathBuilder {
         public string Company { get; set; }
         public string Product { get; set; }
         public string FileName { get; set; }
@@ -50,7 +50,7 @@ namespace DataSpace.Common.Settings {
                     break;
             }
 
-            return Path.Combine(BasePath, Company, Product, string.Concat(FileName, ".config"));
+            return Path.GetFullPath(Path.Combine(BasePath, Company, Product, string.Concat(FileName, ".config")));
         }
     }
 }
