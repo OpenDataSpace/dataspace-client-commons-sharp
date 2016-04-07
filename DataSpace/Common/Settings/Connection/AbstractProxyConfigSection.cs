@@ -23,7 +23,7 @@
     using DataSpace.Common.Utils;
 
     public abstract class AbstractProxyConfigSection : ConfigurationSection {
-        public static readonly string SectionName = "HTTP-Proxy";
+        public static readonly string SectionName = "HTTP.Proxy";
         /// <summary>
         /// Proxy Type
         /// </summary>
