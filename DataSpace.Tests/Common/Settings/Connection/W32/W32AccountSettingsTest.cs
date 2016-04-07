@@ -17,7 +17,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-#if ! __MonoCS__
 namespace Tests.Common.Settings.Connection.W32 {
     using System;
     using System.Collections.Generic;
@@ -37,6 +36,9 @@ namespace Tests.Common.Settings.Connection.W32 {
     using NUnit.Framework;
 
     [TestFixture]
+#if  __MonoCS__
+    [Ignore("IGNORED ON MONO")]
+#endif
     public class W32AccountSettingsTest : WithConfiguredLog4Net {
         private string _Url = "test.url.com";
         private string _UserName = "TestName";
@@ -141,4 +143,3 @@ namespace Tests.Common.Settings.Connection.W32 {
         }
     }
 }
-#endif
