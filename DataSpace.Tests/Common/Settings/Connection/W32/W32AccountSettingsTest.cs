@@ -38,9 +38,6 @@ namespace Tests.Common.Settings.Connection.W32 {
 
     [TestFixture]
     public class W32AccountSettingsTest : WithConfiguredLog4Net {
-        private string _Url = "test.url.com";
-        private string _UserName = "TestName";
-        private string _Password = "TestPassword";
         private Configuration configuration;
 
         [SetUp]
