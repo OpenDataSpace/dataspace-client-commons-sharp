@@ -70,6 +70,7 @@
     <Compile Include="Common\Settings\UserConfigPathBuilderTest.cs" />
     <Compile Include="Common\Settings\Connection\W32\W32AccountSettingsTest.cs" />
     <Compile Include="Common\Settings\Connection\W32\W32ProxySettingsTest.cs" />
+    <Compile Include="Common\Settings\Connection\DataSpaceAccountCollectionTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

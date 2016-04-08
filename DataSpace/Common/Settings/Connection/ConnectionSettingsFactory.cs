@@ -122,6 +122,8 @@ namespace DataSpace.Common.Settings.Connection.W32 {
 
             return Path.Combine(BasePath, Company, Product, string.Concat(FileName, ".config"));
         }
+
+        public DataSpaceAccountCollection DataSpaceAccounts { get; }
     }
 
     /// <summary>

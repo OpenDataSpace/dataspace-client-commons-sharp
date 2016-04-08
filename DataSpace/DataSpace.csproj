@@ -104,6 +104,10 @@
     <Compile Include="Common\Settings\Connection\Generic\ProxyConfigSection.cs" />
     <Compile Include="Common\Settings\Connection\MacOS\ProxySettings.cs" />
     <Compile Include="Common\Settings\Connection\AbstractProxyConfigSection.cs" />
+    <Compile Include="Common\Settings\Connection\DataSpaceAccountSectionGroup.cs" />
+    <Compile Include="Common\Settings\Connection\IDataSpaceAccount.cs" />
+    <Compile Include="Common\Settings\Connection\DataSpaceBindingType.cs" />
+    <Compile Include="Common\Settings\Connection\DataSpaceAccountCollection.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

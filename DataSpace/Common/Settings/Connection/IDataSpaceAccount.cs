@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------
-// <copyright file="IConnectionSettingsFactory.cs" company="GRAU DATA AG">
+// <copyright file="IDataSpaceAccount.cs" company="GRAU DATA AG">
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General private License as published by
@@ -16,10 +16,15 @@
 //
 // </copyright>
 //-----------------------------------------------------------------------
+﻿
+namespace DataSpace.Common.Settings.Connection {
+    using System;
 
-﻿namespace DataSpace.Common.Settings.Connection {
-    public interface IConnectionSettingsFactory {
-        DataSpaceAccountCollection DataSpaceAccounts { get; }
-        IProxySettings ProxySettings { get; }
+    public interface IDataSpaceAccountRead : IAccountSettingsRead {
+        DataSpaceBindingType Binding { get; }
+    }
+
+    public interface IDataSpaceAccount : IAccountSettings {
+        DataSpaceBindingType Binding { get; set; }
     }
 }
