@@ -35,6 +35,12 @@
     <Reference Include="Toxiproxy.Net">
       <HintPath>..\packages\Toxiproxy.Net.1.2.11\lib\net45\Toxiproxy.Net.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="DotCMIS">
+      <HintPath>..\packages\OpenDataSpace.DotCMIS.0.7.0.226-devel\lib\net40\DotCMIS.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -43,12 +49,6 @@
     <Compile Include="SessionFactory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <ProjectReference Include="..\DotCMIS\DotCMIS\DotCMIS.csproj">
-      <Project>{529EF90F-A34C-4426-A4F9-65113AC23841}</Project>
-      <Name>DotCMIS</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

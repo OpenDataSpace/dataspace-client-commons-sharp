@@ -41,6 +41,12 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="DotCMIS">
+      <HintPath>..\packages\OpenDataSpace.DotCMIS.0.7.0.226-devel\lib\net40\DotCMIS.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Settings\Connection\AccountSettingsTest.cs" />
@@ -81,10 +87,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\DotCMIS\DotCMIS\DotCMIS.csproj">
-      <Project>{529EF90F-A34C-4426-A4F9-65113AC23841}</Project>
-      <Name>DotCMIS</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DataSpace\DataSpace.csproj">
       <Project>{558B5501-6944-4CC2-A830-0BBC25D7C848}</Project>
       <Name>DataSpace</Name>
