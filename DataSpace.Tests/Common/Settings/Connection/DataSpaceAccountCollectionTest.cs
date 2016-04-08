@@ -29,7 +29,7 @@ namespace Tests.Common.Settings.Connection {
 
     using NUnit.Framework;
 
-    [TestFixture]
+    [TestFixture, NUnit.Framework.Category("UnitTests")]
     public class DataSpaceAccountCollectionTest {
         [Test]
         public void NotificationOnElementChange() {

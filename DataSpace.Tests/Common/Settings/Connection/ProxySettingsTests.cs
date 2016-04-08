@@ -32,7 +32,7 @@ namespace Tests.Common.Settings.Connection {
 
     ﻿using NUnit.Framework;
 
-    [TestFixture]
+    [TestFixture, NUnit.Framework.Category("UnitTests")]
     public class ProxySettingsTest : WithConfiguredLog4Net {
         private string url = "test.url.com";
         private string username = "TestName";

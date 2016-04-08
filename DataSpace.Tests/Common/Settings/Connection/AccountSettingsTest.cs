@@ -35,7 +35,7 @@ namespace Tests.Common.Settings.Connection {
 
     using NUnit.Framework;
 
-    [TestFixture]
+    [TestFixture, NUnit.Framework.Category("UnitTests")]
     public class AccountSettingsTest : WithConfiguredLog4Net {
         private string _Url = "test.url.com";
         private string _UserName = "TestName";

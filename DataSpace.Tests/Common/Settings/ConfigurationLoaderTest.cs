@@ -26,7 +26,7 @@ namespace Tests.Common.Settings {
 
     using NUnit.Framework;
 
-    [TestFixture]
+    [TestFixture, Category("UnitTests")]
     public class ConfigurationLoaderTest : WithConfiguredLog4Net {
         [Test]
         public void ConfigLoader() {

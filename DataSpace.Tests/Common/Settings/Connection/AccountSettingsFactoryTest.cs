@@ -26,7 +26,7 @@ namespace Tests.Common.Settings.Connection {
 
     using NUnit.Framework;
 
-    [TestFixture]
+    [TestFixture, Category("UnitTests")]
     public class AccountSettingsFactoryTest {
         [Test]
         public void CreateInstance() {

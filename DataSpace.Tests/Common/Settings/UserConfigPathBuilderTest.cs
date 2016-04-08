@@ -28,7 +28,7 @@ namespace Tests.Common.Settings {
 
     using NUnit.Framework;
 
-    [TestFixture]
+    [TestFixture, Category("UnitTests")]
     public class UserConfigPathBuilderTest : WithConfiguredLog4Net {
         [Test]
         public void CreatePathWithDifferentTypesCreatesDifferentPaths() {
