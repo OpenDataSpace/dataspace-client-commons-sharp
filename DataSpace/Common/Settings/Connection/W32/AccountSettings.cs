@@ -76,7 +76,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         public TimeSpan PropsRefreshSpan {
             get {
                 lock (_Lock) {
-                    return _PropsRefreshSpan; 
+                    return _PropsRefreshSpan;
                 }
             }
 
@@ -261,7 +261,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
                     _LastRefreshTime = DateTime.Now;
                     // Signal  clean saved state
                     IsDirty = false;
-                } 
+                }
             }
 
             // fire saved Event
@@ -273,7 +273,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         /// </summary>
         public void Delete() {
             lock (_Lock) {
-                // delete the decoreted Url based entry in OS store 
+                // delete the decoreted Url based entry in OS store
                 // use the _LoadedUrl for deletion! (if we don't, Url may have been changed and not saved and we delete the wrong / nothing)
                 CredentialManager.Delete(UrlPrefix + _LoadedUrl);
                 //reinitialize our Properties
@@ -284,7 +284,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
                 // update the refreh time
                 _LastRefreshTime = DateTime.Now;
 
-                IsDirty = false; 
+                IsDirty = false;
             }
 
             // fire saved Event
@@ -292,12 +292,12 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         }
 
         /// <summary>
-        /// triggers a load operation if object is not in edit mode and 
+        /// triggers a load operation if object is not in edit mode and
         /// and load is more then <c>PropsRefreshSpan</c> ago
         /// </summary>
         private void RefreshProps() {
             lock (_Lock) {
-                // is disabled? 
+                // is disabled?
                 if (PropsRefreshSpan == new TimeSpan(0)) {
                     return; // yes
                 }
@@ -312,7 +312,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
             if (PropertyChanged != null) {
                 PropertyChanged.Invoke(this, new PropertyChangedEventArgs(property));
             }
-            //all Property changes should trigger "IsDirty = true" exept "IsDirty" itself 
+            //all Property changes should trigger "IsDirty = true" exept "IsDirty" itself
             if (string.Compare(property, Property.NameOf(() => this.IsDirty)) != 0) {
                 IsDirty = true;
             }

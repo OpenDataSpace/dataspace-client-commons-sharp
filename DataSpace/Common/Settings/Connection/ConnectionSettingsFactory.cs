@@ -97,7 +97,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         }
 
         /// <summary>
-        /// configuration path builder 
+        /// configuration path builder
         /// </summary>
         /// <param name="Company">Company pathpart</param>
         /// <param name="Product">Produkt pathpart</param>
@@ -173,7 +173,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
             ConfigurationSection Section = null;
             try {
                 // try to get our section -- can except in case of version diff or something else
-                // if section does not exist no exception is thrown an returns zero 
+                // if section does not exist no exception is thrown an returns zero
                 Section = _Config.GetSection(SectionName);
             } catch (ConfigurationErrorsException eConf) {
                 _logger.ErrorFormat("{0} -- Failed to load Section '{1}' - Exception: {2}", System.Reflection.MethodBase.GetCurrentMethod().Name, SectionName , eConf.Message);

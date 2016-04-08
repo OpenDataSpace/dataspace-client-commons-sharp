@@ -60,7 +60,7 @@ namespace DataSpace.Common.Settings.Connection.Generic {
         public bool IsDirty {
             get {
                 lock (l) {
-                    return isDirty; 
+                    return isDirty;
                 }
             }
 
@@ -69,7 +69,7 @@ namespace DataSpace.Common.Settings.Connection.Generic {
                     if (isDirty != value) {
                         isDirty = value;
                         OnPropertyChanged(Property.NameOf(() => IsDirty));
-                    } 
+                    }
                 }
             }
         }
@@ -77,7 +77,7 @@ namespace DataSpace.Common.Settings.Connection.Generic {
         public bool NeedLogin {
             get {
                 lock (l) {
-                    return section.NeedLogin; 
+                    return section.NeedLogin;
                 }
             }
 
@@ -86,7 +86,7 @@ namespace DataSpace.Common.Settings.Connection.Generic {
                     if (section.NeedLogin != value) {
                         section.NeedLogin = value;
                         OnPropertyChanged(Property.NameOf(() => NeedLogin));
-                    } 
+                    }
                 }
             }
         }
@@ -120,7 +120,7 @@ namespace DataSpace.Common.Settings.Connection.Generic {
                     if (section.ProxyType != value) {
                         section.ProxyType = value;
                         OnPropertyChanged(Property.NameOf(() => ProxyType));
-                    } 
+                    }
                 }
             }
         }

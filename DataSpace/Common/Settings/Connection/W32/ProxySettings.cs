@@ -41,7 +41,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         /// Constructor
         /// </summary>
         public ProxySettings() {
-            // catch property change events and relay them 
+            // catch property change events and relay them
             // we can do this because we have identical property names
             _ProxyAccount.PropertyChanged += (sender, e) => {
                 // filter out "IsDirty"; preventing double notification
@@ -86,7 +86,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         /// </summary>
         private object _Lock = new object();
         /// <summary>
-        /// Proxy Account login data 
+        /// Proxy Account login data
         /// </summary>
         private IAccountSettings _ProxyAccount = new AccountSettingsFactory().CreateInstance("DataSpaceProxy@");
         /// <summary>
@@ -101,7 +101,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         public bool IsDirty {
             get {
                 lock (_Lock) {
-                    return _IsDirty; 
+                    return _IsDirty;
                 }
             }
 
@@ -110,7 +110,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
                     if (_IsDirty != value) {
                         _IsDirty = value;
                         OnPropertyChanged(Property.NameOf(() => this.IsDirty));
-                    } 
+                    }
                 }
             }
         }
@@ -120,7 +120,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
             get {
                 lock (_Lock) {
                     RefreshProps();
-                    return _NeedLogin; 
+                    return _NeedLogin;
                 }
             }
 
@@ -129,7 +129,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
                     if (_NeedLogin != value) {
                         _NeedLogin = value;
                         OnPropertyChanged(Property.NameOf(() => this.NeedLogin));
-                    } 
+                    }
                 }
             }
         }
@@ -148,7 +148,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
             get {
                 lock (_Lock) {
                     RefreshProps();
-                    return _ProxyType; 
+                    return _ProxyType;
                 }
             }
 
@@ -157,7 +157,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
                     if (_ProxyType != value) {
                         _ProxyType = value;
                         OnPropertyChanged(Property.NameOf(() => this.ProxyType));
-                    } 
+                    }
                 }
             }
         }
@@ -188,7 +188,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
                 PropertyChanged.Invoke(this, new PropertyChangedEventArgs(property));
             }
 
-            //all Property changes should trigger "IsDirty = true" exept "IsDirty" itself 
+            //all Property changes should trigger "IsDirty = true" exept "IsDirty" itself
             if (string.Compare(property, Property.NameOf(() => this.IsDirty)) != 0) {
                 IsDirty = true;
             }
@@ -209,10 +209,10 @@ namespace DataSpace.Common.Settings.Connection.W32 {
                 // reinit our properties
                 ProxyType = ProxyType.None;
                 NeedLogin = false;
-                // update refresh time 
+                // update refresh time
                 _LastRefreshTime = DateTime.Now;
 
-                IsDirty = false; 
+                IsDirty = false;
             }
 
             SettingsSaved.Invoke(this, new EventArgs());
@@ -270,10 +270,10 @@ namespace DataSpace.Common.Settings.Connection.W32 {
                     Loader.Configuration.Save();
                     // save the Accountinformation part
                     _ProxyAccount.Save();
-                    // update refresh time 
+                    // update refresh time
                     _LastRefreshTime = DateTime.Now;
 
-                    IsDirty = false; 
+                    IsDirty = false;
                 }
             }
 
@@ -281,19 +281,19 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         }
 
         /// <summary>
-        /// triggers a load operation if object is not in edit mode and 
+        /// triggers a load operation if object is not in edit mode and
         /// and load is more then <c>PropsRefreshSpan</c> ago
         /// </summary>
         private void RefreshProps() {
             lock (_Lock) {
-                // is disabled? 
+                // is disabled?
                 if (PropsRefreshSpan == new TimeSpan(0)) {
                     return; // yes
                 }
 
                 // Don't try loading if config path delegate isn't set
                 if (GetConfigFilePath != null &&
-                    IsDirty == false && 
+                    IsDirty == false &&
                     (DateTime.Now - _LastRefreshTime > PropsRefreshSpan))
                 {
                     Load();
