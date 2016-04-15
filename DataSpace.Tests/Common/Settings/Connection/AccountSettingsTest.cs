@@ -49,7 +49,7 @@ namespace Tests.Common.Settings.Connection {
 
         [TearDown]
         public void CleanUp() {
-            if (configuration.HasFile) {
+            if (configuration.HasFile && File.Exists(configuration.FilePath)) {
                 File.Delete(configuration.FilePath);
             }
         }
