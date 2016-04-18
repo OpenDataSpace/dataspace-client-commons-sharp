@@ -114,6 +114,10 @@
     <Compile Include="Common\Settings\Connection\IDataSpaceAccount.cs" />
     <Compile Include="Common\Settings\Connection\DataSpaceBindingType.cs" />
     <Compile Include="Common\Settings\Connection\DataSpaceAccountCollection.cs" />
+    <Compile Include="Common\Settings\Connection\IDataSpaceAccountFactory.cs" />
+    <Compile Include="Common\Settings\Connection\DataSpaceAccountFactory.cs" />
+    <Compile Include="Common\Settings\Connection\Generic\DataSpaceAccount.cs" />
+    <Compile Include="Common\Settings\Connection\Generic\DataSpaceAccountSection.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

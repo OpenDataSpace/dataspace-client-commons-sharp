@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------
-// <copyright file="DataSpaceAccountSectionGroup.cs" company="GRAU DATA AG">
+// <copyright file="DataSpaceAccountSection.cs" company="GRAU DATA AG">
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General private License as published by
@@ -17,11 +17,17 @@
 // </copyright>
 //-----------------------------------------------------------------------
 ﻿
-namespace DataSpace.Common.Settings.Connection {
+namespace DataSpace.Common.Settings.Connection.Generic {
     using System;
     using System.Configuration;
 
-    public class DataSpaceAccountSectionGroup : ConfigurationSectionGroup {
-        public static readonly string DefaultSectionGroupName = "Connections";
+    using DataSpace.Common.Utils;
+
+    public class DataSpaceAccountSection : AccountSettingsSection {
+        [ConfigurationProperty("Binding", DefaultValue = DataSpaceBindingType.Browser, IsRequired = true)]
+        public DataSpaceBindingType Binding {
+            get { return (DataSpaceBindingType)this[Property.NameOf(() => this.Binding)]; }
+            set { this [Property.NameOf(() => this.Binding)] = value; }
+        }
     }
 }

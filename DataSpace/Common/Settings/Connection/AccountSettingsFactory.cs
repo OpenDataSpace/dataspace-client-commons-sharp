@@ -27,7 +27,8 @@
                 case PlatformID.Unix:
                     return new Generic.AccountSettings(urlPrefix, parent);
                 case PlatformID.MacOSX:
-                    return new MacOS.AccountSettings(urlPrefix);
+                    throw new NotImplementedException();
+//                    return new MacOS.AccountSettings(urlPrefix);
                 default:
                     return new W32.AccountSettings(urlPrefix + "@");
             }
