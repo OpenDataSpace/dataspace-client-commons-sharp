@@ -19,9 +19,12 @@
 ﻿
 namespace Tests.Common.Settings.Connection {
     using System;
+    using System.Configuration;
     using System.Collections.Specialized;
     using System.ComponentModel;
+    using System.IO;
 
+    using DataSpace.Common.Settings;
     using DataSpace.Common.Settings.Connection;
     using DataSpace.Common.Utils;
 
@@ -30,13 +33,13 @@ namespace Tests.Common.Settings.Connection {
     using NUnit.Framework;
 
     [TestFixture, NUnit.Framework.Category("UnitTests")]
-    public class DataSpaceAccountCollectionTest {
+    public class DataSpaceAccountCollectionTest : WithGeneratedConfig {
         [Test]
         public void NotificationOnElementChange() {
             int isCollectionTriggered = 0;
             int isElementTriggered = 0;
             string changedProperty = "bla";
-            var underTest = new DataSpaceAccountCollection();
+            var underTest = new DataSpaceAccountCollection(config);
             var mockedEntry = new Mock<IDataSpaceAccount>();
             underTest.Add(mockedEntry.Object);
             underTest.CollectionChanged += (object sender, NotifyCollectionChangedEventArgs e) => {

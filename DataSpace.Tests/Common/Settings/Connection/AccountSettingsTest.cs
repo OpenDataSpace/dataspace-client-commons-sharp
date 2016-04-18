@@ -36,27 +36,14 @@ namespace Tests.Common.Settings.Connection {
     using NUnit.Framework;
 
     [TestFixture, NUnit.Framework.Category("UnitTests")]
-    public class AccountSettingsTest : WithConfiguredLog4Net {
+    public class AccountSettingsTest : WithGeneratedConfig {
         private string _Url = "test.url.com";
         private string _UserName = "TestName";
         private string _Password = "TestPassword";
-        private Configuration configuration;
-
-        [SetUp]
-        public void SetUp() {
-            configuration = new ConfigurationLoader(new UserConfigPathBuilder{ FileName = Guid.NewGuid().ToString() }).Configuration;
-        }
-
-        [TearDown]
-        public void CleanUp() {
-            if (configuration.HasFile) {
-                File.Delete(configuration.FilePath);
-            }
-        }
 
         [Test]
         public void Constructor() {
-            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", configuration);
+            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", config);
             underTest.Load();
             // Assert
             Assert.That(underTest.IsDirty, Is.False);
@@ -67,7 +54,7 @@ namespace Tests.Common.Settings.Connection {
 
         [Test]
         public void PropertyGetSet() {
-            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", configuration);
+            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", config);
             underTest.Load();
             // act
             underTest.Url = _Url;
@@ -82,14 +69,14 @@ namespace Tests.Common.Settings.Connection {
 
         [Test]
         public void WriteAndRead() {
-            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", configuration);
+            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", config);
             underTest.Load();
             underTest.Url = _Url;
             underTest.UserName = _UserName;
             underTest.Password = new System.Security.SecureString().Init(_Password);
             underTest.Save();
 
-            underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", configuration);
+            underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", config);
             underTest.Load();
             Assert.That(underTest.Password.ConvertToUnsecureString(), Is.EqualTo(_Password));
             Assert.That(underTest.Url, Is.EqualTo(_Url));
@@ -98,7 +85,7 @@ namespace Tests.Common.Settings.Connection {
 
         [Test]
         public void CreateNew() {
-            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", configuration);
+            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", config);
             underTest.Load();
             underTest.Url = _Url;
             underTest.UserName = _UserName;
@@ -108,7 +95,7 @@ namespace Tests.Common.Settings.Connection {
 
         [Test]
         public void Check_OnPropertyChanged_Success() {
-            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", configuration);
+            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", config);
             underTest.Load();
             List<string> ReceivedEvents = new List<string>();
 
@@ -135,7 +122,7 @@ namespace Tests.Common.Settings.Connection {
 
         [Test]
         public void Load_TriggersEvent() {
-            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", configuration);
+            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", config);
 
             // Load Event Handler
             bool IsTriggered = false;
@@ -151,7 +138,7 @@ namespace Tests.Common.Settings.Connection {
 
         [Test]
         public void Save_TriggersEvent() {
-            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", configuration);
+            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", config);
             // Save Event Handler
             bool IsTriggered = false;
             underTest.SettingsSaved += (sender, arg) => {

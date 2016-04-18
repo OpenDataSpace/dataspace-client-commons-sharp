@@ -27,11 +27,10 @@ namespace Tests.Common.Settings.Connection {
     using NUnit.Framework;
 
     [TestFixture, Category("UnitTests")]
-    public class AccountSettingsFactoryTest {
+    public class AccountSettingsFactoryTest : WithGeneratedConfig {
         [Test]
         public void CreateInstance() {
             IAccountSettingsFactory underTest = new AccountSettingsFactory();
-            var config = new ConfigurationLoader(new UserConfigPathBuilder(){FileName = Guid.NewGuid().ToString()}).Configuration;
             var account = underTest.CreateInstance("", config);
             Assert.That(account, Is.Not.Null);
         }
