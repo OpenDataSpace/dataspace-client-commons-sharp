@@ -37,7 +37,7 @@ namespace Tests.Common.Settings {
 
         [TearDown]
         public void CleanUp() {
-            if (config.HasFile) {
+            if (config.HasFile && File.Exists(config.FilePath)) {
                 File.Delete(config.FilePath);
             }
         }

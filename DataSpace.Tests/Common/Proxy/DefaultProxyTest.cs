@@ -31,44 +31,56 @@ namespace Tests.Common.Proxy {
     [TestFixture, Category("UnitTests")]
     public class DefaultProxyTest {
         private ProxySettings settings;
+        private readonly string proxyUrl = "http://example.com:8080/";
 
         [SetUp]
         public void SetUp() {
-            this.settings = new ProxySettings();
+            DefaultProxy.SetSystemDefaultProxy();
+            settings = new ProxySettings();
+        }
+
+        [TearDown]
+        public void RestoreDefaultSystemProxy() {
+            DefaultProxy.SetSystemDefaultProxy();
         }
 
         [Test]
-        public void SetDefaultProxyToHTTPWithoutCredentials() {
-            this.settings.Selection = DataSpace.Common.Proxy.Type.CUSTOM;
-            this.settings.LoginRequired = false;
-            this.settings.Server = new Uri("http://example.com:8080/");
-            DefaultProxy.SetDefaultProxy(this.settings);
+        public void SetCustomDefaultProxy(
+            [Values(true, false)]bool loginRequired)
+        {
+            settings.Selection = DataSpace.Common.Proxy.Type.CUSTOM;
+            settings.Server = new Uri(proxyUrl);
+            settings.LoginRequired = loginRequired;
+            settings.Username = loginRequired ? "testuser" : null;
+            settings.ObfuscatedPassword = loginRequired ? "password".Obfuscate() : null;
+            settings.SetAsDefaultProxy();
             Assert.That(WebRequest.DefaultWebProxy, Is.Not.Null);
-            Assert.That(WebRequest.DefaultWebProxy, Is.Not.EqualTo(WebRequest.GetSystemWebProxy()));
-            Assert.That(WebRequest.DefaultWebProxy.Credentials, Is.Null);
+            Assert.That(WebRequest.DefaultWebProxy.Credentials, loginRequired ? Is.Not.Null : Is.Null);
         }
 
         [Test]
-        public void SetDefaultProxyToHTTPWithCredentials() {
-            this.settings.Selection = DataSpace.Common.Proxy.Type.CUSTOM;
-            this.settings.Server = new Uri("http://example.com:8080/");
-            this.settings.LoginRequired = true;
-            this.settings.Username = "testuser";
-            this.settings.ObfuscatedPassword = "password".Obfuscate();
-            DefaultProxy.SetDefaultProxy(this.settings);
-            Assert.That(WebRequest.DefaultWebProxy, Is.Not.Null);
-            Assert.That(WebRequest.DefaultWebProxy.Credentials, Is.Not.Null);
-        }
-
-        [Test]
-        public void SetDefaultProxyToBeIgnored() {
-            this.settings.Selection = DataSpace.Common.Proxy.Type.CUSTOM;
-            this.settings.LoginRequired = false;
-            this.settings.Server = new Uri("http://example.com:8080/");
-            DefaultProxy.SetDefaultProxy(this.settings);
-            this.settings.Selection = DataSpace.Common.Proxy.Type.NOPROXY;
-            DefaultProxy.SetDefaultProxy(this.settings);
+        public void DisableAnyDefaultProxy() {
+            DefaultProxy.SetCustomProxy(to: new WebProxy(proxyUrl));
+            settings.Selection = DataSpace.Common.Proxy.Type.NOPROXY;
+            settings.SetAsDefaultProxy();
             Assert.That(HttpWebRequest.DefaultWebProxy, Is.Null);
+        }
+
+        [Test]
+        public void RestoreSystemDefaultAfterCustomProxy() {
+            IWebProxy originalProxy = WebRequest.DefaultWebProxy;
+            DefaultProxy.SetCustomProxy(to: new WebProxy(proxyUrl));
+            Assert.That(WebRequest.DefaultWebProxy, Is.Not.EqualTo(originalProxy));
+            DefaultProxy.SetSystemDefaultProxy();
+            Assert.That(WebRequest.DefaultWebProxy, Is.EqualTo(originalProxy));
+        }
+
+        [Test]
+        public void PassingNullAsCustomProxyThrowsExceptionAndDoesNotModifyConfiguredProxy() {
+            DefaultProxy.SetCustomProxy(to: new WebProxy(proxyUrl));
+            var oldProxy = WebRequest.DefaultWebProxy;
+            Assert.Throws<ArgumentNullException>(() => DefaultProxy.SetCustomProxy(null));
+            Assert.That(WebRequest.DefaultWebProxy, Is.EqualTo(oldProxy));
         }
     }
 }

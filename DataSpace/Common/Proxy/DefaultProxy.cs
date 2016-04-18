@@ -24,40 +24,55 @@ namespace DataSpace.Common.Proxy {
     using DataSpace.Common.Crypto;
 
     /// <summary>
-    /// Default Http proxy utils.
+    /// Default Http proxy utils and .Net API wrapper to ensure system default proxy usage with NTLM and Kerberos Authentication.
     /// </summary>
     public static class DefaultProxy {
+        private static IWebProxy systemDefault;
+        private static bool isSystemDefaultSet = false;
+        private static object l = new object();
 
         /// <summary>
-        /// Sets the default proxy for every HTTP request.
-        /// If the caller would like to know if the call throws any exception, the second parameter should be set to true
+        /// Inits the proxy switching support. Must be called before any default proxy manipulation is done.
+        /// If this class is the only class, which manipulates the proxy settings, it is not needed to be called.
         /// </summary>
-        /// <param name="settings">proxy settings.</param>
-        /// <param name="throwExceptions">If set to <c>true</c> throw exceptions.</param>
-        public static void SetDefaultProxy(ProxySettings settings) {
-            IWebProxy proxy = null;
-            switch (settings.Selection) {
-                case Type.SYSTEM:
-                    proxy = WebRequest.GetSystemWebProxy();
-                    break;
-                case Type.CUSTOM:
-                    if (settings.Server == null) {
-                        throw new ArgumentNullException("settings.Server");
+        public static void InitProxySwitchingSupport() {
+            if (!isSystemDefaultSet) {
+                lock (l) {
+                    if (!isSystemDefaultSet) {
+                        systemDefault = WebRequest.DefaultWebProxy;
+                        isSystemDefaultSet = true;
                     }
-
-                    proxy = new WebProxy(settings.Server);
-                    break;
-            }
-
-            if (settings.LoginRequired && proxy != null) {
-                if (string.IsNullOrEmpty(settings.Username)) {
-                    throw new ArgumentException("username is null or empty");
                 }
+            }
+        }
 
-                proxy.Credentials = new NetworkCredential(settings.Username, settings.ObfuscatedPassword.Deobfuscate());
+        /// <summary>
+        /// Sets the system default proxy.
+        /// </summary>
+        public static void SetSystemDefaultProxy() {
+            InitProxySwitchingSupport();
+            WebRequest.DefaultWebProxy = systemDefault;
+        }
+
+        /// <summary>
+        /// Removes all potentially existing proxies and enforces direct internet usage.
+        /// </summary>
+        public static void SetNoProxy() {
+            InitProxySwitchingSupport();
+            WebRequest.DefaultWebProxy = null;
+        }
+
+        /// <summary>
+        /// Sets the given custom proxy as default proxy for all web requests.
+        /// </summary>
+        /// <param name="to">Custom proxy. Must not be null. Credentials can be null if no authentication is required on the proxy server.</param>
+        public static void SetCustomProxy(IWebProxy to) {
+            if (to == null) {
+                throw new ArgumentNullException("to");
             }
 
-            WebRequest.DefaultWebProxy = proxy;
+            InitProxySwitchingSupport();
+            WebRequest.DefaultWebProxy = to;
         }
     }
 }

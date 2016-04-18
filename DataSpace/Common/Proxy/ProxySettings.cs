@@ -20,8 +20,10 @@
 namespace DataSpace.Common.Proxy {
     using System;
     using System.ComponentModel;
+    using System.Net;
     using System.Xml.Serialization;
 
+    using DataSpace.Common.Crypto;
     using DataSpace.Common.Serialization;
 
     /// <summary>
@@ -78,5 +80,28 @@ namespace DataSpace.Common.Proxy {
         [XmlElement("password")]
         [DefaultValue(null)]
         public string ObfuscatedPassword { get; set; }
+    }
+
+    public static class ProxySettingsStructExtender {
+        /// <summary>
+        /// Sets the default proxy for every HTTP request.
+        /// </summary>
+        /// <param name="settings">proxy settings. Must not be null.</param>
+        public static void SetAsDefaultProxy(this ProxySettings to) {
+            switch (to.Selection) {
+                case Type.CUSTOM:
+                    IWebProxy proxy = new WebProxy(to.Server) {
+                        Credentials = to.LoginRequired ? new NetworkCredential(to.Username, to.ObfuscatedPassword.Deobfuscate()) : null
+                    };
+                    DefaultProxy.SetCustomProxy(to: proxy);
+                    return;
+                case Type.NOPROXY:
+                    DefaultProxy.SetNoProxy();
+                    return;
+                default:
+                    DefaultProxy.SetSystemDefaultProxy();
+                    return;
+            }
+        }
     }
 }
