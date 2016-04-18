@@ -41,9 +41,6 @@
     <Reference Include="DotCMIS">
       <HintPath>..\packages\OpenDataSpace.DotCMIS.0.7.0.226-devel\lib\net40\DotCMIS.dll</HintPath>
     </Reference>
-    <Reference Include="XamMac">
-      <HintPath>\Library\Frameworks\Xamarin.Mac.framework\Versions\Current\lib\mono\XamMac.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Crypto\SecureStringExtForString.cs" />
@@ -117,7 +114,6 @@
     <Compile Include="Common\Settings\Connection\IDataSpaceAccount.cs" />
     <Compile Include="Common\Settings\Connection\DataSpaceBindingType.cs" />
     <Compile Include="Common\Settings\Connection\DataSpaceAccountCollection.cs" />
-    <Compile Include="Common\NativeKeyStore\MacOS\Keychain.cs" />
     <Compile Include="Common\Settings\Connection\IDataSpaceAccountFactory.cs" />
     <Compile Include="Common\Settings\Connection\DataSpaceAccountFactory.cs" />
     <Compile Include="Common\Settings\Connection\Generic\DataSpaceAccount.cs" />
@@ -137,6 +133,5 @@
     <Folder Include="Common\Settings\Connection\MacOS\" />
     <Folder Include="Common\Settings\Connection\Generic\" />
     <Folder Include="Common\NativeKeyStore\" />
-    <Folder Include="Common\NativeKeyStore\MacOS\" />
   </ItemGroup>
 </Project>
