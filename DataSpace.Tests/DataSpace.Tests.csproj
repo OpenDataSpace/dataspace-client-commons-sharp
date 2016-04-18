@@ -34,7 +34,6 @@
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
-      <Package>nunit</Package>
     </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
@@ -79,6 +78,8 @@
     <Compile Include="Common\Settings\Connection\DataSpaceAccountCollectionTest.cs" />
     <Compile Include="Common\Settings\WithGeneratedConfig.cs" />
     <Compile Include="Common\NativeKeyStore\NativeKeyStoreFactoryTest.cs" />
+    <Compile Include="Common\NativeKeyStore\W32\WindowsPasswordStoreTest.cs" />
+    <Compile Include="Utils\EnsureThisRuns.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -104,5 +105,6 @@
   <ItemGroup>
     <Folder Include="Common\Settings\Connection\W32\" />
     <Folder Include="Common\NativeKeyStore\" />
+    <Folder Include="Common\NativeKeyStore\W32\" />
   </ItemGroup>
 </Project>

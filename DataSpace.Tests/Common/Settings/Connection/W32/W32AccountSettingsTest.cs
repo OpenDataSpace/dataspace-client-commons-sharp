@@ -35,12 +35,14 @@ namespace Tests.Common.Settings.Connection.W32 {
 
     using NUnit.Framework;
 
-#if __MonoCS__
-        [Ignore("IGNORED ON MONO")]
-#endif
     [TestFixture]
     public class W32AccountSettingsTest : WithConfiguredLog4Net {
         private Configuration configuration;
+
+        [TestFixtureSetUp]
+        public void LimitToWindows() {
+            this.EnsureThisRunsOn(PlatformID.Win32NT, PlatformID.Win32S, PlatformID.Win32Windows, PlatformID.WinCE);
+        }
 
         [SetUp]
         public void SetUp() {

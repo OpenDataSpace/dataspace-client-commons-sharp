@@ -22,14 +22,17 @@ namespace Tests.Common.Settings.Connection.W32 {
 
     using DataSpace.Common.Settings.Connection;
     using DataSpace.Common.Settings.Connection.W32;
+    using DataSpace.Tests.Utils;
 
     using NUnit.Framework;
 
     [TestFixture]
-#if __MonoCS__
-    [Ignore("IGNORED ON MONO")]
-#endif
     public class W32ProxySettingsTest {
+        [TestFixtureSetUp]
+        public void LimitToWindows() {
+            this.EnsureThisRunsOn(PlatformID.Win32NT, PlatformID.Win32S, PlatformID.Win32Windows, PlatformID.WinCE);
+        }
+
         [Test, NUnit.Framework.Category("Slow")]
         public void PropGet_TriggersLoad() {
             //prep

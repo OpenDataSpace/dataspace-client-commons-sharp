@@ -122,6 +122,7 @@
     <Compile Include="Common\NativeKeyStore\INativeKeyStoreFactory.cs" />
     <Compile Include="Common\NativeKeyStore\NativeKeyStoreFactory.cs" />
     <Compile Include="Common\NativeKeyStore\NoNativeKeyStoreAvailable.cs" />
+    <Compile Include="Common\NativeKeyStore\W32\WindowsKeyStore.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
@@ -133,5 +134,6 @@
     <Folder Include="Common\Settings\Connection\MacOS\" />
     <Folder Include="Common\Settings\Connection\Generic\" />
     <Folder Include="Common\NativeKeyStore\" />
+    <Folder Include="Common\NativeKeyStore\W32\" />
   </ItemGroup>
 </Project>
