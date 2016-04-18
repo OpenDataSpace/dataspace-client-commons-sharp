@@ -122,6 +122,7 @@
     <Compile Include="Common\Settings\Connection\DataSpaceAccountFactory.cs" />
     <Compile Include="Common\Settings\Connection\Generic\DataSpaceAccount.cs" />
     <Compile Include="Common\Settings\Connection\Generic\DataSpaceAccountSection.cs" />
+    <Compile Include="Common\NativeKeyStore\NativeKeyStore.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
