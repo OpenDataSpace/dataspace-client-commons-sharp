@@ -68,7 +68,6 @@ namespace DataSpace.Common.NativeKeyStore.MacOS {
                 }
 
                 return results;
-
             }
         }
 

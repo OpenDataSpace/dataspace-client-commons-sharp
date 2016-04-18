@@ -82,6 +82,7 @@
     <Compile Include="Common\Settings\Connection\DataSpaceAccountCollectionTest.cs" />
     <Compile Include="Common\NativeKeyStore\MacOS\KeyChainTests.cs" />
     <Compile Include="Common\Settings\WithGeneratedConfig.cs" />
+    <Compile Include="Common\NativeKeyStore\NativeKeyStoreFactoryTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
