@@ -81,6 +81,7 @@
     <Compile Include="Common\Settings\Connection\W32\W32ProxySettingsTest.cs" />
     <Compile Include="Common\Settings\Connection\DataSpaceAccountCollectionTest.cs" />
     <Compile Include="Common\NativeKeyStore\MacOS\KeyChainTests.cs" />
+    <Compile Include="Common\Settings\WithGeneratedConfig.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

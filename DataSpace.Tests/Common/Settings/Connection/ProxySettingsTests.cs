@@ -33,23 +33,10 @@ namespace Tests.Common.Settings.Connection {
     ﻿using NUnit.Framework;
 
     [TestFixture, NUnit.Framework.Category("UnitTests")]
-    public class ProxySettingsTest : WithConfiguredLog4Net {
+    public class ProxySettingsTest : WithGeneratedConfig {
         private string url = "test.url.com";
         private string username = "TestName";
         private string password = "TestPassword";
-        private Configuration config;
-
-        [SetUp]
-        public void CreateConfig() {
-            this.config = new ConfigurationLoader(new UserConfigPathBuilder {FileName = Guid.NewGuid().ToString()}).Configuration;
-        }
-
-        [TearDown]
-        public void CleanUp() {
-            if (config.HasFile) {
-                File.Delete(config.FilePath);
-            }
-        }
 
         [Test]
         public void Constructor() {

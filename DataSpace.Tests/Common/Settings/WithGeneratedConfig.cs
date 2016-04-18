@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------
-// <copyright file="DataSpaceAccountSectionGroup.cs" company="GRAU DATA AG">
+// <copyright file="WithGeneratedConfig.cs" company="GRAU DATA AG">
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General private License as published by
@@ -17,11 +17,29 @@
 // </copyright>
 //-----------------------------------------------------------------------
 ﻿
-namespace DataSpace.Common.Settings.Connection {
+namespace Tests.Common.Settings {
     using System;
     using System.Configuration;
+    using System.IO;
 
-    public class DataSpaceAccountSectionGroup : ConfigurationSectionGroup {
-        public static readonly string DefaultSectionGroupName = "Connections";
+    using DataSpace.Common.Settings;
+    using DataSpace.Tests.Utils;
+
+    using NUnit.Framework;
+
+    public class WithGeneratedConfig : WithConfiguredLog4Net {
+        protected Configuration config;
+
+        [SetUp]
+        public void CreateConfig() {
+            this.config = new ConfigurationLoader(new UserConfigPathBuilder {FileName = Guid.NewGuid().ToString()}).Configuration;
+        }
+
+        [TearDown]
+        public void CleanUp() {
+            if (config.HasFile && File.Exists(config.FilePath)) {
+                File.Delete(config.FilePath);
+            }
+        }
     }
 }

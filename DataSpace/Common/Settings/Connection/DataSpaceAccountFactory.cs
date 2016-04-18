@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------
-// <copyright file="DataSpaceAccountSectionGroup.cs" company="GRAU DATA AG">
+// <copyright file="DataSpaceAccountFactory.cs" company="GRAU DATA AG">
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General private License as published by
@@ -21,7 +21,21 @@ namespace DataSpace.Common.Settings.Connection {
     using System;
     using System.Configuration;
 
-    public class DataSpaceAccountSectionGroup : ConfigurationSectionGroup {
-        public static readonly string DefaultSectionGroupName = "Connections";
+    public class DataSpaceAccountFactory : IDataSpaceAccountFactory {
+        public DataSpaceAccountFactory() {
+        }
+
+        public IDataSpaceAccount CreateInstance(Configuration config, ConfigurationSection section) {
+            switch (Environment.OSVersion.Platform) {
+                case PlatformID.Unix:
+                    return new Generic.DataSpaceAccount(config, section as Generic.DataSpaceAccountSection);
+                case PlatformID.MacOSX:
+                    return new Generic.DataSpaceAccount(config, section as Generic.DataSpaceAccountSection);
+                default:
+                    throw new NotImplementedException();
+                    //return new W32.DataSpaceAccount(urlPrefix + "@");
+            }
+
+        }
     }
 }
