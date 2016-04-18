@@ -59,6 +59,10 @@ namespace DataSpace.Common.NativeKeyStore {
 
         public virtual int Count { get { return Keys.Count; } }
 
+        public virtual void Add(KeyValuePair<string, string> item) {
+            Add(item.Key, item.Value);
+        }
+
         public virtual void Clear() {
             foreach (var key in Keys) {
                 Remove(key);
@@ -99,7 +103,7 @@ namespace DataSpace.Common.NativeKeyStore {
             }
         }
 
-        public virtual System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
             return this.GetEnumerator();
         }
     }
