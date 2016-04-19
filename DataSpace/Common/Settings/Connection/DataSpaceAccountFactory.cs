@@ -35,7 +35,6 @@ namespace DataSpace.Common.Settings.Connection {
                     throw new NotImplementedException();
                     //return new W32.DataSpaceAccount(urlPrefix + "@");
             }
-
         }
     }
 }
