@@ -22,7 +22,16 @@ namespace DataSpace.Common.NativeKeyStore {
     using System.Collections.Generic;
     using System.Reflection;
 
+    /// <summary>
+    /// Native key store factory. This can be used to create new instances of the given generic type T.
+    /// The factory checks if the type T supports the actual OS, otherwise a creation will fail.
+    /// </summary>
     public class NativeKeyStoreFactory<T> : INativeKeyStoreFactory where T : NativeKeyStore {
+        /// <summary>
+        /// Creates a new instance of the type T if the given type T has been marked by <see cref="KeyStoreSupportsAttribute"/> to support the actual platform.
+        /// </summary>
+        /// <returns>The instance.</returns>
+        /// <param name="args">Arguments needed to create a new instance.</param>
         public NativeKeyStore CreateInstance(params object[] args) {
             try {
                 var attributes = typeof(T).GetCustomAttributes(true);

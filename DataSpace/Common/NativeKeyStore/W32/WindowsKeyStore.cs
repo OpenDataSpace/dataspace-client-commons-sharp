@@ -24,11 +24,24 @@ namespace DataSpace.Common.NativeKeyStore.W32 {
 
     using DataSpace.Common.Settings.Connection.W32;
 
+    /// <summary>
+    /// Native windows credential manager wrapper.
+    /// On Windows it is not possible to store multiple credentials for one "targetName" or in our terminology: "ApplicationName".
+    /// To support multiple accounts for one application, we use the ApplicationName as targetName prefix, concatinated with a Random Guid.
+    /// </summary>
     [KeyStoreSupports(PlatformID.Win32NT, PlatformID.Win32S, PlatformID.Win32Windows, PlatformID.WinCE)]
     public class WindowsKeyStore : NativeKeyStore {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WindowsKeyStore"/> class.
+        /// </summary>
+        /// <param name="appName">Application name.</param>
         public WindowsKeyStore(string appName) : base(appName) {
         }
 
+        /// <summary>
+        /// Gets the usernames.
+        /// </summary>
+        /// <value>The keys.</value>
         public override ICollection<string> Keys {
             get {
                 var results = new List<string>();
@@ -53,7 +66,7 @@ namespace DataSpace.Common.NativeKeyStore.W32 {
 
         public override string this [string key] {
             get {
-                return getAccounts().FirstOrDefault(a => a.UserName.Equals(key));
+                return getAccounts().FirstOrDefault(a => a.UserName.Equals(key)).Password;
             }
 
             set {

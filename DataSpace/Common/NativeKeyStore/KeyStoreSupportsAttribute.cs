@@ -19,9 +19,22 @@
 ﻿
 namespace DataSpace.Common.NativeKeyStore {
     using System;
+
+    /// <summary>
+    /// This attribute shows enables a <see cref="NativeKeyStore"/> to mark which platforms it supports. A creator of a tagged class can check if the actual platform is supported.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public class KeyStoreSupportsAttribute : Attribute {
+        /// <summary>
+        /// Gets the supported platforms of the tagged <see cref="NativeKeyStore"/>.
+        /// </summary>
+        /// <value>The supported platforms.</value>
         public PlatformID[] Platforms { get; private set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataSpace.Common.NativeKeyStore.KeyStoreSupportsAttribute"/> class.
+        /// </summary>
+        /// <param name="platforms">Supported Platforms.</param>
         public KeyStoreSupportsAttribute(params PlatformID[] platforms) {
             Platforms = platforms ?? new PlatformID[0];
         }
