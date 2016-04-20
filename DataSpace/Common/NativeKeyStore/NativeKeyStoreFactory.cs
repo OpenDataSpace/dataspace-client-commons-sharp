@@ -19,11 +19,21 @@
 ﻿
 namespace DataSpace.Common.NativeKeyStore {
     using System;
+    using System.Collections.Generic;
     using System.Reflection;
 
     public class NativeKeyStoreFactory<T> : INativeKeyStoreFactory where T : NativeKeyStore {
         public NativeKeyStore CreateInstance(params object[] args) {
             try {
+                var attributes = typeof(T).GetCustomAttributes(true);
+                foreach (var attribute in attributes) {
+                    if (attribute is KeyStoreSupportsAttribute) {
+                        if (!new List<PlatformID>((attribute as KeyStoreSupportsAttribute).Platforms).Contains(Environment.OSVersion.Platform)) {
+                            throw new PlatformNotSupportedException();
+                        }
+                    }
+                }
+
                 return Activator.CreateInstance(typeof(T), args) as NativeKeyStore;
             } catch (TargetInvocationException ex) {
                 throw new NotSupportedException(ex.Message, ex);

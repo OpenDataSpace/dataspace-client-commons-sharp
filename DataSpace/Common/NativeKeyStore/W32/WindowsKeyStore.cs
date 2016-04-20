@@ -20,9 +20,11 @@
 namespace DataSpace.Common.NativeKeyStore.W32 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using DataSpace.Common.Settings.Connection.W32;
 
+    [KeyStoreSupports(PlatformID.Win32NT, PlatformID.Win32S, PlatformID.Win32Windows, PlatformID.WinCE)]
     public class WindowsKeyStore : NativeKeyStore {
         public WindowsKeyStore(string appName) : base(appName) {
         }
@@ -30,7 +32,7 @@ namespace DataSpace.Common.NativeKeyStore.W32 {
         public override ICollection<string> Keys {
             get {
                 var results = new List<string>();
-                foreach(var entry in this) {
+                foreach (var entry in this) {
                     results.Add(entry.Key);
                 }
 
@@ -41,7 +43,7 @@ namespace DataSpace.Common.NativeKeyStore.W32 {
         public override ICollection<string> Values {
             get {
                 var results = new List<string>();
-                foreach(var entry in this) {
+                foreach (var entry in this) {
                     results.Add(entry.Value);
                 }
 
@@ -51,37 +53,54 @@ namespace DataSpace.Common.NativeKeyStore.W32 {
 
         public override string this [string key] {
             get {
-                throw new NotSupportedException();
+                return getAccounts().FirstOrDefault(a => a.UserName.Equals(key));
             }
+
             set {
-                throw new NotSupportedException();
+                if (Contains(key)) {
+                    Remove(key);
+                }
+
+                Add(key, value);
             }
         }
 
         public override void Add(string key, string value) {
-            CredentialManager.WriteCredential(ApplicationName, key, value);
+            if (Contains(key)) {
+                throw new ArgumentException(string.Format("Entry with key {} already exists", key));
+            }
+
+            CredentialManager.WriteCredential(ApplicationName + "@" + Guid.NewGuid().ToString(), key, value);
         }
 
         public override bool Contains(string key) {
-            throw new NotSupportedException();
+            return Keys.Contains(key);
         }
 
         public override bool Remove(string key) {
-            throw new NotSupportedException();
+            foreach (var account in getAccounts()) {
+                if (account.UserName.Equals(key)) {
+                    CredentialManager.Delete(account.ApplicationName);
+                }
+            }
         }
 
         public override IEnumerator<KeyValuePair<string, string>> GetEnumerator() {
-            IList<Credential> accounts = CredentialManager.EnumerateCrendentials(ApplicationName + "*");
             IList<KeyValuePair<string, string>> results = new List<KeyValuePair<string, string>>();
-            foreach (var account in accounts) {
-                if (account.CredentialType != CredentialType.Generic || !account.ApplicationName.Equals(ApplicationName)) {
-                    continue;
-                }
-
+            foreach (var account in getAccounts()) {
                 results.Add(new KeyValuePair<string, string>(account.UserName, account.Password));
             }
 
             return results.GetEnumerator();
+        }
+
+        private IList<Credential> getAccounts() {
+            IList<Credential> result = new List<Credential>();
+            foreach (var cred in CredentialManager.EnumerateCrendentials(ApplicationName + "@*")) {
+                if (cred.CredentialType == CredentialType.Generic && cred.ApplicationName.StartsWith(ApplicationName + "@")) {
+                    result.Add(cred);
+                }
+            }
         }
     }
 }

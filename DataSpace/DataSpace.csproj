@@ -123,6 +123,7 @@
     <Compile Include="Common\NativeKeyStore\NativeKeyStoreFactory.cs" />
     <Compile Include="Common\NativeKeyStore\NoNativeKeyStoreAvailable.cs" />
     <Compile Include="Common\NativeKeyStore\W32\WindowsKeyStore.cs" />
+    <Compile Include="Common\NativeKeyStore\KeyStoreSupportsAttribute.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
