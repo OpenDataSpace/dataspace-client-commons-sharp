@@ -91,11 +91,15 @@ namespace DataSpace.Common.NativeKeyStore.W32 {
         }
 
         public override bool Remove(string key) {
+            var result = false;
             foreach (var account in getAccounts()) {
                 if (account.UserName.Equals(key)) {
                     CredentialManager.Delete(account.ApplicationName);
+                    result = true;
                 }
             }
+
+            return result;
         }
 
         public override IEnumerator<KeyValuePair<string, string>> GetEnumerator() {
@@ -114,6 +118,8 @@ namespace DataSpace.Common.NativeKeyStore.W32 {
                     result.Add(cred);
                 }
             }
+
+            return result;
         }
     }
 }
