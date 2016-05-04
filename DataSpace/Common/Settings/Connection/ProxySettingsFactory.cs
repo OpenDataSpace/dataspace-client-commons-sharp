@@ -34,9 +34,10 @@ namespace DataSpace.Common.Settings.Connection {
                 case PlatformID.Unix:
                     return new Generic.ProxySettings(config);
                 case PlatformID.MacOSX:
-                    return new MacOS.ProxySettings(config);
+                    // TODO Use MacOs Proxy Settings
+                    return new Generic.ProxySettings(config);
                 default:
-                    return new W32.ProxySettings();
+                    return new W32.ProxySettings(config);
             }
         }
     }

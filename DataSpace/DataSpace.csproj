@@ -94,7 +94,6 @@
     <Compile Include="Common\Transmissions\TransmissionType.cs" />
     <Compile Include="Common\Settings\Connection\W32\AccountSettings.cs" />
     <Compile Include="Common\Settings\Connection\ProxyType.cs" />
-    <Compile Include="Common\Settings\Connection\MacOS\AccountSettings.cs" />
     <Compile Include="Common\Settings\Connection\W32\CredentialManager.cs" />
     <Compile Include="Common\Settings\Connection\AccountSettingsFactory.cs" />
     <Compile Include="Common\Settings\ConfigurationLoader.cs" />
@@ -108,7 +107,6 @@
     <Compile Include="Common\Settings\Connection\W32\ProxyConfigSection.cs" />
     <Compile Include="Common\Settings\Connection\Generic\ProxySettings.cs" />
     <Compile Include="Common\Settings\Connection\Generic\ProxyConfigSection.cs" />
-    <Compile Include="Common\Settings\Connection\MacOS\ProxySettings.cs" />
     <Compile Include="Common\Settings\Connection\AbstractProxyConfigSection.cs" />
     <Compile Include="Common\Settings\Connection\DataSpaceAccountSectionGroup.cs" />
     <Compile Include="Common\Settings\Connection\IDataSpaceAccount.cs" />
@@ -132,7 +130,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Common\Settings\Connection\W32\" />
-    <Folder Include="Common\Settings\Connection\MacOS\" />
     <Folder Include="Common\Settings\Connection\Generic\" />
     <Folder Include="Common\NativeKeyStore\" />
     <Folder Include="Common\NativeKeyStore\W32\" />
