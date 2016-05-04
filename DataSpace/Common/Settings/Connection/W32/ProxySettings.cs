@@ -37,10 +37,18 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         /// the Logger  object
         /// </summary>
         private static readonly log4net.ILog _logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        private readonly Configuration config;
+
         /// <summary>
         /// Constructor
         /// </summary>
-        public ProxySettings() {
+        public ProxySettings(Configuration config) {
+            if (config == null) {
+                throw new ArgumentNullException("config");
+            }
+
+            this.config = config;
             // catch property change events and relay them
             // we can do this because we have identical property names
             _ProxyAccount.PropertyChanged += (sender, e) => {
@@ -195,23 +203,18 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         }
 
         public void Delete() {
-            // get the Configfile Section object
-            ConfigurationSectionLoader Loader = new ConfigurationSectionLoader(GetConfigFilePath());
-            ProxyConfigSection StoredSection = (ProxyConfigSection)Loader.GetSection(SectionName, typeof(ProxyConfigSection));
             lock (_Lock) {
                 // find our Section in Collection and delete it
-                Loader.Configuration.Sections.Remove(StoredSection.SectionInformation.SectionName);
-
+                config.Sections.Remove(AbstractProxyConfigSection.SectionName);
                 // delete the Accountinformation part
                 _ProxyAccount.Delete();
                 // save changes
-                Loader.Configuration.Save();
+                config.Save();
                 // reinit our properties
                 ProxyType = ProxyType.None;
                 NeedLogin = false;
                 // update refresh time
                 _LastRefreshTime = DateTime.Now;
-
                 IsDirty = false;
             }
 
@@ -220,28 +223,16 @@ namespace DataSpace.Common.Settings.Connection.W32 {
 
         public void Load() {
             // get the Configfile Section object
-            ConfigurationSectionLoader Loader = new ConfigurationSectionLoader(GetConfigFilePath());
-            ProxyConfigSection StoredSection = (ProxyConfigSection)Loader.GetSection(SectionName, typeof(ProxyConfigSection));
+            ProxyConfigSection StoredSection = config.GetOrCreateSection<ProxyConfigSection>(SectionName);
 
             // using local variables -- so we can keep the following lock block short
             // initialize with fallback values
-            ProxyType NewProxyType = ProxyType.None;
+            ProxyType NewProxyType = ProxyType.Default;
             bool NewNeedLogin = false;
 
-            if (StoredSection.ElementInformation.Errors.Count == 0) {
-                // retrieve the data from Configfile
-                NewProxyType = StoredSection.ProxyType;
-                NewNeedLogin = StoredSection.NeedLogin;
-            } else {
-                _logger.WarnFormat("Found {0} Errors in Configuration.", StoredSection.ElementInformation.Errors.Count);
-                foreach (var err in StoredSection.ElementInformation.Errors) {
-                    _logger.Warn(err.ToString());
-                }
-
-                _logger.Warn("Using default Configuration.");
-            }
-
-
+            // retrieve the data from Configfile
+            NewProxyType = StoredSection.ProxyType;
+            NewNeedLogin = StoredSection.NeedLogin;
             lock (_Lock) {
                 // update refresh time and Properties
                 _LastRefreshTime = DateTime.Now;
@@ -257,17 +248,15 @@ namespace DataSpace.Common.Settings.Connection.W32 {
 
         public void Save() {
             // get the Configfile Section object
-            ConfigurationSectionLoader Loader = new ConfigurationSectionLoader(GetConfigFilePath());
-
-            ProxyConfigSection StoredSection = (ProxyConfigSection)Loader.GetSection(SectionName, typeof(ProxyConfigSection));
+            ProxyConfigSection StoredSection = config.GetOrCreateSection<ProxyConfigSection>(SectionName);
             // store if changes were pending or no config file is present
-            if (IsDirty || Loader.Configuration.HasFile == false) {
+            if (IsDirty || config.HasFile == false) {
                 // transfer local properties to section object and save Configuration
                 lock (_Lock) {
                     // use backing field values to prevent autoupdate
                     StoredSection.ProxyType = _ProxyType;
                     StoredSection.NeedLogin = _NeedLogin;
-                    Loader.Configuration.Save();
+                    config.Save();
                     // save the Accountinformation part
                     _ProxyAccount.Save();
                     // update refresh time
