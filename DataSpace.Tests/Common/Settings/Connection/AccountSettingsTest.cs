@@ -21,17 +21,10 @@ namespace Tests.Common.Settings.Connection {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Configuration;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     using DataSpace.Common.Crypto;
-    using DataSpace.Common.Settings;
     using DataSpace.Common.Settings.Connection;
     using DataSpace.Common.Utils;
-    using DataSpace.Tests.Utils;
 
     using NUnit.Framework;
 
@@ -40,10 +33,25 @@ namespace Tests.Common.Settings.Connection {
         private string _Url = "test.url.com";
         private string _UserName = "TestName";
         private string _Password = "TestPassword";
+        private IAccountSettings underTest;
+        private string accountName;
+
+        [SetUp]
+        public void CreateAccountInstance() {
+            accountName = "DataSpaceAccount" + Guid.NewGuid().ToString();
+            underTest = new AccountSettingsFactory().CreateInstance(accountName, config);
+        }
+
+        [TearDown]
+        public void RemoveAccountInstance() {
+            if (underTest != null) {
+                underTest.Delete();
+            }
+        }
+
 
         [Test]
         public void Constructor() {
-            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", config);
             underTest.Load();
             // Assert
             Assert.That(underTest.IsDirty, Is.False);
@@ -54,7 +62,6 @@ namespace Tests.Common.Settings.Connection {
 
         [Test]
         public void PropertyGetSet() {
-            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", config);
             underTest.Load();
             // act
             underTest.Url = _Url;
@@ -69,14 +76,13 @@ namespace Tests.Common.Settings.Connection {
 
         [Test]
         public void WriteAndRead() {
-            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", config);
             underTest.Load();
             underTest.Url = _Url;
             underTest.UserName = _UserName;
             underTest.Password = new System.Security.SecureString().Init(_Password);
             underTest.Save();
 
-            underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", config);
+            underTest = new AccountSettingsFactory().CreateInstance(accountName, config);
             underTest.Load();
             Assert.That(underTest.Password.ConvertToUnsecureString(), Is.EqualTo(_Password));
             Assert.That(underTest.Url, Is.EqualTo(_Url));
@@ -85,7 +91,6 @@ namespace Tests.Common.Settings.Connection {
 
         [Test]
         public void CreateNew() {
-            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", config);
             underTest.Load();
             underTest.Url = _Url;
             underTest.UserName = _UserName;
@@ -95,7 +100,6 @@ namespace Tests.Common.Settings.Connection {
 
         [Test]
         public void Check_OnPropertyChanged_Success() {
-            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", config);
             underTest.Load();
             List<string> ReceivedEvents = new List<string>();
 
@@ -122,8 +126,6 @@ namespace Tests.Common.Settings.Connection {
 
         [Test]
         public void Load_TriggersEvent() {
-            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", config);
-
             // Load Event Handler
             bool IsTriggered = false;
             underTest.SettingsLoaded += (sender, arg) => {
@@ -138,7 +140,6 @@ namespace Tests.Common.Settings.Connection {
 
         [Test]
         public void Save_TriggersEvent() {
-            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", config);
             // Save Event Handler
             bool IsTriggered = false;
             underTest.SettingsSaved += (sender, arg) => {
