@@ -28,7 +28,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         /// <summary>
         /// Proxy Type
         /// </summary>
-        [ConfigurationProperty("ProxyType", DefaultValue = ProxyType.None, IsRequired = true)]
+        [ConfigurationProperty("ProxyType", DefaultValue = ProxyType.Default, IsRequired = true)]
         public ProxyType ProxyType {
             get { return (ProxyType)this[Property.NameOf(() => this.ProxyType)]; }
             set { this [Property.NameOf(() => this.ProxyType)] = value; }
