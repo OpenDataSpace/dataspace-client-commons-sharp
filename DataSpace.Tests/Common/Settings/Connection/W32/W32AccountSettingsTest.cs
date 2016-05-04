@@ -38,6 +38,7 @@ namespace Tests.Common.Settings.Connection.W32 {
     [TestFixture]
     public class W32AccountSettingsTest : WithConfiguredLog4Net {
         private Configuration configuration;
+        private IAccountSettings underTest;
 
         [TestFixtureSetUp]
         public void LimitToWindows() {
@@ -47,12 +48,11 @@ namespace Tests.Common.Settings.Connection.W32 {
         [SetUp]
         public void SetUp() {
             configuration = new ConfigurationLoader(new UserConfigPathBuilder{ Company = "UnitTest" }).Configuration;
+            underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", configuration);
         }
 
         [Test, NUnit.Framework.Category("Slow")]
         public void PropGet_TriggersLoad() {
-            //prep
-            IAccountSettings underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", configuration);
             // clear dirty flag
             underTest.Load();
             AccountSettings AccSetObj = underTest as AccountSettings;
@@ -73,43 +73,39 @@ namespace Tests.Common.Settings.Connection.W32 {
 
         [Test, NUnit.Framework.Category("Slow")]
         public void PropGet_NoTriggersLoadInRefreshSpan() {
-            // prep
-            IAccountSettings AccSet = new ConnectionSettingsFactory().AccountSettings;
             // clear dirty flag
-            AccSet.Load();
-            AccountSettings AccSetObj = AccSet as AccountSettings;
+            underTest.Load();
+            AccountSettings AccSetObj = underTest as AccountSettings;
             AccSetObj.PropsRefreshSpan = new TimeSpan(0, 2, 0);
             bool IsTriggered = false;
-            AccSet.SettingsLoaded += (sender, arg) => {
+            underTest.SettingsLoaded += (sender, arg) => {
                 IsTriggered = true;
             };
             // act
-            string Url = AccSet.Url;
+            string Url = underTest.Url;
             System.Threading.Thread.Sleep(1000);
-            Url = AccSet.Url;
+            Url = underTest.Url;
             // assert
             Assert.AreEqual(false, IsTriggered);
         }
 
         [Test, NUnit.Framework.Category("Slow")]
         public void PropGet_NoTriggersLoadDisabled() {
-            // prep
-            IAccountSettings AccSet = new ConnectionSettingsFactory().AccountSettings;
             // clear dirty flag
-            AccSet.Load();
-            AccountSettings AccSetObj = AccSet as AccountSettings;
+            underTest.Load();
+            AccountSettings AccSetObj = underTest as AccountSettings;
             // set 5 sec timer
             AccSetObj.PropsRefreshSpan = new TimeSpan(0, 5, 0);
             // set disabled
             AccSetObj.PropsRefreshSpan = new TimeSpan(0, 0, 0);
             bool IsTriggered = false;
-            AccSet.SettingsLoaded += (sender, arg) => {
+            underTest.SettingsLoaded += (sender, arg) => {
                 IsTriggered = true;
             };
             // act
-            string Url = AccSet.Url;
+            string Url = underTest.Url;
             System.Threading.Thread.Sleep(5020);
-            Url = AccSet.Url;
+            Url = underTest.Url;
             // assert
             Assert.AreEqual(false, IsTriggered);
             // house keeping
@@ -118,23 +114,21 @@ namespace Tests.Common.Settings.Connection.W32 {
 
         [Test, NUnit.Framework.Category("Slow")]
         public void PropGet_NoTriggersLoadEditMode() {
-            // prep
-            IAccountSettings AccSet = new ConnectionSettingsFactory().AccountSettings;
             // clear dirty flag
-            AccSet.Load();
-            AccountSettings AccSetObj = AccSet as AccountSettings;
+            underTest.Load();
+            AccountSettings AccSetObj = underTest as AccountSettings;
             // set 5 sec timer
             AccSetObj.PropsRefreshSpan = new TimeSpan(0, 5, 0);
             bool IsTriggered = false;
-            AccSet.SettingsLoaded += (sender, arg) => {
+            underTest.SettingsLoaded += (sender, arg) => {
                 IsTriggered = true;
             };
             // act
-            string Url = AccSet.Url;
+            string Url = underTest.Url;
             // modify -> go in Edit mode
-            AccSet.Url = Url + "!";
+            underTest.Url = Url + "!";
             System.Threading.Thread.Sleep(5020);
-            Url = AccSet.Url;
+            Url = underTest.Url;
             // assert
             Assert.AreEqual(false, IsTriggered);
             // house keeping
