@@ -86,11 +86,11 @@ namespace Tests.Common.Settings.Connection {
             underTest.Delete();
 
             Assert.That(underTest.IsDirty, Is.False);
-            Assert.AreEqual(false, underTest.NeedLogin);
-            Assert.AreEqual(ProxyType.None, underTest.ProxyType);
-            Assert.AreEqual(string.Empty, underTest.Url);
-            Assert.AreEqual(string.Empty, underTest.UserName);
-            Assert.AreEqual(string.Empty, underTest.Password.ConvertToUnsecureString());
+            Assert.That(underTest.NeedLogin, Is.False);
+            Assert.That(underTest.ProxyType, Is.EqualTo(ProxyType.Default));
+            Assert.That(underTest.Url, Is.Empty);
+            Assert.That(underTest.UserName, Is.Empty);
+            Assert.That(underTest.Password.ConvertToUnsecureString(), Is.Empty);
         }
 
         [Test]
