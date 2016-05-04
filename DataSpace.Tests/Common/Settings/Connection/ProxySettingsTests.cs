@@ -44,7 +44,7 @@ namespace Tests.Common.Settings.Connection {
             // check default values
             Assert.That(underTest.IsDirty, Is.False);
             Assert.That(underTest.NeedLogin, Is.False);
-            Assert.That(underTest.ProxyType, Is.EqualTo(ProxyType.None));
+            Assert.That(underTest.ProxyType, Is.EqualTo(ProxyType.Default));
             Assert.That(underTest.Url, Is.Empty);
             Assert.That(underTest.UserName, Is.Empty);
             Assert.That(underTest.Password.ConvertToUnsecureString(), Is.Empty);

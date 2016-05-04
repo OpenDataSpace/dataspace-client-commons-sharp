@@ -49,6 +49,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
             }
 
             this.config = config;
+            this.Load();
             // catch property change events and relay them
             // we can do this because we have identical property names
             _ProxyAccount.PropertyChanged += (sender, e) => {
@@ -104,7 +105,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         /// <summary>
         /// Section name in config file
         /// </summary>
-        internal string SectionName = "";
+        internal string SectionName = "DataSpaceProxy";
         private bool _IsDirty = false;
         public bool IsDirty {
             get {
