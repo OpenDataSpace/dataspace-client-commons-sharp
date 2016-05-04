@@ -31,6 +31,9 @@ namespace DataSpace.Common.NativeKeyStore.W32 {
     /// </summary>
     [KeyStoreSupports(PlatformID.Win32NT, PlatformID.Win32S, PlatformID.Win32Windows, PlatformID.WinCE)]
     public class WindowsKeyStore : NativeKeyStore {
+        public WindowsKeyStore() : base("DataSpace") {
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="WindowsKeyStore"/> class.
         /// </summary>
