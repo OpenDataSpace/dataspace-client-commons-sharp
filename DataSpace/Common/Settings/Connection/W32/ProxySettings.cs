@@ -212,7 +212,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
                 // save changes
                 config.Save();
                 // reinit our properties
-                ProxyType = ProxyType.None;
+                ProxyType = ProxyType.Default;
                 NeedLogin = false;
                 // update refresh time
                 _LastRefreshTime = DateTime.Now;
