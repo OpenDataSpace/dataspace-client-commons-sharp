@@ -92,6 +92,16 @@ namespace DataSpace.Common.Settings.Connection.W32 {
             }
         }
 
+        public string Id {
+            get {
+                throw new NotImplementedException();
+            }
+
+            set {
+                throw new NotImplementedException();
+            }
+        }
+
         /// <summary>
         /// Prefix used for saved Urls
         /// </summary>

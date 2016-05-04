@@ -28,7 +28,7 @@ namespace DataSpace.Common.Settings.Connection.Generic {
     using DataSpace.Common.Utils;
 
     /// <summary>
-    /// Read/Store Account information in Windows Credential Store
+    /// Read/Store Account information Configuration file.
     /// </summary>
     public class AccountSettings : IAccountSettingsRead, IAccountSettings {
         private Configuration parent;
@@ -61,6 +61,19 @@ namespace DataSpace.Common.Settings.Connection.Generic {
             }
         }
 
+        public string Id {
+            get {
+                return section.Id;
+            }
+
+            set {
+                if (!this.section.Id.Equals(value)) {
+                    this.section.Id = value;
+                    OnPropertyChanged(Property.NameOf(() => this.Id));
+                }
+            }
+        }
+
         public string Url {
             get {
                 return this.section.Url;
@@ -73,6 +86,7 @@ namespace DataSpace.Common.Settings.Connection.Generic {
                 }
             }
         }
+
         public string UserName {
             get {
                 return section.UserName;

@@ -24,6 +24,7 @@ namespace DataSpace.Common.Settings.Connection {
     /// Account read access
     /// </summary>
     public interface IAccountSettingsRead : INotifySettingsChanged {
+        string Id { get; }
         string Url { get; }
         string UserName { get;}
         SecureString Password { get;}
@@ -33,6 +34,7 @@ namespace DataSpace.Common.Settings.Connection {
     /// Account read/write access
     /// </summary>
     public interface IAccountSettings  : INotifySettingsChanged, ISettingsPersist {
+        string Id { get; set; }
         string Url { get; set; }
         string UserName { get; set; }
         SecureString Password { get; set; }
