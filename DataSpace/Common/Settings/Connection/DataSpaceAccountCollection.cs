@@ -67,6 +67,10 @@ namespace DataSpace.Common.Settings.Connection {
         }
 
         public void Delete() {
+            foreach (var entry in this) {
+                entry.Delete();
+            }
+
             this.config.SectionGroups.Remove(DataSpaceAccountSectionGroup.DefaultSectionGroupName);
             this.config.Save();
             SettingsSaved.Invoke(this, new EventArgs());
