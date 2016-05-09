@@ -42,6 +42,7 @@ namespace Tests.Common.Settings {
         public void GetSectionInGroup() {
             var groupName = "group";
             var sectionName = "section";
+            var fullSectionName = groupName + "/" + sectionName;
             var config = new ConfigurationLoader(new UserConfigPathBuilder{ FileName = Guid.NewGuid().ToString() }).Configuration;
             var group = config.GetOrCreateSectionGroup<ConfigurationSectionGroup>(groupName);
             Assert.That(group, Is.Not.Null);
@@ -49,9 +50,10 @@ namespace Tests.Common.Settings {
             group.Sections.Add(sectionName, section);
             Assert.That(config.GetSection(groupName + "/nonExistingSection"), Is.Null);
             Assert.That(config.GetSection("nonExistingSection"), Is.Null);
-            Assert.That(config.GetSection(groupName + "/" + sectionName), Is.EqualTo(section));
-            Assert.That(config.GetOrCreateSection<ConfigurationSection>(groupName + "/" + sectionName), Is.EqualTo(section));
-            Assert.That(config.GetSection(groupName + "/" + sectionName).SectionInformation.Name, Is.EqualTo(sectionName));
+            Assert.That(config.GetSection(fullSectionName), Is.EqualTo(section));
+            Assert.That(config.GetOrCreateSection<ConfigurationSection>(fullSectionName), Is.EqualTo(section));
+            Assert.That(config.GetSection(fullSectionName).SectionInformation.Name, Is.EqualTo(sectionName));
+            Assert.That(config.GetSection(fullSectionName).SectionInformation.SectionName, Is.EqualTo(fullSectionName));
         }
 
         [Test]
