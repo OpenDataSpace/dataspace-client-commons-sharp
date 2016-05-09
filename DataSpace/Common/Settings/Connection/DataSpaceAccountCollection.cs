@@ -50,7 +50,7 @@ namespace DataSpace.Common.Settings.Connection {
             this.group = this.config.GetOrCreateSectionGroup<DataSpaceAccountSectionGroup>(DataSpaceAccountSectionGroup.DefaultSectionGroupName);
             this.Clear();
             foreach (var entry in this.group.Sections) {
-                this.accountFactory.CreateInstance(config, entry as ConfigurationSection);
+                base.Add(this.accountFactory.CreateInstance(config, entry as ConfigurationSection));
             }
 
             SettingsLoaded.Invoke(this, new EventArgs());
