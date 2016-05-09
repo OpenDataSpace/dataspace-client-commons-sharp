@@ -19,10 +19,13 @@
 ﻿
 namespace Tests.Common.Settings {
     using System;
+    using System.Configuration;
     using System.IO;
 
     using DataSpace.Common.Settings;
     using DataSpace.Tests.Utils;
+
+    using Moq;
 
     using NUnit.Framework;
 
@@ -33,6 +36,22 @@ namespace Tests.Common.Settings {
             var configPath = new UserConfigPathBuilder{ FileName = Guid.NewGuid().ToString() };
             ConfigurationLoader underTest = new ConfigurationLoader(configPath);
             Assert.That(underTest.Configuration, Is.Not.Null);
+        }
+
+        [Test]
+        public void GetSectionInGroup() {
+            var groupName = "group";
+            var sectionName = "section";
+            var config = new ConfigurationLoader(new UserConfigPathBuilder{ FileName = Guid.NewGuid().ToString() }).Configuration;
+            var group = config.GetOrCreateSectionGroup<ConfigurationSectionGroup>(groupName);
+            Assert.That(group, Is.Not.Null);
+            var section = Mock.Of<ConfigurationSection>();
+            group.Sections.Add(sectionName, section);
+            Assert.That(config.GetSection(groupName + "/nonExistingSection"), Is.Null);
+            Assert.That(config.GetSection("nonExistingSection"), Is.Null);
+            Assert.That(config.GetSection(groupName + "/" + sectionName), Is.EqualTo(section));
+            Assert.That(config.GetOrCreateSection<ConfigurationSection>(groupName + "/" + sectionName), Is.EqualTo(section));
+            Assert.That(config.GetSection(groupName + "/" + sectionName).SectionInformation.Name, Is.EqualTo(sectionName));
         }
     }
 }
