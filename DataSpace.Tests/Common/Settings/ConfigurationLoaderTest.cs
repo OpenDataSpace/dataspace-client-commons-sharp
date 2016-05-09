@@ -53,5 +53,18 @@ namespace Tests.Common.Settings {
             Assert.That(config.GetOrCreateSection<ConfigurationSection>(groupName + "/" + sectionName), Is.EqualTo(section));
             Assert.That(config.GetSection(groupName + "/" + sectionName).SectionInformation.Name, Is.EqualTo(sectionName));
         }
+
+        [Test]
+        public void CreateSectionWithGroupPathCreatesGroup() {
+            var groupName = "group";
+            var sectionName = "section";
+            var config = new ConfigurationLoader(new UserConfigPathBuilder{ FileName = Guid.NewGuid().ToString() }).Configuration;
+            var section = config.GetOrCreateSection<TestSection>(groupName + "/" + sectionName);
+            Assert.That(section, Is.Not.Null);
+            Assert.That(config.SectionGroups.Get(groupName), Is.Not.Null);
+        }
+
+        private class TestSection : ConfigurationSection {
+        }
     }
 }
