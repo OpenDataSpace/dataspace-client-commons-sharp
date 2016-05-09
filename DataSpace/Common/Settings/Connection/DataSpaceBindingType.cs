@@ -38,7 +38,7 @@ namespace DataSpace.Common.Settings.Connection {
     }
 
     [AttributeUsage(AttributeTargets.Field)]
-    public class DataSpaceUrlSuffixAttribute : System.Attribute {
+    public class DataSpaceUrlSuffixAttribute : Attribute {
         public DataSpaceUrlSuffixAttribute(string suffix) {
             Suffix = suffix;
         }

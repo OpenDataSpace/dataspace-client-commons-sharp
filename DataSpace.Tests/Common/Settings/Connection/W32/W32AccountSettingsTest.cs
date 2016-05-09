@@ -48,7 +48,7 @@ namespace Tests.Common.Settings.Connection.W32 {
         [SetUp]
         public void SetUp() {
             configuration = new ConfigurationLoader(new UserConfigPathBuilder{ Company = "UnitTest" }).Configuration;
-            underTest = new AccountSettingsFactory().CreateInstance("DataSpaceAccount", configuration);
+            underTest = new AccountSettingsFactory().CreateInstance(configuration, "DataSpaceAccount");
         }
 
         [Test, NUnit.Framework.Category("Slow")]

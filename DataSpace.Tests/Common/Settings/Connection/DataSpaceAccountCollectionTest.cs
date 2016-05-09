@@ -40,7 +40,7 @@ namespace Tests.Common.Settings.Connection {
             int isElementTriggered = 0;
             string changedProperty = "bla";
             var underTest = new DataSpaceAccountCollection(config);
-            var mockedEntry = new Mock<IDataSpaceAccount>();
+            var mockedEntry = new Mock<IAccountSettings>();
             underTest.Add(mockedEntry.Object);
             underTest.CollectionChanged += (object sender, NotifyCollectionChangedEventArgs e) => {
                 Assert.That(sender, Is.EqualTo(underTest));
@@ -57,7 +57,7 @@ namespace Tests.Common.Settings.Connection {
             Assert.That(isElementTriggered, Is.EqualTo(1));
             Assert.That(isCollectionTriggered, Is.EqualTo(0));
             Assert.That(underTest.Count, Is.EqualTo(1));
-            underTest.Add(Mock.Of<IDataSpaceAccount>());
+            underTest.Add(Mock.Of<IAccountSettings>());
             Assert.That(isCollectionTriggered, Is.EqualTo(1));
             Assert.That(underTest.Count, Is.EqualTo(2));
         }

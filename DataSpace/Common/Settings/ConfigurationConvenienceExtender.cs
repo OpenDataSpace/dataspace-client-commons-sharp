@@ -28,30 +28,30 @@ namespace DataSpace.Common.Settings {
         /// Reads or Creates ConfigurationSection derived objects
         /// </summary>
         /// <param name="SectionName">Name Tag in <code>Configuration.Sections</code></param>
-        /// <param name="StoreSectionType">ConfigurationSection derived Type for load/save operations</param>
-        /// <returns></returns>
-        public static T GetOrCreateSection<T>(this Configuration configuration, string SectionName) where T : ConfigurationSection {
+        /// <param name="config">Configuration for load/save operations</param>
+        /// <returns>Configuration section</returns>
+        public static T GetOrCreateSection<T>(this Configuration config, string SectionName) where T : ConfigurationSection {
             T section = null;
             try {
                 // try to get our section -- can except in case of version diff or something else
                 // if section does not exist no exception is thrown an returns zero
-                section = configuration.GetSection(SectionName) as T;
+                section = config.GetSection(SectionName) as T;
             } catch (ConfigurationErrorsException eConf) {
                 logger.ErrorFormat("{0} -- Failed to load Section '{1}' - Exception: {2}", System.Reflection.MethodBase.GetCurrentMethod().Name, SectionName, eConf.Message);
                 // assume it already exists  -> delete it
-                configuration.Sections.Remove(SectionName);
+                config.Sections.Remove(SectionName);
             } catch (Exception e) {
                 // something else .. log it and eat it
-                logger.ErrorFormat("{0} -- Failed to load Section {1} - Exception: {2}", System.Reflection.MethodBase.GetCurrentMethod().Name, SectionName, e.Message);
+                logger.ErrorFormat("{0} -- Failed to load Section '{1}' - Exception: {2}", System.Reflection.MethodBase.GetCurrentMethod().Name, SectionName, e.Message);
             }
 
             if (section == null) {
                 // Config without our section -> create and add it
                 try {
                     section = Activator.CreateInstance<T>();
-                    configuration.Sections.Add(SectionName, section);
+                    config.Sections.Add(SectionName, section);
                 } catch (Exception e) {
-                    logger.ErrorFormat("{0} -- Failed to create Section {1} - Exception: {2}", System.Reflection.MethodBase.GetCurrentMethod().Name, SectionName, e.Message);
+                    logger.ErrorFormat("{0} -- Failed to create Section '{1}' - Exception: {2}", System.Reflection.MethodBase.GetCurrentMethod().Name, SectionName, e.Message);
                     throw;
                 }
             }
@@ -62,36 +62,55 @@ namespace DataSpace.Common.Settings {
         /// <summary>
         /// Reads or Creates ConfigurationSectionGroup derived objects
         /// </summary>
-        /// <param name="SectionName">Name Tag in <code>Configuration.Sections</code></param>
-        /// <param name="StoreSectionType">ConfigurationSectionGroup derived Type for load/save operations</param>
+        /// <param name="sectionGroupName">Name of Group in <code>Configuration.SectionGroups</code></param>
+        /// <param name="config">Configuration for load/save operations</param>
         /// <returns>ConfigurationSectionGroup</returns>
-        public static T GetOrCreateSectionGroup<T>(this Configuration configuration, string SectionName) where T : ConfigurationSectionGroup {
+        public static T GetOrCreateSectionGroup<T>(this Configuration config, string sectionGroupName) where T : ConfigurationSectionGroup {
             T sectionGroup = null;
             try {
                 // try to get our section -- can except in case of version diff or something else
-                // if section does not exist no exception is thrown an returns zero
-                sectionGroup = configuration.GetSectionGroup(SectionName) as T;
+                // if section group does not exist no exception is thrown an returns zero
+                sectionGroup = config.GetSectionGroup(sectionGroupName) as T;
             } catch (ConfigurationErrorsException eConf) {
-                logger.ErrorFormat("{0} -- Failed to load Section '{1}' - Exception: {2}", System.Reflection.MethodBase.GetCurrentMethod().Name, SectionName, eConf.Message);
+                logger.ErrorFormat("{0} -- Failed to load Section Group '{1}' - Exception: {2}", System.Reflection.MethodBase.GetCurrentMethod().Name, sectionGroupName, eConf.Message);
                 // assume it already exists  -> delete it
-                configuration.SectionGroups.Remove(SectionName);
+                config.SectionGroups.Remove(sectionGroupName);
             } catch (Exception e) {
                 // something else .. log it and eat it
-                logger.ErrorFormat("{0} -- Failed to load Section {1} - Exception: {2}", System.Reflection.MethodBase.GetCurrentMethod().Name, SectionName, e.Message);
+                logger.ErrorFormat("{0} -- Failed to load Section Group '{1}' - Exception: {2}", System.Reflection.MethodBase.GetCurrentMethod().Name, sectionGroupName, e.Message);
             }
 
             if (sectionGroup == null) {
                 // Config without our section -> create and add it
                 try {
                     sectionGroup = Activator.CreateInstance<T>();
-                    configuration.SectionGroups.Add(SectionName, sectionGroup);
+                    config.SectionGroups.Add(sectionGroupName, sectionGroup);
                 } catch (Exception e) {
-                    logger.ErrorFormat("{0} -- Failed to create Section {1} - Exception: {2}", System.Reflection.MethodBase.GetCurrentMethod().Name, SectionName, e.Message);
+                    logger.ErrorFormat("{0} -- Failed to create Section Group '{1}' - Exception: {2}", System.Reflection.MethodBase.GetCurrentMethod().Name, sectionGroupName, e.Message);
                     throw;
                 }
             }
 
             return sectionGroup;
+        }
+
+        public static void RemoveSection(this Configuration config, string sectionName) {
+            var segments = sectionName.Split('/');
+
+            int i = 0;
+            var groups = config.SectionGroups;
+            ConfigurationSectionGroup group = null;
+            while (i < segments.Length) {
+                group = groups.Get(segments[i]);
+                groups = group.SectionGroups;
+                i++;
+            }
+
+            if (segments.Length > 1) {
+                groups.Remove(segments[i]);
+            } else {
+                config.Sections.Remove(sectionName);
+            }
         }
     }
 }

@@ -22,6 +22,6 @@ namespace DataSpace.Common.Settings.Connection {
     using System.Configuration;
 
     public class DataSpaceAccountSectionGroup : ConfigurationSectionGroup {
-        public static readonly string DefaultSectionGroupName = "Connections";
+        public static readonly string DefaultSectionGroupName = "Accounts";
     }
 }

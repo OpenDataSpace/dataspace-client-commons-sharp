@@ -39,17 +39,20 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         private static readonly log4net.ILog _logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly Configuration config;
+        private readonly IAccountSettingsFactory accountFactory;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public ProxySettings(Configuration config) {
+        public ProxySettings(Configuration config, IAccountSettingsFactory accountFactory = null) {
             if (config == null) {
                 throw new ArgumentNullException("config");
             }
 
             this.config = config;
-            this.Load();
+            this.accountFactory = accountFactory ?? new AccountSettingsFactory();
+            _ProxyAccount = this.accountFactory.CreateInstance(config, SectionName + "Account");
+            Load();
             // catch property change events and relay them
             // we can do this because we have identical property names
             _ProxyAccount.PropertyChanged += (sender, e) => {
@@ -97,7 +100,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         /// <summary>
         /// Proxy Account login data
         /// </summary>
-        private IAccountSettings _ProxyAccount = new AccountSettingsFactory().CreateInstance("DataSpaceProxy@");
+        private IAccountSettings _ProxyAccount = null;
         /// <summary>
         /// delegate -- must retrieve the config file loction
         /// </summary>

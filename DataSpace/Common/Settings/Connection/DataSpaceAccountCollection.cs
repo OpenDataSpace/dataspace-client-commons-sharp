@@ -16,41 +16,36 @@
 //
 // </copyright>
 //-----------------------------------------------------------------------
-﻿
+
 namespace DataSpace.Common.Settings.Connection {
     using System;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
-    using System.ComponentModel;
     using System.Configuration;
 
-    using DataSpace.Common.Utils;
-
-    public class DataSpaceAccountCollection : ObservableCollection<IDataSpaceAccount>, ISettingsPersist, INotifySettingsChanged {
+    public class DataSpaceAccountCollection : ObservableCollection<IAccountSettings>, ISettingsPersist, INotifySettingsChanged {
         private bool isDirty = false;
         private Configuration config;
-        private IDataSpaceAccountFactory accountFactory;
+        private IAccountSettingsFactory accountFactory;
         private DataSpaceAccountSectionGroup group;
-        public DataSpaceAccountCollection(Configuration config, IDataSpaceAccountFactory factory = null) {
+        public DataSpaceAccountCollection(Configuration config, IAccountSettingsFactory factory = null) {
             if (config == null) {
                 throw new ArgumentNullException("config");
             }
 
             this.config = config;
-            this.accountFactory = factory ?? new DataSpaceAccountFactory();
-            this.CollectionChanged += (object sender, NotifyCollectionChangedEventArgs e) => {
+            accountFactory = factory ?? new AccountSettingsFactory();
+            CollectionChanged += (object sender, NotifyCollectionChangedEventArgs e) => {
                 IsDirty = true;
             };
-            this.Load();
+            Load();
         }
 
         public void Load() {
-            this.group = this.config.GetOrCreateSectionGroup<DataSpaceAccountSectionGroup>(DataSpaceAccountSectionGroup.DefaultSectionGroupName);
-            this.Clear();
-            foreach (var entry in this.group.Sections) {
-                this.accountFactory.CreateInstance(config, entry as ConfigurationSection);
+            group = config.GetOrCreateSectionGroup<DataSpaceAccountSectionGroup>(DataSpaceAccountSectionGroup.DefaultSectionGroupName);
+            Clear();
+            foreach (var entry in group.Sections) {
+                
             }
 
             SettingsLoaded.Invoke(this, new EventArgs());
@@ -61,16 +56,16 @@ namespace DataSpace.Common.Settings.Connection {
                 entry.Save();
             }
 
-            this.config.Save();
+            config.Save();
             SettingsSaved.Invoke(this, new EventArgs());
-            this.isDirty = false;
+            isDirty = false;
         }
 
         public void Delete() {
-            this.config.SectionGroups.Remove(DataSpaceAccountSectionGroup.DefaultSectionGroupName);
-            this.config.Save();
+            config.SectionGroups.Remove(DataSpaceAccountSectionGroup.DefaultSectionGroupName);
+            config.Save();
             SettingsSaved.Invoke(this, new EventArgs());
-            this.isDirty = false;
+            isDirty = false;
         }
 
         public bool IsDirty {

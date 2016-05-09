@@ -18,71 +18,62 @@
 //-----------------------------------------------------------------------
 
 namespace DataSpace.Common.Settings.Connection.Generic {
-    ﻿using System;
-    using System.Collections.Generic;
+    using System;
     using System.ComponentModel;
     using System.Configuration;
     using System.Security;
 
-    using DataSpace.Common.Crypto;
-    using DataSpace.Common.Utils;
+    using Crypto;
+    using Utils;
 
     /// <summary>
     /// Read/Store Account information Configuration file.
     /// </summary>
     public class AccountSettings : IAccountSettingsRead, IAccountSettings {
-        private Configuration parent;
-        private string configPath;
-        private bool isDirty;
+        private readonly Configuration config;
+        private readonly string sectionName;
         private AccountSettingsSection section;
+        private bool isDirty;
         public event PropertyChangedEventHandler PropertyChanged;
         public event EventHandler SettingsLoaded = delegate { };
         public event EventHandler SettingsSaved = delegate { };
 
-        public AccountSettings(string urlPrefix, Configuration parent) {
-            if (parent == null) {
-                throw new ArgumentNullException("parent");
+        public AccountSettings(Configuration config, string sectionName) {
+            if (config == null) {
+                throw new ArgumentNullException("config");
             }
 
-            this.parent = parent;
-            this.configPath = urlPrefix;
+            if (string.IsNullOrWhiteSpace(sectionName)) {
+                throw new ArgumentNullException("sectionName");
+            }
+
+            this.config = config;
+            this.sectionName = sectionName;
+            Load();
         }
 
         public bool IsDirty {
             get {
-                return this.isDirty;
+                return isDirty;
             }
 
             private set {
-                if (this.isDirty != value) {
-                    this.isDirty = value;
-                    OnPropertyChanged(Property.NameOf(() => this.IsDirty));
-                }
-            }
-        }
-
-        public string Id {
-            get {
-                return section.Id;
-            }
-
-            set {
-                if (!this.section.Id.Equals(value)) {
-                    this.section.Id = value;
-                    OnPropertyChanged(Property.NameOf(() => this.Id));
+                if (isDirty != value) {
+                    isDirty = value;
+                    OnPropertyChanged(Property.NameOf(() => IsDirty));
                 }
             }
         }
 
         public string Url {
             get {
-                return this.section.Url;
+                return section.Url;
             }
 
             set {
-                if (!this.section.Url.Equals(value)) {
-                    this.section.Url = value;
-                    OnPropertyChanged(Property.NameOf(() => this.Url));
+                if (!section.Url.Equals(value)) {
+                    section.Url = value;
+                    OnPropertyChanged(Property.NameOf(() => Url));
                 }
             }
         }
@@ -93,42 +84,42 @@ namespace DataSpace.Common.Settings.Connection.Generic {
             }
 
             set {
-                if (!this.section.UserName.Equals(value)) {
-                    this.section.UserName = value;
-                    OnPropertyChanged(Property.NameOf(() => this.UserName));
+                if (!section.UserName.Equals(value)) {
+                    section.UserName = value;
+                    OnPropertyChanged(Property.NameOf(() => UserName));
                 }
             }
         }
 
         public SecureString Password {
             get {
-                return new SecureString().Init(this.section.Password);
+                return new SecureString().Init(section.Password);
             }
 
             set {
-                if (!this.section.Password.Equals(value.ConvertToUnsecureString())) {
-                    this.section.Password = value.ConvertToUnsecureString();
-                    OnPropertyChanged(Property.NameOf(() => this.Password));
+                if (!section.Password.Equals(value.ConvertToUnsecureString())) {
+                    section.Password = value.ConvertToUnsecureString();
+                    OnPropertyChanged(Property.NameOf(() => Password));
                 }
             }
         }
 
         public void Load() {
-            this.section = this.parent.GetOrCreateSection<AccountSettingsSection>(this.configPath);
+            section = config.GetOrCreateSection<AccountSettingsSection>(sectionName);
             SettingsLoaded.Invoke(this, new EventArgs());
-            this.IsDirty = false;
+            IsDirty = false;
         }
 
         public void Save() {
-            this.parent.Save();
+            config.Save();
             SettingsSaved.Invoke(this, new EventArgs());
-            this.IsDirty = false;
+            IsDirty = false;
         }
 
         public void Delete() {
-            this.parent.Sections.Remove(this.configPath);
-            this.parent.Save();
-            this.IsDirty = false;
+            config.Sections.Remove(sectionName);
+            config.Save();
+            IsDirty = false;
         }
 
         private void OnPropertyChanged(string property) {
@@ -136,7 +127,7 @@ namespace DataSpace.Common.Settings.Connection.Generic {
                 PropertyChanged.Invoke(this, new PropertyChangedEventArgs(property));
             }
 
-            this.IsDirty = true;
+            IsDirty = true;
         }
     }
 }

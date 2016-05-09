@@ -24,6 +24,7 @@ namespace Tests.Common.Settings.Connection {
 
     using DataSpace.Common.Crypto;
     using DataSpace.Common.Settings.Connection;
+    using DataSpace.Common.Settings;
     using DataSpace.Common.Utils;
 
     using NUnit.Framework;
@@ -39,7 +40,7 @@ namespace Tests.Common.Settings.Connection {
         [SetUp]
         public void CreateAccountInstance() {
             accountName = "DataSpaceAccount" + Guid.NewGuid().ToString();
-            underTest = new AccountSettingsFactory().CreateInstance(accountName, config);
+            underTest = new AccountSettingsFactory().CreateInstance(config, accountName);
         }
 
         [TearDown]
@@ -82,7 +83,7 @@ namespace Tests.Common.Settings.Connection {
             underTest.Password = new System.Security.SecureString().Init(_Password);
             underTest.Save();
 
-            underTest = new AccountSettingsFactory().CreateInstance(accountName, config);
+            underTest = new AccountSettingsFactory().CreateInstance(config, accountName);
             underTest.Load();
             Assert.That(underTest.Password.ConvertToUnsecureString(), Is.EqualTo(_Password));
             Assert.That(underTest.Url, Is.EqualTo(_Url));

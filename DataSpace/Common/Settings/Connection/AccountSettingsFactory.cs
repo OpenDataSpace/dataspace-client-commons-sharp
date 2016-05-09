@@ -22,15 +22,14 @@
     using System.Configuration;
 
     public class AccountSettingsFactory : IAccountSettingsFactory {
-        public IAccountSettings CreateInstance(string urlPrefix = "", Configuration parent = null) {
+        public IAccountSettings CreateInstance(Configuration config, string sectionName) {
             switch (Environment.OSVersion.Platform) {
                 case PlatformID.Unix:
-                    return new Generic.AccountSettings(urlPrefix, parent);
+                    return new Generic.AccountSettings(config, sectionName);
                 case PlatformID.MacOSX:
                     throw new NotImplementedException();
-//                    return new MacOS.AccountSettings(urlPrefix);
                 default:
-                    return new W32.AccountSettings(urlPrefix + "@");
+                    return new W32.AccountSettings(config, sectionName);
             }
         }
     }
