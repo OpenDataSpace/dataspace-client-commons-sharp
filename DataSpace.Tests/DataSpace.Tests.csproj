@@ -80,6 +80,7 @@
     <Compile Include="Common\NativeKeyStore\NativeKeyStoreFactoryTest.cs" />
     <Compile Include="Common\NativeKeyStore\W32\WindowsPasswordStoreTest.cs" />
     <Compile Include="Utils\EnsureThisRuns.cs" />
+    <Compile Include="Common\Settings\ConfigurationExtensionsTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
