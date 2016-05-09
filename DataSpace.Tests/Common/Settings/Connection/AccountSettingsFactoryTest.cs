@@ -31,7 +31,7 @@ namespace Tests.Common.Settings.Connection {
         [Test]
         public void CreateInstance() {
             IAccountSettingsFactory underTest = new AccountSettingsFactory();
-            var account = underTest.CreateInstance("", config);
+            var account = underTest.CreateInstance(config, "DataSpaceAccount" + Guid.NewGuid().ToString());
             Assert.That(account, Is.Not.Null);
         }
     }

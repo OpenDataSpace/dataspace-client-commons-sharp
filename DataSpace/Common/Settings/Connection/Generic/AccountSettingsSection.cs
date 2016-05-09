@@ -16,42 +16,34 @@
 //
 // </copyright>
 //-----------------------------------------------------------------------
-﻿
-namespace DataSpace.Common.Settings.Connection.Generic {
-    using System;
-    using System.Configuration;
-    using System.Security;
 
-    using DataSpace.Common.Crypto;
-    using DataSpace.Common.Utils;
+namespace DataSpace.Common.Settings.Connection.Generic {
+    using System.Configuration;
+
+    using Crypto;
+    using Utils;
 
     public class AccountSettingsSection : ConfigurationSection {
         [ConfigurationProperty("Url", DefaultValue = "", IsRequired = true)]
         public string Url {
-            get { return (string)this[Property.NameOf(() => this.Url)]; }
-            set { this [Property.NameOf(() => this.Url)] = value; }
+            get { return (string)this[Property.NameOf(() => Url)]; }
+            set { this[Property.NameOf(() => Url)] = value; }
         }
 
         [ConfigurationProperty("UserName", DefaultValue = "", IsRequired = true)]
         public string UserName {
-            get { return (string)this[Property.NameOf(() => this.UserName)]; }
-            set { this [Property.NameOf(() => this.UserName)] = value; }
+            get { return (string)this[Property.NameOf(() => UserName)]; }
+            set { this[Property.NameOf(() => UserName)] = value; }
         }
 
         [ConfigurationProperty("Password", DefaultValue = "", IsRequired = true)]
         public string Password {
             get {
-                var obfuscatedPassword = (string)this[Property.NameOf(() => this.Password)];
+                var obfuscatedPassword = (string)this[Property.NameOf(() => Password)];
                 return string.IsNullOrEmpty(obfuscatedPassword) ? string.Empty : obfuscatedPassword.Deobfuscate();
             }
 
-            set { this [Property.NameOf(() => this.Password)] = value.Obfuscate(); }
-        }
-
-        [ConfigurationProperty("Id", IsRequired = true)]
-        public string Id {
-            get { return (string)this[Property.NameOf(() => this.Id)]; }
-            set { this [Property.NameOf(() => this.Id)] = value; }
+            set { this[Property.NameOf(() => Password)] = value.Obfuscate(); }
         }
     }
 }

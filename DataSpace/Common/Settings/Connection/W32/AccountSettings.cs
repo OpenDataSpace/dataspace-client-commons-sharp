@@ -62,10 +62,16 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="UrlPrefix">optional Url Prefix to differentiate Account types</param>
-        public AccountSettings(string UrlPrefix = "") {
-            this.UrlPrefix = UrlPrefix;
-            this.UrlPrefix.Trim();
+        public AccountSettings(Configuration config, string sectionName) {
+            if (config == null) {
+                throw new ArgumentNullException("config");
+            }
+
+            if (string.IsNullOrWhiteSpace(sectionName)) {
+                throw new ArgumentNullException("sectionName");
+            }
+            
+            UrlPrefix = config.GetOrCreateSection<AccountSettingsSection>(sectionName).SectionInformation.Name;
         }
 
         /// <summary>
@@ -89,16 +95,6 @@ namespace DataSpace.Common.Settings.Connection.W32 {
                     }
                     _PropsRefreshSpan = value;
                 }
-            }
-        }
-
-        public string Id {
-            get {
-                throw new NotImplementedException();
-            }
-
-            set {
-                throw new NotImplementedException();
             }
         }
 

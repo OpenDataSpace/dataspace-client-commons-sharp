@@ -29,10 +29,17 @@ namespace Tests.Common.Settings {
 
     public class WithGeneratedConfig : WithConfiguredLog4Net {
         protected Configuration config;
+        protected ConfigurationSection section;
 
         [SetUp]
         public void CreateConfig() {
-            this.config = new ConfigurationLoader(new UserConfigPathBuilder {FileName = Guid.NewGuid().ToString()}).Configuration;
+            config = new ConfigurationLoader(new UserConfigPathBuilder {FileName = Guid.NewGuid().ToString()}).Configuration;
+        }
+
+        protected T CreateSection<T>(string sectionName) where T : ConfigurationSection {
+            T section = config.GetOrCreateSection<T>(sectionName);
+            this.section = section;
+            return section;
         }
 
         [TearDown]

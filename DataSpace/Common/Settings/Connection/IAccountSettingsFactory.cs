@@ -21,6 +21,6 @@
     using System.Configuration;
 
     public interface IAccountSettingsFactory {
-        IAccountSettings CreateInstance(string urlPrefix, Configuration parent);
+        IAccountSettings CreateInstance(Configuration config, string sectionName);
     }
 }
