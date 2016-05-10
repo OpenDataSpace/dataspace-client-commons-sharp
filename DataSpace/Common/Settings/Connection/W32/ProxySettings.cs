@@ -37,13 +37,47 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         /// the Logger  object
         /// </summary>
         private static readonly log4net.ILog _logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
+        /// <summary>
+        /// The configuration instance to read and write settings.
+        /// </summary>
         private readonly Configuration config;
+        /// <summary>
+        /// The account factory to create the account credentials.
+        /// </summary>
         private readonly IAccountSettingsFactory accountFactory;
+        /// <summary>
+        /// Time of last load/save call
+        /// </summary>
+        private DateTime _LastRefreshTime = DateTime.Now;
+        /// <summary>
+        /// Multithreading lock object
+        /// </summary>
+        private object _Lock = new object();
+        /// <summary>
+        /// Proxy Account login data
+        /// </summary>
+        private IAccountSettings _ProxyAccount = null;
+        /// <summary>
+        /// delegate -- must retrieve the config file loction
+        /// </summary>
+        internal Func<string> GetConfigFilePath;
+        /// <summary>
+        /// Section name in config file
+        /// </summary>
+        internal string SectionName = "DataSpaceProxy";
+        /// <summary>
+        /// Flag to signalize that settings are changed and not saved yet.
+        /// </summary>
+        private bool _IsDirty = false;
+        private TimeSpan _PropsRefreshSpan = new TimeSpan(0, 2, 0);
+        private bool _NeedLogin = false;
+        ProxyType _ProxyType = ProxyType.None;
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the <see cref="DataSpace.Common.Settings.Connection.W32.ProxySettings"/> class.
         /// </summary>
+        /// <param name="config">Configuration instance.</param>
+        /// <param name="accountFactory">Account factory.</param>
         public ProxySettings(Configuration config, IAccountSettingsFactory accountFactory = null) {
             if (config == null) {
                 throw new ArgumentNullException("config");
@@ -63,7 +97,6 @@ namespace DataSpace.Common.Settings.Connection.W32 {
             };
         }
 
-        private TimeSpan _PropsRefreshSpan = new TimeSpan(0, 2, 0);
         /// <summary>
         /// Span between automatic Property refresh from Config file / store
         /// on external property reads
@@ -89,27 +122,6 @@ namespace DataSpace.Common.Settings.Connection.W32 {
             }
         }
 
-        /// <summary>
-        /// Time of last load/save call
-        /// </summary>
-        private DateTime _LastRefreshTime = DateTime.Now;
-        /// <summary>
-        /// Multithreading lock object
-        /// </summary>
-        private object _Lock = new object();
-        /// <summary>
-        /// Proxy Account login data
-        /// </summary>
-        private IAccountSettings _ProxyAccount = null;
-        /// <summary>
-        /// delegate -- must retrieve the config file loction
-        /// </summary>
-        internal Func<string> GetConfigFilePath;
-        /// <summary>
-        /// Section name in config file
-        /// </summary>
-        internal string SectionName = "DataSpaceProxy";
-        private bool _IsDirty = false;
         public bool IsDirty {
             get {
                 lock (_Lock) {
@@ -127,7 +139,6 @@ namespace DataSpace.Common.Settings.Connection.W32 {
             }
         }
 
-        private bool _NeedLogin = false;
         public bool NeedLogin {
             get {
                 lock (_Lock) {
@@ -155,7 +166,6 @@ namespace DataSpace.Common.Settings.Connection.W32 {
             set { _ProxyAccount.Password = value; }
         }
 
-        ProxyType _ProxyType = ProxyType.None;
         public ProxyType ProxyType {
             get {
                 lock (_Lock) {
@@ -168,7 +178,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
                 lock (_Lock) {
                     if (_ProxyType != value) {
                         _ProxyType = value;
-                        OnPropertyChanged(Property.NameOf(() => this.ProxyType));
+                        OnPropertyChanged(Property.NameOf(() => ProxyType));
                     }
                 }
             }
@@ -195,21 +205,10 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         public event EventHandler SettingsLoaded = delegate { };
         public event EventHandler SettingsSaved = delegate { };
 
-        private void OnPropertyChanged(string property) {
-            if (PropertyChanged != null) {
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(property));
-            }
-
-            //all Property changes should trigger "IsDirty = true" exept "IsDirty" itself
-            if (string.Compare(property, Property.NameOf(() => this.IsDirty)) != 0) {
-                IsDirty = true;
-            }
-        }
-
         public void Delete() {
             lock (_Lock) {
                 // find our Section in Collection and delete it
-                config.Sections.Remove(AbstractProxyConfigSection.SectionName);
+                config.Sections.Remove(ProxyConfigSection.SectionName);
                 // delete the Accountinformation part
                 _ProxyAccount.Delete();
                 // save changes
@@ -271,6 +270,17 @@ namespace DataSpace.Common.Settings.Connection.W32 {
             }
 
             SettingsSaved.Invoke(this, new EventArgs());
+        }
+
+        private void OnPropertyChanged(string property) {
+            if (PropertyChanged != null) {
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(property));
+            }
+
+            //all Property changes should trigger "IsDirty = true" exept "IsDirty" itself
+            if (string.Compare(property, Property.NameOf(() => IsDirty)) != 0) {
+                IsDirty = true;
+            }
         }
 
         /// <summary>

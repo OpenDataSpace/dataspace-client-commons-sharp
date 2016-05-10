@@ -22,7 +22,7 @@
 
     using DataSpace.Common.Utils;
 
-    public abstract class AbstractProxyConfigSection : ConfigurationSection {
+    public class ProxyConfigSection : ConfigurationSection {
         public static readonly string SectionName = "HTTP.Proxy";
         /// <summary>
         /// Proxy Type
@@ -40,12 +40,6 @@
         public bool NeedLogin {
             get { return (bool)this[Property.NameOf(() => this.NeedLogin)]; }
             set { this [Property.NameOf(() => this.NeedLogin)] = value; }
-        }
-
-        [ConfigurationProperty("Url", DefaultValue = "", IsRequired = true)]
-        public string Url {
-            get { return (string)this[Property.NameOf(() => this.Url)]; }
-            set { this [Property.NameOf(() => this.Url)] = value; }
         }
     }
 }

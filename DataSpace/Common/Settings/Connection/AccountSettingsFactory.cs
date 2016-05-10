@@ -21,6 +21,9 @@
     using System;
     using System.Configuration;
 
+    /// <summary>
+    /// Account settings factory is used to initialize platform depedend IAccountSettings instances.
+    /// </summary>
     public class AccountSettingsFactory : IAccountSettingsFactory {
         public IAccountSettings CreateInstance(Configuration config, string sectionName) {
             switch (Environment.OSVersion.Platform) {

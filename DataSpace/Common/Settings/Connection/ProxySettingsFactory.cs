@@ -22,7 +22,9 @@ namespace DataSpace.Common.Settings.Connection {
     using System.Configuration;
 
     public class ProxySettingsFactory : IProxySettingsFactory {
-        public ProxySettingsFactory() {
+        private readonly IAccountSettingsFactory accountFactory;
+        public ProxySettingsFactory(IAccountSettingsFactory accountFactory = null) {
+            this.accountFactory = accountFactory ?? new AccountSettingsFactory();
         }
 
         public IProxySettings GetInstance(Configuration config) {

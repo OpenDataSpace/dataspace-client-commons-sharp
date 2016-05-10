@@ -36,15 +36,20 @@ namespace DataSpace.Common.Settings.Connection.Generic {
     public class ProxySettings : IProxySettings, IProxySettingsRead {
         private readonly Configuration config;
         private ProxyConfigSection section;
+        private IAccountSettings account;
+        private readonly string SectionName = "DataSpaceProxy";
+
         /// <summary>
         /// Constructor
         /// </summary>
-        public ProxySettings(Configuration config) {
+        public ProxySettings(Configuration config, IAccountSettingsFactory accountFactory = null) {
             if (config == null) {
                 throw new ArgumentNullException("config");
             }
 
             this.config = config;
+            IAccountSettingsFactory factory = accountFactory ?? new AccountSettingsFactory();
+            account = factory.CreateInstance(config, SectionName + "Account");
             Load();
         }
 
@@ -94,14 +99,14 @@ namespace DataSpace.Common.Settings.Connection.Generic {
         public SecureString Password {
             get {
                 lock (l) {
-                    return new SecureString().Init(section.Password);
+                    return account.Password;
                 }
             }
 
             set {
                 lock (l) {
-                    if (!section.Password.Equals(value.ConvertToUnsecureString())) {
-                        section.Password = value.ConvertToUnsecureString();
+                    if (!account.Password.Equals(value.ConvertToUnsecureString())) {
+                        account.Password = value;
                         OnPropertyChanged(Property.NameOf(() => Password));
                     }
                 }
@@ -128,14 +133,14 @@ namespace DataSpace.Common.Settings.Connection.Generic {
         public string Url {
             get {
                 lock (l) {
-                    return section.Url;
+                    return account.Url;
                 }
             }
 
             set {
                 lock (l) {
-                    if (!section.Url.Equals(value)) {
-                        section.Url = value;
+                    if (!account.Url.Equals(value)) {
+                        account.Url = value;
                         OnPropertyChanged(Property.NameOf(() => Url));
                     }
                 }
@@ -145,14 +150,14 @@ namespace DataSpace.Common.Settings.Connection.Generic {
         public string UserName {
             get {
                 lock (l) {
-                    return section.UserName;
+                    return account.UserName;
                 }
             }
 
             set {
                 lock (l) {
-                    if (!section.UserName.Equals(value)) {
-                        section.UserName = value;
+                    if (!account.UserName.Equals(value)) {
+                        account.UserName = value;
                         OnPropertyChanged(Property.NameOf(() => UserName));
                     }
                 }
@@ -165,7 +170,8 @@ namespace DataSpace.Common.Settings.Connection.Generic {
 
         public void Delete() {
             lock (l) {
-                config.Sections.Remove(AbstractProxyConfigSection.SectionName);
+                config.Sections.Remove(ProxyConfigSection.SectionName);
+                account.Delete();
                 config.Save();
             }
 
@@ -174,7 +180,8 @@ namespace DataSpace.Common.Settings.Connection.Generic {
 
         public void Load() {
             lock (l) {
-                section = config.GetOrCreateSection<ProxyConfigSection>(AbstractProxyConfigSection.SectionName);
+                section = config.GetOrCreateSection<ProxyConfigSection>(ProxyConfigSection.SectionName);
+                account.Load();
             }
 
             SettingsLoaded.Invoke(this, new EventArgs());
