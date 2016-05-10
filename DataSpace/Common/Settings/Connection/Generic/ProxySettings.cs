@@ -191,6 +191,7 @@ namespace DataSpace.Common.Settings.Connection.Generic {
         public void Save() {
             lock (l) {
                 config.Save();
+                account.Save();
                 SettingsSaved.Invoke(this, new EventArgs());
                 IsDirty = false;
             }
