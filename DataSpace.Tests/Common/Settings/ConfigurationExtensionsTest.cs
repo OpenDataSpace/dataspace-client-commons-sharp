@@ -27,7 +27,7 @@ namespace Tests.Common.Settings {
 
     using NUnit.Framework;
 
-    [TestFixture]
+    [TestFixture, Category("UnitTests")]
     public class ConfigurationExtensionsTest : WithGeneratedConfig {
         [Test]
         public void GetSectionInGroup() {
