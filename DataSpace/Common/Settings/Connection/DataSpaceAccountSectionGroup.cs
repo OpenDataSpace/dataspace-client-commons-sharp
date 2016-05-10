@@ -21,7 +21,13 @@ namespace DataSpace.Common.Settings.Connection {
     using System;
     using System.Configuration;
 
+    /// <summary>
+    /// Data space account section group contains all available accounts.
+    /// </summary>
     public class DataSpaceAccountSectionGroup : ConfigurationSectionGroup {
+        /// <summary>
+        /// The default name of the section group.
+        /// </summary>
         public static readonly string DefaultSectionGroupName = "Accounts";
     }
 }
