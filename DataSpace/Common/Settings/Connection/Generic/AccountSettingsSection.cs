@@ -23,7 +23,7 @@ namespace DataSpace.Common.Settings.Connection.Generic {
     using Crypto;
     using Utils;
 
-    public class AccountSettingsSection : ConfigurationSection {
+    public class AccountSettingsSection : AbstractAccountSettingsSection {
         [ConfigurationProperty("Url", DefaultValue = "", IsRequired = true)]
         public string Url {
             get { return (string)this[Property.NameOf(() => Url)]; }
