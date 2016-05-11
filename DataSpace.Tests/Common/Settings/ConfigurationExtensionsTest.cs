@@ -22,15 +22,18 @@ namespace Tests.Common.Settings {
     using System.Configuration;
 
     using DataSpace.Common.Settings;
+    using DataSpace.Tests.Utils;
 
     using Moq;
 
     using NUnit.Framework;
 
+
     [TestFixture, Category("UnitTests")]
     public class ConfigurationExtensionsTest : WithGeneratedConfig {
         [Test]
         public void GetSectionInGroup() {
+            this.EnsureThisRunsOn(PlatformID.Win32NT, PlatformID.Win32Windows);
             var groupName = "group";
             var sectionName = "section";
             var fullSectionName = groupName + "/" + sectionName;
@@ -46,7 +49,7 @@ namespace Tests.Common.Settings {
             Assert.That(config.GetSection(fullSectionName).SectionInformation.SectionName, Is.EqualTo(fullSectionName));
         }
 
-        [Test]
+        [Test, Ignore("Just for configuration feature testing")]
         public void CreateSectionWithGroupPathCreatesGroup() {
             var groupName = "group";
             var sectionName = "section";
