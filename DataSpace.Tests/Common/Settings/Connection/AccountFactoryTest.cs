@@ -44,6 +44,7 @@ namespace Tests.Common.Settings.Connection {
             Assert.That(account.Url, Is.EqualTo(url));
             Assert.That(account.UserName, Is.EqualTo(username));
             Assert.That(account.Password.ConvertToUnsecureString(), Is.EqualTo(password));
+            account.Delete();
         }
     }
 }

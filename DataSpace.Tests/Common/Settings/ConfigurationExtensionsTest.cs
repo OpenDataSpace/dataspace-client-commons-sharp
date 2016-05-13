@@ -18,47 +18,10 @@
 //-----------------------------------------------------------------------
 ﻿
 namespace Tests.Common.Settings {
-    using System;
-    using System.Configuration;
-
-    using DataSpace.Common.Settings;
-    using DataSpace.Tests.Utils;
-
-    using Moq;
-
     using NUnit.Framework;
-
 
     [TestFixture, Category("UnitTests")]
     public class ConfigurationExtensionsTest : WithGeneratedConfig {
-        [Test]
-        public void GetSectionInGroup() {
-            this.EnsureThisRunsOn(PlatformID.Win32NT, PlatformID.Win32Windows);
-            var groupName = "group";
-            var sectionName = "section";
-            var fullSectionName = groupName + "/" + sectionName;
-            var group = config.GetOrCreateSectionGroup<ConfigurationSectionGroup>(groupName);
-            Assert.That(group, Is.Not.Null);
-            var section = Mock.Of<ConfigurationSection>();
-            group.Sections.Add(sectionName, section);
-            Assert.That(config.GetSection(groupName + "/nonExistingSection"), Is.Null);
-            Assert.That(config.GetSection("nonExistingSection"), Is.Null);
-            Assert.That(config.GetSection(fullSectionName), Is.EqualTo(section));
-            Assert.That(config.GetOrCreateSection<ConfigurationSection>(fullSectionName), Is.EqualTo(section));
-            Assert.That(config.GetSection(fullSectionName).SectionInformation.Name, Is.EqualTo(sectionName));
-            Assert.That(config.GetSection(fullSectionName).SectionInformation.SectionName, Is.EqualTo(fullSectionName));
-        }
 
-        [Test, Ignore("Just for configuration feature testing")]
-        public void CreateSectionWithGroupPathCreatesGroup() {
-            var groupName = "group";
-            var sectionName = "section";
-            var section = config.GetOrCreateSection<TestSection>(groupName + "/" + sectionName);
-            Assert.That(section, Is.Not.Null);
-            Assert.That(config.SectionGroups.Get(groupName), Is.Not.Null);
-        }
-
-        private class TestSection : ConfigurationSection {
-        }
     }
 }

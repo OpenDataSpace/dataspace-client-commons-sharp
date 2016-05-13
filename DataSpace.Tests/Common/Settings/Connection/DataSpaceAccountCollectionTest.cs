@@ -48,6 +48,7 @@ namespace Tests.Common.Settings.Connection {
             Assert.That(account.Url, Is.EqualTo(url));
             Assert.That(config.GetDataSpaceAccounts().Count, Is.EqualTo(1));
             Assert.That(config.GetDataSpaceAccounts().First().Value, Is.EqualTo(account));
+            account.Delete();
         }
     }
 }

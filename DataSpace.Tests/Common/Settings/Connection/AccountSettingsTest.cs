@@ -16,12 +16,12 @@
 //
 // </copyright>
 //-----------------------------------------------------------------------
-using System.Linq;
 
 namespace Tests.Common.Settings.Connection {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Linq;
     using System.Security;
 
     using DataSpace.Common.Crypto;
@@ -33,7 +33,7 @@ namespace Tests.Common.Settings.Connection {
 
     [TestFixture, NUnit.Framework.Category("UnitTests")]
     public class AccountSettingsTest : WithGeneratedConfig {
-        private string _Url = "test.url.com";
+        private string _Url = "https://test.url.com";
         private string _UserName = "TestName";
         private string _Password = "TestPassword";
         private IAccount underTest;
@@ -64,7 +64,7 @@ namespace Tests.Common.Settings.Connection {
         public void PropertyGetSet() {
             string anotherPassword = Guid.NewGuid().ToString();
             // act
-            underTest.Password = new System.Security.SecureString().Init(anotherPassword);
+            underTest.Password = new SecureString().Init(anotherPassword);
             // assert
             Assert.That(underTest.Password.ConvertToUnsecureString(), Is.EqualTo(anotherPassword));
         }
@@ -86,7 +86,7 @@ namespace Tests.Common.Settings.Connection {
                 ReceivedEvents.Add(args.PropertyName);
             };
             // Act
-            underTest.Password = new System.Security.SecureString().Init(_Password + " changed");
+            underTest.Password = new SecureString().Init(_Password + " changed");
 
             // Assert
             Assert.That(underTest.Url, Is.EqualTo(_Url));

@@ -39,6 +39,11 @@ namespace Tests.Common.Settings.Connection {
         private string username = "TestName";
         private string password = "TestPassword";
 
+        [TearDown]
+        public void RemoveProxySettings() {
+            config.GetProxySettings().Delete();
+        }
+
         [Test]
         public void Constructor() {
             IProxySettings underTest = config.GetProxySettings();
