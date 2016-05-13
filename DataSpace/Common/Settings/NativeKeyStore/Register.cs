@@ -17,16 +17,16 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace DataSpace.Common.NativeKeyStore {
+namespace DataSpace.Common.Settings.NativeKeyStore {
     using System;
     using System.Collections.Generic;
 
-    using Settings.Accounts.Native;
+    using Accounts.Native;
 
     public class Register {
         private static readonly Dictionary<PlatformID, INativeAccountStore> registry = new Dictionary<PlatformID, INativeAccountStore>();
         static Register() {
-            var windowsStore = new Settings.Accounts.Native.W32.NativeAccountStore();
+            var windowsStore = new Accounts.Native.W32.NativeAccountStore();
             registry[PlatformID.Win32Windows] = windowsStore;
             registry[PlatformID.Win32NT] = windowsStore;
             registry[PlatformID.Win32S] = windowsStore;
@@ -35,6 +35,10 @@ namespace DataSpace.Common.NativeKeyStore {
 
         public INativeAccountStore GetAccountStoreFor(PlatformID platform) {
             return registry[platform];
+        }
+
+        public void SetAccountStoreFor(PlatformID platform, INativeAccountStore store) {
+            registry[platform] = store;
         }
     }
 }

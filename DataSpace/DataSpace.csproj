@@ -99,7 +99,7 @@
     <Compile Include="Common\Settings\Accounts\AbstractAccount.cs" />
     <Compile Include="Common\Settings\Accounts\IAccountFactory.cs" />
     <Compile Include="Common\Settings\Accounts\AccountFactory.cs" />
-    <Compile Include="Common\NativeKeyStore\Register.cs" />
+    <Compile Include="Common\Settings\NativeKeyStore\Register.cs" />
     <Compile Include="Common\Settings\Accounts\Native\INativeAccountStore.cs" />
     <Compile Include="Common\Settings\Accounts\Native\W32\NativeAccountStore.cs" />
     <Compile Include="Common\Settings\Proxy\AbstractProxyConfig.cs" />
