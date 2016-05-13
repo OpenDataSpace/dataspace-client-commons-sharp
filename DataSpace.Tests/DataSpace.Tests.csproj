@@ -70,17 +70,15 @@
     <Compile Include="Toxiproxy\SessionFactoryTest.cs" />
     <Compile Include="Utils\WithConfiguredDotCMISLogging.cs" />
     <Compile Include="Utils\WithConfiguredLog4Net.cs" />
-    <Compile Include="Common\Settings\Connection\AccountSettingsFactoryTest.cs" />
     <Compile Include="Common\Settings\ConfigurationLoaderTest.cs" />
     <Compile Include="Common\Settings\UserConfigPathBuilderTest.cs" />
-    <Compile Include="Common\Settings\Connection\W32\W32AccountSettingsTest.cs" />
-    <Compile Include="Common\Settings\Connection\W32\W32ProxySettingsTest.cs" />
     <Compile Include="Common\Settings\Connection\DataSpaceAccountCollectionTest.cs" />
     <Compile Include="Common\Settings\WithGeneratedConfig.cs" />
     <Compile Include="Common\NativeKeyStore\NativeKeyStoreFactoryTest.cs" />
     <Compile Include="Common\NativeKeyStore\W32\WindowsPasswordStoreTest.cs" />
     <Compile Include="Utils\EnsureThisRuns.cs" />
     <Compile Include="Common\Settings\ConfigurationExtensionsTest.cs" />
+    <Compile Include="Common\Settings\Connection\AccountFactoryTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -104,7 +102,6 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Common\Settings\Connection\W32\" />
     <Folder Include="Common\NativeKeyStore\" />
     <Folder Include="Common\NativeKeyStore\W32\" />
   </ItemGroup>

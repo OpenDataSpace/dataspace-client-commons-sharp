@@ -22,21 +22,13 @@ namespace DataSpace.Common.Settings.Connection {
     using System.ComponentModel;
 
     public interface ISettingsPersist {
-        void Load();
-        void Save();
         void Delete();
-        /// <summary>
-        /// flag indicates unsaved changes
-        /// </summary>
-        bool IsDirty { get; }
     }
 
     /// <summary>
     /// Settings Change Notifications
     /// </summary>
     public interface INotifySettingsChanged : INotifyPropertyChanged {
-        event EventHandler SettingsLoaded;
-        event EventHandler SettingsSaved;
         event EventHandler SettingsDeleted;
     }
 }

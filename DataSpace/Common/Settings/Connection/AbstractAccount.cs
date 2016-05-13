@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------
-// <copyright file="AccountSettingsSection.cs" company="GRAU DATA AG">
+// <copyright file="AccountSection.cs" company="GRAU DATA AG">
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General private License as published by
@@ -16,14 +16,16 @@
 //
 // </copyright>
 //-----------------------------------------------------------------------
-
-namespace DataSpace.Common.Settings.Connection.Generic {
+﻿
+namespace DataSpace.Common.Settings.Connection {
+    using System;
+    using System.ComponentModel;
     using System.Configuration;
+    using System.Security;
 
-    using Crypto;
     using Utils;
 
-    public class AccountSettingsSection : AbstractAccountSettingsSection {
+    public abstract class AbstractAccount : ConfigurationSection, IAccountReadOnly, IAccount {
         [ConfigurationProperty("Url", DefaultValue = "", IsRequired = true)]
         public string Url {
             get { return (string)this[Property.NameOf(() => Url)]; }
@@ -36,14 +38,26 @@ namespace DataSpace.Common.Settings.Connection.Generic {
             set { this[Property.NameOf(() => UserName)] = value; }
         }
 
-        [ConfigurationProperty("Password", DefaultValue = "", IsRequired = true)]
-        public string Password {
+        public virtual string Id {
             get {
-                var obfuscatedPassword = (string)this[Property.NameOf(() => Password)];
-                return string.IsNullOrEmpty(obfuscatedPassword) ? string.Empty : obfuscatedPassword.Deobfuscate();
+                return string.Format("{0} @ {1}", UserName, Url);
             }
+        }
 
-            set { this[Property.NameOf(() => Password)] = value.Obfuscate(); }
+        public abstract SecureString Password { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler SettingsDeleted;
+
+        protected void OnPropertyChanged(string property) {
+            if (PropertyChanged != null) {
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(property));
+            }
+        }
+
+        public virtual void Delete() {
+            if (SettingsDeleted != null) {
+                SettingsDeleted.Invoke(this, new EventArgs());
+            }
         }
     }
 }

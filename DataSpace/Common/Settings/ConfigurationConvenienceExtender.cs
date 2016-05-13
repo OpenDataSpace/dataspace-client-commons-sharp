@@ -24,9 +24,26 @@ namespace DataSpace.Common.Settings {
     using System.Security;
 
     using DataSpace.Common.Settings.Connection;
+    using DataSpace.Common.Settings.Connection.Native;
 
     public static class ConfigurationConvenienceExtender {
         private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static INativeAccountStore nativeAccountStore = null;
+        static ConfigurationConvenienceExtender() {
+            switch (Environment.OSVersion.Platform) {
+                case PlatformID.Win32NT:
+                    goto case PlatformID.Win32Windows;
+                case PlatformID.Win32S:
+                    goto case PlatformID.Win32Windows;
+                case PlatformID.WinCE:
+                    goto case PlatformID.Win32Windows;
+                case PlatformID.Win32Windows:
+                    nativeAccountStore = new DataSpace.Common.Settings.Connection.W32.NativeAccountStore();
+                    break;
+                default:
+                    break;
+            }
+        }
 
         /// <summary>
         /// Reads or Creates ConfigurationSection derived objects
@@ -117,13 +134,12 @@ namespace DataSpace.Common.Settings {
             }
         }
 
-        public static IDictionary<string, IAccountSettings> GetDataSpaceAccounts(this Configuration config, IAccountSettingsFactory accountFactory = null) {
-            accountFactory = accountFactory ?? new AccountSettingsFactory();
+        public static IDictionary<string, IAccount> GetDataSpaceAccounts(this Configuration config, IAccountFactory accountFactory = null) {
+            accountFactory = accountFactory ?? new AccountFactory();
             var group = config.SectionGroups.Get(DataSpaceAccountSectionGroup.DefaultSectionGroupName) as DataSpaceAccountSectionGroup;
-            var accounts = new Dictionary<string, IAccountSettings>();
+            var accounts = new Dictionary<string, IAccount>();
             if (group != null) {
-                foreach (AbstractAccountSettingsSection section in group.Sections) {
-                    var account = accountFactory.LoadInstance(config, section);
+                foreach (AbstractAccount account in group.Sections) {
                     accounts[account.Id] = account;
                 }
             }
@@ -131,28 +147,33 @@ namespace DataSpace.Common.Settings {
             return accounts;
         }
 
-        public static IAccountSettings GetProxyAccount(this Configuration config, IAccountSettingsFactory accountFactory = null) {
-            accountFactory = accountFactory ?? new AccountSettingsFactory();
-            var section = config.GetSection("DataSpaceProxyAccount") as AbstractAccountSettingsSection;
-            if (section != null) {
-                return accountFactory.LoadInstance(config, section);
-            } else {
-                return accountFactory.CreateInstance(config, "DataSpaceProxyAccount", "https://", string.Empty, new SecureString());
+        public static IProxySettings GetProxySettings(this Configuration config, IProxyConfigFactory factory = null) {
+            factory = factory ?? new ProxyConfigFactory();
+            AbstractProxyConfig section = config.GetSection(AbstractProxyConfig.SectionName) as AbstractProxyConfig;
+            if (section == null) {
+                section = factory.CreateInstance();
+                config.Sections.Add(AbstractProxyConfig.SectionName, section);
             }
+
+            return section;
         }
 
-        public static IAccountSettings AddDataSpaceAccount(
+        public static IAccount AddDataSpaceAccount(
             this Configuration config,
             string url,
             string userName,
             SecureString password,
-            IAccountSettingsFactory accountFactory = null)
+            IAccountFactory accountFactory = null)
         {
-            accountFactory = accountFactory ?? new AccountSettingsFactory();
-            config.GetOrCreateSectionGroup<DataSpaceAccountSectionGroup>(DataSpaceAccountSectionGroup.DefaultSectionGroupName);
-            var account = accountFactory.CreateInstance(config, string.Format("{0}/{1}@{2}", DataSpaceAccountSectionGroup.DefaultSectionGroupName, userName, url), url, userName, password);
-            account.Save();
+            accountFactory = accountFactory ?? new AccountFactory();
+            var accounts = config.GetOrCreateSectionGroup<DataSpaceAccountSectionGroup>(DataSpaceAccountSectionGroup.DefaultSectionGroupName);
+            var account = accountFactory.CreateInstance(url, userName, password);
+            accounts.Sections.Add(Guid.NewGuid().ToString(), account);
             return account;
+        }
+
+        internal static INativeAccountStore GetRegisteredStore() {
+            return nativeAccountStore;
         }
     }
 }

@@ -23,10 +23,10 @@
     using System.Security;
 
     /// <summary>
-    /// Account settings factory is used to initialize platform depedend IAccountSettings instances.
+    /// Account factory is used to initialize platform depedend IAccount instances.
     /// </summary>
-    public class AccountSettingsFactory : IAccountSettingsFactory {
-        public IAccountSettings CreateInstance(Configuration config, string sectionName, string url, string userName, SecureString password) {
+    public class AccountFactory : IAccountFactory {
+        public AbstractAccount CreateInstance(string url, string userName, SecureString password) {
             switch (Environment.OSVersion.Platform) {
                 case PlatformID.WinCE:
                     goto case PlatformID.Win32Windows;
@@ -35,25 +35,17 @@
                 case PlatformID.Win32NT:
                     goto case PlatformID.Win32Windows;
                 case PlatformID.Win32Windows:
-                    return new W32.AccountSettings(config, sectionName, url, userName, password);
+                    return new DataSpace.Common.Settings.Connection.Native.Account() {
+                        Url = url,
+                        UserName = userName,
+                        Password = password
+                    };
                 default:
-                    var defaultSection = config.GetOrCreateSection<Generic.AccountSettingsSection>(sectionName);
-                    defaultSection.Url = url;
-                    defaultSection.UserName = userName;
-                    var defaultAccount = LoadInstance(config, defaultSection);
-                    defaultAccount.Password = password;
-                    return defaultAccount;
-            }
-        }
-
-        public IAccountSettings LoadInstance(Configuration config, AbstractAccountSettingsSection section) {
-            switch (Environment.OSVersion.Platform) {
-                case PlatformID.Unix:
-                    return new Generic.AccountSettings(config, section as Generic.AccountSettingsSection);
-                case PlatformID.MacOSX:
-                    throw new NotImplementedException();
-                default:
-                    return new W32.AccountSettings(config, section as W32.AccountSettingsSection);
+                    return new DataSpace.Common.Settings.Connection.Generic.Account() {
+                        Url = url,
+                        UserName = userName,
+                        Password = password
+                    };
             }
         }
     }

@@ -31,16 +31,19 @@ namespace Tests.Common.Settings.Connection {
     using NUnit.Framework;
 
     [TestFixture, Category("UnitTests")]
-    public class AccountSettingsFactoryTest : WithGeneratedConfig {
+    public class AccountFactoryTest {
         private readonly string url = "https://example.com/";
         private readonly string username = "user";
+        private readonly string password = "password";
+
         [Test]
         public void CreateInstance() {
-            IAccountSettingsFactory underTest = new AccountSettingsFactory();
-            var account = underTest.CreateInstance(config, "DataSpaceAccount" + Guid.NewGuid().ToString(), url, username, new SecureString().Init("pw"));
+            IAccountFactory underTest = new AccountFactory();
+            var account = underTest.CreateInstance(url, username, new SecureString().Init(password));
             Assert.That(account, Is.Not.Null);
             Assert.That(account.Url, Is.EqualTo(url));
             Assert.That(account.UserName, Is.EqualTo(username));
+            Assert.That(account.Password.ConvertToUnsecureString(), Is.EqualTo(password));
         }
     }
 }

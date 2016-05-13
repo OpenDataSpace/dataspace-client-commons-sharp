@@ -40,9 +40,8 @@ namespace Tests.Common.Settings.Connection {
 
         [Test]
         public void Constructor() {
-            IProxySettings underTest = new ProxySettingsFactory().GetInstance(config);
+            IProxySettings underTest = config.GetProxySettings();
             // check default values
-            Assert.That(underTest.IsDirty, Is.False);
             Assert.That(underTest.NeedLogin, Is.False);
             Assert.That(underTest.ProxyType, Is.EqualTo(ProxyType.Default));
             Assert.That(underTest.Url, Is.Empty);
@@ -52,7 +51,7 @@ namespace Tests.Common.Settings.Connection {
 
         [Test]
         public void PropertyGetSet() {
-            IProxySettings underTest = new ProxySettingsFactory().GetInstance(config);
+            IProxySettings underTest = config.GetProxySettings();
             // act
             underTest.Url = url;
             underTest.UserName = username;
@@ -65,27 +64,24 @@ namespace Tests.Common.Settings.Connection {
             Assert.That(underTest.Password.ConvertToUnsecureString(), Is.EqualTo(password));
             Assert.That(underTest.NeedLogin, Is.True);
             Assert.That(underTest.ProxyType, Is.EqualTo(ProxyType.Custom));
-            Assert.That(underTest.IsDirty, Is.True);
         }
 
         [Test]
         public void CreateNew() {
-            IProxySettings underTest = new ProxySettingsFactory().GetInstance(config);
+            IProxySettings underTest = config.GetProxySettings();
             underTest.ProxyType = ProxyType.Custom;
             underTest.NeedLogin = true;
             underTest.Url = url;
             underTest.UserName = username;
             underTest.Password = new System.Security.SecureString().Init(password);
-            underTest.Save();
         }
 
         [Test]
         public void DeleteTest() {
-            IProxySettings underTest = new ProxySettingsFactory().GetInstance(config);
+            IProxySettings underTest = config.GetProxySettings();
 
             underTest.Delete();
 
-            Assert.That(underTest.IsDirty, Is.False);
             Assert.That(underTest.NeedLogin, Is.False);
             Assert.That(underTest.ProxyType, Is.EqualTo(ProxyType.Default));
             Assert.That(underTest.Url, Is.Empty);
@@ -94,37 +90,22 @@ namespace Tests.Common.Settings.Connection {
         }
 
         [Test]
-        public void Load_TriggersEvent() {
-            IProxySettings underTest = new ProxySettingsFactory().GetInstance(config);
-            // Load Event Handler
-            bool IsTriggered = false;
-            underTest.SettingsLoaded += (sender, arg) => {
-                IsTriggered = true;
-            };
-
-            // Load
-            underTest.Load();
-
-            Assert.That(IsTriggered, Is.True);
-        }
-
-        [Test]
-        public void Save_TriggersEvent() {
-            IProxySettings underTest = new ProxySettingsFactory().GetInstance(config);
+        public void DeletedTriggersEvent() {
+            IProxySettings underTest = config.GetProxySettings();
             // Save Event Handler
             bool IsTriggered = false;
-            underTest.SettingsSaved += (sender, arg) => {
+            underTest.SettingsDeleted += (sender, arg) => {
                 IsTriggered = true;
             };
             // Save
-            underTest.Save();
+            underTest.Delete();
 
             Assert.That(IsTriggered, Is.True);
         }
 
         [Test]
         public void OnPropertyChanged_Success() {
-            IProxySettings underTest = new ProxySettingsFactory().GetInstance(config);
+            IProxySettings underTest = config.GetProxySettings();
 
             List<string> ReceivedEvents = new List<string>();
 
@@ -139,7 +120,6 @@ namespace Tests.Common.Settings.Connection {
             underTest.Password = new System.Security.SecureString().Init(password);
 
             // Assert
-            Assert.That(underTest.IsDirty, Is.True);
             Assert.That(underTest.ProxyType, Is.EqualTo(ProxyType.Custom));
             Assert.That(underTest.NeedLogin, Is.True);
             Assert.That(underTest.Url, Is.EqualTo(url));
@@ -148,7 +128,6 @@ namespace Tests.Common.Settings.Connection {
 
             Assert.That(ReceivedEvents.Count, Is.EqualTo(6));
             Assert.AreEqual(Property.NameOf((IProxySettings a) => a.ProxyType), ReceivedEvents[0]);
-            Assert.AreEqual(Property.NameOf((IProxySettings a) => a.IsDirty), ReceivedEvents[1]);
             Assert.AreEqual(Property.NameOf((IProxySettings a) => a.NeedLogin), ReceivedEvents[2]);
             Assert.AreEqual(Property.NameOf((IProxySettings a) => a.Url), ReceivedEvents[3]);
             Assert.AreEqual(Property.NameOf((IProxySettings a) => a.UserName), ReceivedEvents[4]);

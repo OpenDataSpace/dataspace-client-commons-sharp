@@ -16,6 +16,7 @@
 //
 // </copyright>
 //-----------------------------------------------------------------------
+using System.Linq;
 
 namespace Tests.Common.Settings.Connection {
     using System;
@@ -35,13 +36,13 @@ namespace Tests.Common.Settings.Connection {
         private string _Url = "test.url.com";
         private string _UserName = "TestName";
         private string _Password = "TestPassword";
-        private IAccountSettings underTest;
+        private IAccount underTest;
         private string accountName;
 
         [SetUp]
         public void CreateAccountInstance() {
-            accountName = "DataSpaceAccount" + Guid.NewGuid().ToString();
-            underTest = new AccountSettingsFactory().CreateInstance(config, accountName, _Url, _UserName, new SecureString().Init(_Password));
+            underTest = config.AddDataSpaceAccount(_Url, _UserName, new SecureString().Init(_Password));
+            config.Save();
         }
 
         [TearDown]
@@ -54,94 +55,58 @@ namespace Tests.Common.Settings.Connection {
 
         [Test]
         public void Constructor() {
-            underTest.Load();
             // Assert
-            Assert.That(underTest.IsDirty, Is.False);
-            Assert.That(underTest.Url, Is.EqualTo(string.Empty));
-            Assert.That(underTest.UserName, Is.EqualTo(string.Empty));
-            Assert.That(underTest.Password.ConvertToUnsecureString(), Is.EqualTo(string.Empty));
+            Assert.That(underTest.Url, Is.EqualTo(_Url));
+            Assert.That(underTest.UserName, Is.EqualTo(_UserName));
+            Assert.That(underTest.Password.ConvertToUnsecureString(), Is.EqualTo(_Password));
         }
 
         [Test]
         public void PropertyGetSet() {
-            underTest.Load();
+            string anotherPassword = Guid.NewGuid().ToString();
             // act
-            underTest.Password = new System.Security.SecureString().Init(_Password);
+            underTest.Password = new System.Security.SecureString().Init(anotherPassword);
             // assert
-            Assert.That(underTest.Url, Is.EqualTo(_Url));
-            Assert.That(underTest.UserName, Is.EqualTo(_UserName));
-            Assert.That(underTest.Password.ConvertToUnsecureString(), Is.EqualTo(_Password));
-            Assert.That(underTest.IsDirty, Is.True);
+            Assert.That(underTest.Password.ConvertToUnsecureString(), Is.EqualTo(anotherPassword));
         }
 
         [Test]
         public void WriteAndRead() {
-            underTest.Load();
-            underTest.Password = new System.Security.SecureString().Init(_Password);
-            underTest.Save();
+            underTest = config.GetDataSpaceAccounts().First().Value;
 
-            underTest = new AccountSettingsFactory().LoadInstance(config, config.GetSection(accountName) as AbstractAccountSettingsSection);
-            underTest.Load();
             Assert.That(underTest.Password.ConvertToUnsecureString(), Is.EqualTo(_Password));
             Assert.That(underTest.Url, Is.EqualTo(_Url));
             Assert.That(underTest.UserName, Is.EqualTo(_UserName));
         }
 
         [Test]
-        public void CreateNew() {
-            underTest.Load();
-            underTest.Password = new System.Security.SecureString().Init(_Password);
-            underTest.Save();
-        }
-
-        [Test]
         public void Check_OnPropertyChanged_Success() {
-            underTest.Load();
             List<string> ReceivedEvents = new List<string>();
 
             underTest.PropertyChanged += delegate (object sender, PropertyChangedEventArgs args) {
                 ReceivedEvents.Add(args.PropertyName);
             };
             // Act
-            underTest.Password = new System.Security.SecureString().Init(_Password);
+            underTest.Password = new System.Security.SecureString().Init(_Password + " changed");
 
             // Assert
-            Assert.That(underTest.IsDirty, Is.True);
             Assert.That(underTest.Url, Is.EqualTo(_Url));
             Assert.That(underTest.UserName, Is.EqualTo(_UserName));
-            Assert.That(underTest.Password.ConvertToUnsecureString(), Is.EqualTo(_Password));
+            Assert.That(underTest.Password.ConvertToUnsecureString(), Is.EqualTo(_Password + " changed"));
 
-            Assert.That(ReceivedEvents.Count, Is.EqualTo(4));
-            Assert.That(ReceivedEvents[0], Is.EqualTo(Property.NameOf((IAccountSettings a) => a.Url)));
-            Assert.That(ReceivedEvents[1], Is.EqualTo(Property.NameOf((IAccountSettings a) => a.IsDirty)));
-            Assert.That(ReceivedEvents[2], Is.EqualTo(Property.NameOf((IAccountSettings a) => a.UserName)));
-            Assert.That(ReceivedEvents[3], Is.EqualTo(Property.NameOf((IAccountSettings a) => a.Password)));
+            Assert.That(ReceivedEvents.Count, Is.EqualTo(1));
+            Assert.That(ReceivedEvents[0], Is.EqualTo(Property.NameOf((IAccount a) => a.Password)));
         }
 
         [Test]
-        public void Load_TriggersEvent() {
-            // Load Event Handler
+        public void DeleteTriggersEvent() {
+            // Delete Event Handler
             bool IsTriggered = false;
-            underTest.SettingsLoaded += (sender, arg) => {
-                IsTriggered = true;
-            };
-
-            // Load 
-            underTest.Load();
-
-            Assert.That(IsTriggered, Is.True);
-        }
-
-        [Test]
-        public void Save_TriggersEvent() {
-            // Save Event Handler
-            bool IsTriggered = false;
-            underTest.SettingsSaved += (sender, arg) => {
+            underTest.SettingsDeleted += (sender, arg) => {
                 IsTriggered = true;
             };
             // Save 
-            underTest.Save();
-
+            underTest.Delete();
             Assert.That(IsTriggered, Is.True);
         }
     }

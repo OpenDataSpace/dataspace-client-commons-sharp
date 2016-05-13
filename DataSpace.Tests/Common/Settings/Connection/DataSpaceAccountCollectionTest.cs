@@ -23,6 +23,7 @@ namespace Tests.Common.Settings.Connection {
     using System.Collections.Specialized;
     using System.ComponentModel;
     using System.IO;
+    using System.Linq;
     using System.Security;
 
     using DataSpace.Common.Crypto;
@@ -46,7 +47,7 @@ namespace Tests.Common.Settings.Connection {
             var account = config.AddDataSpaceAccount(url, username, new SecureString().Init(password));
             Assert.That(account.Url, Is.EqualTo(url));
             Assert.That(config.GetDataSpaceAccounts().Count, Is.EqualTo(1));
-            Assert.That(config.GetDataSpaceAccounts()[account.Id], Is.EqualTo(account));
+            Assert.That(config.GetDataSpaceAccounts().First().Value, Is.EqualTo(account));
         }
     }
 }

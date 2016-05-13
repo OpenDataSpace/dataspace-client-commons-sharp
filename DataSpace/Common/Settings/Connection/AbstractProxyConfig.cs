@@ -16,14 +16,20 @@
 //
 // </copyright>
 //-----------------------------------------------------------------------
+
 ﻿namespace DataSpace.Common.Settings.Connection {
     using System;
+    using System.ComponentModel;
     using System.Configuration;
+    using System.Security;
 
     using DataSpace.Common.Utils;
 
-    public class ProxyConfigSection : ConfigurationSection {
+    public abstract class AbstractProxyConfig : ConfigurationSection, IProxySettings, IProxySettingsRead {
         public static readonly string SectionName = "HTTP.Proxy";
+        public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler SettingsDeleted;
+
         /// <summary>
         /// Proxy Type
         /// </summary>
@@ -40,6 +46,32 @@
         public bool NeedLogin {
             get { return (bool)this[Property.NameOf(() => this.NeedLogin)]; }
             set { this [Property.NameOf(() => this.NeedLogin)] = value; }
+        }
+
+        [ConfigurationProperty("Url", DefaultValue = "", IsRequired = true)]
+        public string Url {
+            get { return (string)this[Property.NameOf(() => Url)]; }
+            set { this[Property.NameOf(() => Url)] = value; }
+        }
+
+        [ConfigurationProperty("UserName", DefaultValue = "", IsRequired = true)]
+        public string UserName {
+            get { return (string)this[Property.NameOf(() => UserName)]; }
+            set { this[Property.NameOf(() => UserName)] = value; }
+        }
+
+        public abstract SecureString Password { get; set; }
+
+        protected void OnPropertyChanged(string property) {
+            if (PropertyChanged != null) {
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(property));
+            }
+        }
+
+        public virtual void Delete() {
+            if (SettingsDeleted != null) {
+                SettingsDeleted.Invoke(this, new EventArgs());
+            }
         }
     }
 }

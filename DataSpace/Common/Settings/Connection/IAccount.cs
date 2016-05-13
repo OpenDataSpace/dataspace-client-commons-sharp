@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------
-// <copyright file="AccountSettingsSection.cs" company="GRAU DATA AG">
+// <copyright file="IAccountSettings.cs" company="GRAU DATA AG">
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General private License as published by
@@ -16,9 +16,27 @@
 //
 // </copyright>
 //-----------------------------------------------------------------------
-﻿
-namespace DataSpace.Common.Settings.Connection.W32 {
 
-    public class AccountSettingsSection : AbstractAccountSettingsSection {
+namespace DataSpace.Common.Settings.Connection {
+    using System.Security;
+
+    /// <summary>
+    /// Account read access
+    /// </summary>
+    public interface IAccountReadOnly : INotifySettingsChanged {
+        string Id { get; }
+        string Url { get; }
+        string UserName { get;}
+        SecureString Password { get;}
+    }
+
+    /// <summary>
+    /// Account read/write access
+    /// </summary>
+    public interface IAccount  : INotifySettingsChanged, ISettingsPersist {
+        string Id { get; }
+        string Url { get; }
+        string UserName { get; }
+        SecureString Password { get; set; }
     }
 }

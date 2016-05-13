@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------
-// <copyright file="IAccountSettingsFactory.cs" company="GRAU DATA AG">
+// <copyright file="IAccountFactory.cs" company="GRAU DATA AG">
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General private License as published by
@@ -21,8 +21,7 @@
     using System.Configuration;
     using System.Security;
 
-    public interface IAccountSettingsFactory {
-        IAccountSettings CreateInstance(Configuration config, string sectionName, string url, string userName, SecureString password);
-        IAccountSettings LoadInstance(Configuration config, AbstractAccountSettingsSection section);
+    public interface IAccountFactory {
+        AbstractAccount CreateInstance(string url, string userName, SecureString password);
     }
 }
