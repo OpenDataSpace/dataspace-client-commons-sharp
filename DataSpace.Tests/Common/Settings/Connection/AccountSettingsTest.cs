@@ -37,7 +37,6 @@ namespace Tests.Common.Settings.Connection {
         private string _UserName = "TestName";
         private string _Password = "TestPassword";
         private IAccount underTest;
-        private string accountName;
 
         [SetUp]
         public void CreateAccountInstance() {

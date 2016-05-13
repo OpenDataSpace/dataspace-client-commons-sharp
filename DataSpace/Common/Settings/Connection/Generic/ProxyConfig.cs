@@ -16,14 +16,13 @@
 //
 // </copyright>
 //-----------------------------------------------------------------------
-﻿
+
 namespace DataSpace.Common.Settings.Connection.Generic {
-    using System;
     using System.Configuration;
     using System.Security;
 
-    using DataSpace.Common.Crypto;
-    using DataSpace.Common.Utils;
+    using Crypto;
+    using Utils;
 
     public class ProxyConfig : AbstractProxyConfig {
         [ConfigurationProperty("Password", DefaultValue = "", IsRequired = true)]

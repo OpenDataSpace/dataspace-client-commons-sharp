@@ -168,7 +168,7 @@ namespace DataSpace.Common.Settings {
             accountFactory = accountFactory ?? new AccountFactory();
             var accounts = config.GetOrCreateSectionGroup<DataSpaceAccountSectionGroup>(DataSpaceAccountSectionGroup.DefaultSectionGroupName);
             var account = accountFactory.CreateInstance(url, userName, password);
-            accounts.Sections.Add(Guid.NewGuid().ToString(), account);
+            accounts.Sections.Add("account" + Guid.NewGuid().ToString(), account);
             return account;
         }
 

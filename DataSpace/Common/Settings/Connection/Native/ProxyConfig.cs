@@ -26,8 +26,10 @@ namespace DataSpace.Common.Settings.Connection.Native {
 
     public class ProxyConfig : AbstractProxyConfig {
         private readonly INativeAccountStore nativeStore;
-        public ProxyConfig(INativeAccountStore store = null) {
-            this.nativeStore = store ?? ConfigurationConvenienceExtender.GetRegisteredStore();
+        public ProxyConfig() : this(null) {
+        }
+        public ProxyConfig(INativeAccountStore store) {
+            nativeStore = store ?? ConfigurationConvenienceExtender.GetRegisteredStore();
         }
 
         public override SecureString Password {

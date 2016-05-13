@@ -16,18 +16,21 @@
 //
 // </copyright>
 //-----------------------------------------------------------------------
-﻿
+
 namespace DataSpace.Common.Settings.Connection.Native {
-    using System;
     using System.Security;
 
-    using DataSpace.Common.Crypto;
-    using DataSpace.Common.Utils;
+    using Crypto;
+    using Utils;
 
     public class Account : AbstractAccount {
         private readonly INativeAccountStore nativeStore;
-        public Account(INativeAccountStore store = null) {
-            this.nativeStore = store ?? ConfigurationConvenienceExtender.GetRegisteredStore();
+
+        public Account() : this(null) {
+        }
+
+        public Account(INativeAccountStore store) {
+            nativeStore = store ?? ConfigurationConvenienceExtender.GetRegisteredStore();
         }
 
         public override SecureString Password {

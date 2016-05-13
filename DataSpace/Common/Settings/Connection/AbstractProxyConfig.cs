@@ -23,7 +23,7 @@
     using System.Configuration;
     using System.Security;
 
-    using DataSpace.Common.Utils;
+    using Utils;
 
     public abstract class AbstractProxyConfig : ConfigurationSection, IProxySettings, IProxySettingsRead {
         public static readonly string SectionName = "HTTP.Proxy";

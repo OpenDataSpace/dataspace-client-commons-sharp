@@ -40,15 +40,29 @@ namespace DataSpace.Common.Settings.Connection.W32 {
             this.applicationName = applicationName;
         }
 
-        public void Add(string url, string userName, SecureString Password) {
-            throw new NotImplementedException();
+        public void Add(string url, string userName, SecureString password) {
+            CredentialManager.Delete(GetApplicationName(url, userName));
+            CredentialManager.WriteCredential(GetApplicationName(url, userName), userName, password.ConvertToUnsecureString());
         }
+
         public SecureString Get(string url, string userName) {
-            throw new NotImplementedException();
+            foreach (var cred in CredentialManager.EnumerateCrendentials(GetApplicationName(url, userName) + "*")) {
+                if (cred.CredentialType == CredentialType.Generic &&
+                    cred.UserName.Equals(userName))
+                {
+                    return new SecureString().Init(cred.Password);
+                }
+            }
+
+            return new SecureString();
         }
 
         public void Remove(string url, string userName) {
-            throw new NotImplementedException();
+            CredentialManager.Delete(GetApplicationName(url, userName));
+        }
+
+        private string GetApplicationName(string url, string userName) {
+            return string.Format("{0}_{1}@{2}", applicationName, userName, url);
         }
     }
 }

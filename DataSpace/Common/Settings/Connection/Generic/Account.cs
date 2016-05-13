@@ -21,8 +21,8 @@ namespace DataSpace.Common.Settings.Connection.Generic {
     using System.Configuration;
     using System.Security;
 
-    using DataSpace.Common.Crypto;
-    using DataSpace.Common.Utils;
+    using Crypto;
+    using Utils;
 
     public class Account : AbstractAccount {
         [ConfigurationProperty("Password", DefaultValue = "", IsRequired = true)]
