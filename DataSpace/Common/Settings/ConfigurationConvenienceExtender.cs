@@ -133,7 +133,12 @@ namespace DataSpace.Common.Settings {
 
         public static IAccountSettings GetProxyAccount(this Configuration config, IAccountSettingsFactory accountFactory = null) {
             accountFactory = accountFactory ?? new AccountSettingsFactory();
-            return accountFactory.LoadInstance(config, config.GetOrCreateSection<AbstractAccountSettingsSection>("DataSpaceProxyAccount"));
+            var section = config.GetSection("DataSpaceProxyAccount") as AbstractAccountSettingsSection;
+            if (section != null) {
+                return accountFactory.LoadInstance(config, section);
+            } else {
+                return accountFactory.CreateInstance(config, "DataSpaceProxyAccount", "https://", string.Empty, new SecureString());
+            }
         }
 
         public static IAccountSettings AddDataSpaceAccount(
