@@ -48,8 +48,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\Settings\Connection\AccountSettingsTest.cs" />
-    <Compile Include="Common\Settings\Connection\ProxySettingsTests.cs" />
+    <Compile Include="Common\Settings\Accounts\AccountSettingsTest.cs" />
+    <Compile Include="Common\Settings\Proxy\ProxySettingsTests.cs" />
     <Compile Include="EmptyTest.cs" />
     <Compile Include="HashAlgorithm\SHA1ReuseTest.cs" />
     <Compile Include="Common\Streams\AbortableStreamTest.cs" />
@@ -72,13 +72,11 @@
     <Compile Include="Utils\WithConfiguredLog4Net.cs" />
     <Compile Include="Common\Settings\ConfigurationLoaderTest.cs" />
     <Compile Include="Common\Settings\UserConfigPathBuilderTest.cs" />
-    <Compile Include="Common\Settings\Connection\DataSpaceAccountCollectionTest.cs" />
+    <Compile Include="Common\Settings\Accounts\DataSpaceAccountCollectionTest.cs" />
     <Compile Include="Common\Settings\WithGeneratedConfig.cs" />
-    <Compile Include="Common\NativeKeyStore\NativeKeyStoreFactoryTest.cs" />
-    <Compile Include="Common\NativeKeyStore\W32\WindowsPasswordStoreTest.cs" />
     <Compile Include="Utils\EnsureThisRuns.cs" />
     <Compile Include="Common\Settings\ConfigurationExtensionsTest.cs" />
-    <Compile Include="Common\Settings\Connection\AccountFactoryTest.cs" />
+    <Compile Include="Common\Settings\Accounts\AccountFactoryTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -87,7 +85,9 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Common\NativeKeyStore\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataSpace\DataSpace.csproj">
       <Project>{558B5501-6944-4CC2-A830-0BBC25D7C848}</Project>
@@ -101,8 +101,5 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Common\NativeKeyStore\" />
-    <Folder Include="Common\NativeKeyStore\W32\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

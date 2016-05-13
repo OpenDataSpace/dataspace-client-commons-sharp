@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------
-// <copyright file="Register.cs" company="GRAU DATA AG">
+// <copyright file="ISettingsPersist.cs" company="GRAU DATA AG">
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General private License as published by
@@ -17,24 +17,18 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace DataSpace.Common.NativeKeyStore {
-    using System;
-    using System.Collections.Generic;
+namespace DataSpace.Common.Settings {
+    ﻿using System;
+    using System.ComponentModel;
 
-    using Settings.Accounts.Native;
+    public interface ISettingsPersist {
+        void Delete();
+    }
 
-    public class Register {
-        private static readonly Dictionary<PlatformID, INativeAccountStore> registry = new Dictionary<PlatformID, INativeAccountStore>();
-        static Register() {
-            var windowsStore = new Settings.Accounts.Native.W32.NativeAccountStore();
-            registry[PlatformID.Win32Windows] = windowsStore;
-            registry[PlatformID.Win32NT] = windowsStore;
-            registry[PlatformID.Win32S] = windowsStore;
-            registry[PlatformID.WinCE] = windowsStore;
-        }
-
-        public INativeAccountStore GetAccountStoreFor(PlatformID platform) {
-            return registry[platform];
-        }
+    /// <summary>
+    /// Settings Change Notifications
+    /// </summary>
+    public interface INotifySettingsChanged : INotifyPropertyChanged {
+        event EventHandler SettingsDeleted;
     }
 }

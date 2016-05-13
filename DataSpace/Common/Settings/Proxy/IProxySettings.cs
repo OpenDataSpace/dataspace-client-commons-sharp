@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------
-// <copyright file="Register.cs" company="GRAU DATA AG">
+// <copyright file="IProxySettings.cs" company="GRAU DATA AG">
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General private License as published by
@@ -17,24 +17,28 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace DataSpace.Common.NativeKeyStore {
-    using System;
-    using System.Collections.Generic;
+namespace DataSpace.Common.Settings.Proxy {
+    using System.Security;
 
-    using Settings.Accounts.Native;
+    /// <summary>
+    /// Proxy settings read access
+    /// </summary>
+    public interface IProxySettingsRead : INotifySettingsChanged {
+        ProxyType ProxyType { get; }
+        string Url { get; }
+        bool NeedLogin { get; }
+        string UserName { get; }
+        SecureString Password { get; }
+    }
 
-    public class Register {
-        private static readonly Dictionary<PlatformID, INativeAccountStore> registry = new Dictionary<PlatformID, INativeAccountStore>();
-        static Register() {
-            var windowsStore = new Settings.Accounts.Native.W32.NativeAccountStore();
-            registry[PlatformID.Win32Windows] = windowsStore;
-            registry[PlatformID.Win32NT] = windowsStore;
-            registry[PlatformID.Win32S] = windowsStore;
-            registry[PlatformID.WinCE] = windowsStore;
-        }
-
-        public INativeAccountStore GetAccountStoreFor(PlatformID platform) {
-            return registry[platform];
-        }
+    /// <summary>
+    /// Proxy settings read/write access
+    /// </summary>
+    public interface IProxySettings : INotifySettingsChanged, ISettingsPersist {
+        ProxyType ProxyType { get; set; }
+        string Url { get; set; }
+        bool NeedLogin { get; set; }
+        string UserName { get; set; }
+        SecureString Password { get; set; }
     }
 }

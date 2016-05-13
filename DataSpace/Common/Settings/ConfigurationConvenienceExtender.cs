@@ -23,9 +23,9 @@ namespace DataSpace.Common.Settings {
     using System.Configuration;
     using System.Security;
 
-    using DataSpace.Common.Settings.Connection;
-    using DataSpace.Common.Settings.Connection.Native;
-
+    using Accounts;
+    using Accounts.Native;
+    using Proxy;
     public static class ConfigurationConvenienceExtender {
         private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static INativeAccountStore nativeAccountStore = null;
@@ -38,7 +38,7 @@ namespace DataSpace.Common.Settings {
                 case PlatformID.WinCE:
                     goto case PlatformID.Win32Windows;
                 case PlatformID.Win32Windows:
-                    nativeAccountStore = new DataSpace.Common.Settings.Connection.W32.NativeAccountStore();
+                    nativeAccountStore = new Accounts.Native.W32.NativeAccountStore();
                     break;
                 default:
                     break;

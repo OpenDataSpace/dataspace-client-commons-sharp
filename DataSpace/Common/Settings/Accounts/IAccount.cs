@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------
-// <copyright file="Register.cs" company="GRAU DATA AG">
+// <copyright file="IAccount.cs" company="GRAU DATA AG">
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General private License as published by
@@ -17,24 +17,26 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace DataSpace.Common.NativeKeyStore {
-    using System;
-    using System.Collections.Generic;
+namespace DataSpace.Common.Settings.Accounts {
+    using System.Security;
 
-    using Settings.Accounts.Native;
+    /// <summary>
+    /// Account read access
+    /// </summary>
+    public interface IAccountReadOnly : INotifySettingsChanged {
+        string Id { get; }
+        string Url { get; }
+        string UserName { get;}
+        SecureString Password { get;}
+    }
 
-    public class Register {
-        private static readonly Dictionary<PlatformID, INativeAccountStore> registry = new Dictionary<PlatformID, INativeAccountStore>();
-        static Register() {
-            var windowsStore = new Settings.Accounts.Native.W32.NativeAccountStore();
-            registry[PlatformID.Win32Windows] = windowsStore;
-            registry[PlatformID.Win32NT] = windowsStore;
-            registry[PlatformID.Win32S] = windowsStore;
-            registry[PlatformID.WinCE] = windowsStore;
-        }
-
-        public INativeAccountStore GetAccountStoreFor(PlatformID platform) {
-            return registry[platform];
-        }
+    /// <summary>
+    /// Account read/write access
+    /// </summary>
+    public interface IAccount  : INotifySettingsChanged, ISettingsPersist {
+        string Id { get; }
+        string Url { get; }
+        string UserName { get; }
+        SecureString Password { get; set; }
     }
 }

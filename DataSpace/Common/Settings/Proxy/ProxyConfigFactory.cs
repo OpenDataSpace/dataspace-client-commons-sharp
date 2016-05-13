@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------
-// <copyright file="Register.cs" company="GRAU DATA AG">
+// <copyright file="ProxyConfigFactory.cs" company="GRAU DATA AG">
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General private License as published by
@@ -16,25 +16,25 @@
 //
 // </copyright>
 //-----------------------------------------------------------------------
-
-namespace DataSpace.Common.NativeKeyStore {
+﻿
+namespace DataSpace.Common.Settings.Proxy {
     using System;
-    using System.Collections.Generic;
+    using System.Security;
 
-    using Settings.Accounts.Native;
-
-    public class Register {
-        private static readonly Dictionary<PlatformID, INativeAccountStore> registry = new Dictionary<PlatformID, INativeAccountStore>();
-        static Register() {
-            var windowsStore = new Settings.Accounts.Native.W32.NativeAccountStore();
-            registry[PlatformID.Win32Windows] = windowsStore;
-            registry[PlatformID.Win32NT] = windowsStore;
-            registry[PlatformID.Win32S] = windowsStore;
-            registry[PlatformID.WinCE] = windowsStore;
-        }
-
-        public INativeAccountStore GetAccountStoreFor(PlatformID platform) {
-            return registry[platform];
+    public class ProxyConfigFactory : IProxyConfigFactory {
+        public AbstractProxyConfig CreateInstance() {
+            switch (Environment.OSVersion.Platform) {
+                case PlatformID.WinCE:
+                    goto case PlatformID.Win32Windows;
+                case PlatformID.Win32S:
+                    goto case PlatformID.Win32Windows;
+                case PlatformID.Win32NT:
+                    goto case PlatformID.Win32Windows;
+                case PlatformID.Win32Windows:
+                    return new DataSpace.Common.Settings.Proxy.Native.ProxyConfig();
+                default:
+                    return new DataSpace.Common.Settings.Proxy.Generic.ProxyConfig();
+            }
         }
     }
 }
