@@ -84,11 +84,11 @@ namespace DataSpace.Common.Settings.Connection.W32 {
                 throw new ArgumentNullException("sectionName");
             }
 
-            if (string.IsNullOrWhiteSpace(url)) {
+            if (url == null) {
                 throw new ArgumentNullException("url");
             }
 
-            if (string.IsNullOrWhiteSpace(userName)) {
+            if (userName == null) {
                 throw new ArgumentNullException("userName");
             }
 
