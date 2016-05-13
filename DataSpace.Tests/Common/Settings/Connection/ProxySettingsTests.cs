@@ -23,6 +23,7 @@ namespace Tests.Common.Settings.Connection {
     using System.Configuration;
     using System.ComponentModel;
     using System.IO;
+    using System.Security;
 
     using DataSpace.Common.Crypto;
     using DataSpace.Common.Settings;
@@ -55,7 +56,7 @@ namespace Tests.Common.Settings.Connection {
             // act
             underTest.Url = url;
             underTest.UserName = username;
-            underTest.Password = new System.Security.SecureString().Init(password);
+            underTest.Password = new SecureString().Init(password);
             underTest.NeedLogin = true;
             underTest.ProxyType = ProxyType.Custom;
             // assert
@@ -79,7 +80,11 @@ namespace Tests.Common.Settings.Connection {
         [Test]
         public void DeleteTest() {
             IProxySettings underTest = config.GetProxySettings();
-
+            underTest.UserName = Guid.NewGuid().ToString();
+            underTest.Url = Guid.NewGuid().ToString();
+            underTest.ProxyType = ProxyType.Custom;
+            underTest.NeedLogin = true;
+            underTest.Password = new SecureString().Init(Guid.NewGuid().ToString());
             underTest.Delete();
 
             Assert.That(underTest.NeedLogin, Is.False);
@@ -126,12 +131,12 @@ namespace Tests.Common.Settings.Connection {
             Assert.That(underTest.UserName, Is.EqualTo(username));
             Assert.That(underTest.Password.ConvertToUnsecureString(), Is.EqualTo(password));
 
-            Assert.That(ReceivedEvents.Count, Is.EqualTo(6));
-            Assert.AreEqual(Property.NameOf((IProxySettings a) => a.ProxyType), ReceivedEvents[0]);
-            Assert.AreEqual(Property.NameOf((IProxySettings a) => a.NeedLogin), ReceivedEvents[2]);
-            Assert.AreEqual(Property.NameOf((IProxySettings a) => a.Url), ReceivedEvents[3]);
-            Assert.AreEqual(Property.NameOf((IProxySettings a) => a.UserName), ReceivedEvents[4]);
-            Assert.AreEqual(Property.NameOf((IProxySettings a) => a.Password), ReceivedEvents[5]);
+            Assert.That(ReceivedEvents.Count, Is.EqualTo(5));
+            Assert.That(ReceivedEvents[0], Is.EqualTo(Property.NameOf((IProxySettings a) => a.ProxyType)));
+            Assert.That(ReceivedEvents[1], Is.EqualTo(Property.NameOf((IProxySettings a) => a.NeedLogin)));
+            Assert.That(ReceivedEvents[2], Is.EqualTo(Property.NameOf((IProxySettings a) => a.Url)));
+            Assert.That(ReceivedEvents[3], Is.EqualTo(Property.NameOf((IProxySettings a) => a.UserName)));
+            Assert.That(ReceivedEvents[4], Is.EqualTo(Property.NameOf((IProxySettings a) => a.Password)));
         }
     }
 }

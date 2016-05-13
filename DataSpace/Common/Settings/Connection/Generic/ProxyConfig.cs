@@ -49,5 +49,10 @@ namespace DataSpace.Common.Settings.Connection.Generic {
                 }
             }
         }
+
+        public override void Delete() {
+            StoredPassword = string.Empty;
+            base.Delete();
+        }
     }
 }

@@ -35,8 +35,11 @@
         /// </summary>
         [ConfigurationProperty("ProxyType", DefaultValue = ProxyType.Default, IsRequired = true)]
         public ProxyType ProxyType {
-            get { return (ProxyType)this[Property.NameOf(() => this.ProxyType)]; }
-            set { this [Property.NameOf(() => this.ProxyType)] = value; }
+            get { return (ProxyType)this[Property.NameOf(() => ProxyType)]; }
+            set {
+                this [Property.NameOf(() => ProxyType)] = value;
+                OnPropertyChanged(Property.NameOf(() => ProxyType));
+            }
         }
 
         /// <summary>
@@ -44,20 +47,29 @@
         /// </summary>
         [ConfigurationProperty("NeedLogin", DefaultValue = false, IsRequired = false)]
         public bool NeedLogin {
-            get { return (bool)this[Property.NameOf(() => this.NeedLogin)]; }
-            set { this [Property.NameOf(() => this.NeedLogin)] = value; }
+            get { return (bool)this[Property.NameOf(() => NeedLogin)]; }
+            set {
+                this [Property.NameOf(() => NeedLogin)] = value;
+                OnPropertyChanged(Property.NameOf(() => NeedLogin));
+            }
         }
 
         [ConfigurationProperty("Url", DefaultValue = "", IsRequired = true)]
         public string Url {
             get { return (string)this[Property.NameOf(() => Url)]; }
-            set { this[Property.NameOf(() => Url)] = value; }
+            set {
+                this[Property.NameOf(() => Url)] = value;
+                OnPropertyChanged(Property.NameOf(() => Url));
+            }
         }
 
         [ConfigurationProperty("UserName", DefaultValue = "", IsRequired = true)]
         public string UserName {
             get { return (string)this[Property.NameOf(() => UserName)]; }
-            set { this[Property.NameOf(() => UserName)] = value; }
+            set {
+                this[Property.NameOf(() => UserName)] = value;
+                OnPropertyChanged(Property.NameOf(() => UserName));
+            }
         }
 
         public abstract SecureString Password { get; set; }
@@ -69,6 +81,11 @@
         }
 
         public virtual void Delete() {
+            NeedLogin = false;
+            ProxyType = ProxyType.Default;
+            Url = string.Empty;
+            UserName = string.Empty;
+
             if (SettingsDeleted != null) {
                 SettingsDeleted.Invoke(this, new EventArgs());
             }
