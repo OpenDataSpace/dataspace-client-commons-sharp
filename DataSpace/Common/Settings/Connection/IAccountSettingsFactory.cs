@@ -19,8 +19,10 @@
 
 ﻿namespace DataSpace.Common.Settings.Connection {
     using System.Configuration;
+    using System.Security;
 
     public interface IAccountSettingsFactory {
-        IAccountSettings CreateInstance(Configuration config, string sectionName);
+        IAccountSettings CreateInstance(Configuration config, string sectionName, string url, string userName, SecureString password);
+        IAccountSettings LoadInstance(Configuration config, AbstractAccountSettingsSection section);
     }
 }

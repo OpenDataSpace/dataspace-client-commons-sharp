@@ -18,8 +18,10 @@
 //-----------------------------------------------------------------------
 
 ﻿namespace DataSpace.Common.Settings.Connection {
+    using System.Collections.Generic;
+
     public interface IConnectionSettingsFactory {
-        DataSpaceAccountCollection DataSpaceAccounts { get; }
+        IDictionary<string, IAccountSettings> DataSpaceAccounts { get; }
         IProxySettings ProxySettings { get; }
     }
 }

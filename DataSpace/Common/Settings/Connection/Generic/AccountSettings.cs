@@ -37,19 +37,27 @@ namespace DataSpace.Common.Settings.Connection.Generic {
         public event PropertyChangedEventHandler PropertyChanged;
         public event EventHandler SettingsLoaded = delegate { };
         public event EventHandler SettingsSaved = delegate { };
+        public event EventHandler SettingsDeleted = delegate { };
 
-        public AccountSettings(Configuration config, string sectionName) {
+        public AccountSettings(Configuration config, AccountSettingsSection section) {
             if (config == null) {
                 throw new ArgumentNullException("config");
             }
 
-            if (string.IsNullOrWhiteSpace(sectionName)) {
-                throw new ArgumentNullException("sectionName");
+            if (section == null) {
+                throw new ArgumentNullException("section");
             }
 
             this.config = config;
-            this.sectionName = sectionName;
+            this.section = section;
+            this.sectionName = section.SectionInformation.SectionName;
             Load();
+        }
+
+        public string Id {
+            get {
+                return string.Format("{0}@{1}", UserName, Url);
+            }
         }
 
         public bool IsDirty {
@@ -70,7 +78,7 @@ namespace DataSpace.Common.Settings.Connection.Generic {
                 return section.Url;
             }
 
-            set {
+            private set {
                 if (!section.Url.Equals(value)) {
                     section.Url = value;
                     OnPropertyChanged(Property.NameOf(() => Url));
@@ -83,7 +91,7 @@ namespace DataSpace.Common.Settings.Connection.Generic {
                 return section.UserName;
             }
 
-            set {
+            private set {
                 if (!section.UserName.Equals(value)) {
                     section.UserName = value;
                     OnPropertyChanged(Property.NameOf(() => UserName));
@@ -105,7 +113,7 @@ namespace DataSpace.Common.Settings.Connection.Generic {
         }
 
         public void Load() {
-            section = config.GetOrCreateSection<AccountSettingsSection>(sectionName);
+            section = config.GetOrCreateSection<AccountSettingsSection>(section.SectionInformation.SectionName);
             SettingsLoaded.Invoke(this, new EventArgs());
             IsDirty = false;
         }

@@ -23,7 +23,9 @@ namespace Tests.Common.Settings.Connection.W32 {
     using System.ComponentModel;
     using System.Configuration;
     using System.Linq;
+    using System.Security;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using DataSpace.Common.Crypto;
@@ -48,7 +50,7 @@ namespace Tests.Common.Settings.Connection.W32 {
         [SetUp]
         public void SetUp() {
             configuration = new ConfigurationLoader(new UserConfigPathBuilder{ Company = "UnitTest" }).Configuration;
-            underTest = new AccountSettingsFactory().CreateInstance(configuration, "DataSpaceAccount");
+            underTest = new AccountSettingsFactory().CreateInstance(configuration, "DataSpaceAccount" + Guid.NewGuid().ToString(), "https://example.com/", "username", new SecureString().Init("pw"));
         }
 
         [Test, NUnit.Framework.Category("Slow")]
@@ -119,18 +121,18 @@ namespace Tests.Common.Settings.Connection.W32 {
             AccountSettings AccSetObj = underTest as AccountSettings;
             // set 5 sec timer
             AccSetObj.PropsRefreshSpan = new TimeSpan(0, 5, 0);
-            bool IsTriggered = false;
+            bool isTriggered = false;
             underTest.SettingsLoaded += (sender, arg) => {
-                IsTriggered = true;
+                isTriggered = true;
             };
             // act
-            string Url = underTest.Url;
+            string Password = underTest.Password.ConvertToUnsecureString();
             // modify -> go in Edit mode
-            underTest.Url = Url + "!";
-            System.Threading.Thread.Sleep(5020);
-            Url = underTest.Url;
+            underTest.Password =  new SecureString().Init(Password + "!");
+            Thread.Sleep(5020);
+            Assert.That(underTest.Password.ConvertToUnsecureString(), Is.EquivalentTo(Password));
             // assert
-            Assert.AreEqual(false, IsTriggered);
+            Assert.That(isTriggered, Is.False);
             // house keeping
             AccSetObj.PropsRefreshSpan = new TimeSpan(0, 2, 0);
         }

@@ -34,12 +34,12 @@ namespace DataSpace.Common.Settings.Connection {
 
             switch (Environment.OSVersion.Platform) {
                 case PlatformID.Unix:
-                    return new Generic.ProxySettings(config);
+                    return new Generic.ProxySettings(config, accountFactory);
                 case PlatformID.MacOSX:
                     // TODO Use MacOs Proxy Settings
-                    return new Generic.ProxySettings(config);
+                    return new Generic.ProxySettings(config, accountFactory);
                 default:
-                    return new W32.ProxySettings(config);
+                    return new W32.ProxySettings(config, accountFactory);
             }
         }
     }

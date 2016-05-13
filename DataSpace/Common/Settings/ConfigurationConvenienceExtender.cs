@@ -19,7 +19,11 @@
 ﻿
 namespace DataSpace.Common.Settings {
     using System;
+    using System.Collections.Generic;
     using System.Configuration;
+    using System.Security;
+
+    using DataSpace.Common.Settings.Connection;
 
     public static class ConfigurationConvenienceExtender {
         private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -111,6 +115,39 @@ namespace DataSpace.Common.Settings {
             } else {
                 config.Sections.Remove(sectionName);
             }
+        }
+
+        public static IDictionary<string, IAccountSettings> GetDataSpaceAccounts(this Configuration config, IAccountSettingsFactory accountFactory = null) {
+            accountFactory = accountFactory ?? new AccountSettingsFactory();
+            var group = config.SectionGroups.Get(DataSpaceAccountSectionGroup.DefaultSectionGroupName) as DataSpaceAccountSectionGroup;
+            var accounts = new Dictionary<string, IAccountSettings>();
+            if (group != null) {
+                foreach (AbstractAccountSettingsSection section in group.Sections) {
+                    var account = accountFactory.LoadInstance(config, section);
+                    accounts[account.Id] = account;
+                }
+            }
+
+            return accounts;
+        }
+
+        public static IAccountSettings GetProxyAccount(this Configuration config, IAccountSettingsFactory accountFactory = null) {
+            accountFactory = accountFactory ?? new AccountSettingsFactory();
+            return accountFactory.LoadInstance(config, config.GetOrCreateSection<AbstractAccountSettingsSection>("DataSpaceProxyAccount"));
+        }
+
+        public static IAccountSettings AddDataSpaceAccount(
+            this Configuration config,
+            string url,
+            string userName,
+            SecureString password,
+            IAccountSettingsFactory accountFactory = null)
+        {
+            accountFactory = accountFactory ?? new AccountSettingsFactory();
+            config.GetOrCreateSectionGroup<DataSpaceAccountSectionGroup>(DataSpaceAccountSectionGroup.DefaultSectionGroupName);
+            var account = accountFactory.CreateInstance(config, string.Format("{0}/{1}@{2}", DataSpaceAccountSectionGroup.DefaultSectionGroupName, userName, url), url, userName, password);
+            account.Save();
+            return account;
         }
     }
 }

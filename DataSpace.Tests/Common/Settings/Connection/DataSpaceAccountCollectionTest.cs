@@ -23,7 +23,9 @@ namespace Tests.Common.Settings.Connection {
     using System.Collections.Specialized;
     using System.ComponentModel;
     using System.IO;
+    using System.Security;
 
+    using DataSpace.Common.Crypto;
     using DataSpace.Common.Settings;
     using DataSpace.Common.Settings.Connection;
     using DataSpace.Common.Utils;
@@ -35,31 +37,16 @@ namespace Tests.Common.Settings.Connection {
     [TestFixture, NUnit.Framework.Category("UnitTests")]
     public class DataSpaceAccountCollectionTest : WithGeneratedConfig {
         [Test]
-        public void NotificationOnElementChange() {
-            int isCollectionTriggered = 0;
-            int isElementTriggered = 0;
-            string changedProperty = "bla";
-            var underTest = new DataSpaceAccountCollection(config);
-            var mockedEntry = new Mock<IAccountSettings>();
-            underTest.Add(mockedEntry.Object);
-            underTest.CollectionChanged += (object sender, NotifyCollectionChangedEventArgs e) => {
-                Assert.That(sender, Is.EqualTo(underTest));
-                Assert.That(e.Action, Is.EqualTo(NotifyCollectionChangedAction.Add));
-                isCollectionTriggered++;
-            };
-
-            mockedEntry.Object.PropertyChanged += (object sender, PropertyChangedEventArgs e) => {
-                Assert.That(sender, Is.EqualTo(mockedEntry.Object));
-                isElementTriggered++;
-            };
-
-            mockedEntry.Raise(m => m.PropertyChanged += null, new PropertyChangedEventArgs(changedProperty));
-            Assert.That(isElementTriggered, Is.EqualTo(1));
-            Assert.That(isCollectionTriggered, Is.EqualTo(0));
-            Assert.That(underTest.Count, Is.EqualTo(1));
-            underTest.Add(Mock.Of<IAccountSettings>());
-            Assert.That(isCollectionTriggered, Is.EqualTo(1));
-            Assert.That(underTest.Count, Is.EqualTo(2));
+        public void SaveConfigAndLoadConfig() {
+            var username = "user";
+            var password = "password";
+            var url = "https://example.org/";
+            var underTest = config.GetDataSpaceAccounts();
+            Assert.That(underTest, Is.Empty);
+            var account = config.AddDataSpaceAccount(url, username, new SecureString().Init(password));
+            Assert.That(account.Url, Is.EqualTo(url));
+            Assert.That(config.GetDataSpaceAccounts().Count, Is.EqualTo(1));
+            Assert.That(config.GetDataSpaceAccounts()[account.Id], Is.EqualTo(account));
         }
     }
 }

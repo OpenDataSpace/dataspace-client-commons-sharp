@@ -16,10 +16,14 @@
 //
 // </copyright>
 //-----------------------------------------------------------------------
+using DataSpace.Common.Crypto;
+
+
 ﻿
 namespace Tests.Common.Settings.Connection {
     using System;
     using System.Configuration;
+    using System.Security;
 
     using DataSpace.Common.Settings;
     using DataSpace.Common.Settings.Connection;
@@ -28,11 +32,15 @@ namespace Tests.Common.Settings.Connection {
 
     [TestFixture, Category("UnitTests")]
     public class AccountSettingsFactoryTest : WithGeneratedConfig {
+        private readonly string url = "https://example.com/";
+        private readonly string username = "user";
         [Test]
         public void CreateInstance() {
             IAccountSettingsFactory underTest = new AccountSettingsFactory();
-            var account = underTest.CreateInstance(config, "DataSpaceAccount" + Guid.NewGuid().ToString());
+            var account = underTest.CreateInstance(config, "DataSpaceAccount" + Guid.NewGuid().ToString(), url, username, new SecureString().Init("pw"));
             Assert.That(account, Is.Not.Null);
+            Assert.That(account.Url, Is.EqualTo(url));
+            Assert.That(account.UserName, Is.EqualTo(username));
         }
     }
 }

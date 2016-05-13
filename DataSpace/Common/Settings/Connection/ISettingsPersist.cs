@@ -37,5 +37,6 @@ namespace DataSpace.Common.Settings.Connection {
     public interface INotifySettingsChanged : INotifyPropertyChanged {
         event EventHandler SettingsLoaded;
         event EventHandler SettingsSaved;
+        event EventHandler SettingsDeleted;
     }
 }

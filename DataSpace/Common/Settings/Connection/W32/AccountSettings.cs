@@ -58,11 +58,24 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         public event PropertyChangedEventHandler PropertyChanged;
         public event EventHandler SettingsLoaded = delegate { };
         public event EventHandler SettingsSaved = delegate { };
+        public event EventHandler SettingsDeleted = delegate { };
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public AccountSettings(Configuration config, string sectionName) {
+        public AccountSettings(Configuration config, AccountSettingsSection section) {
+            if (config == null) {
+                throw new ArgumentNullException("config");
+            }
+
+            if (section == null) {
+                throw new ArgumentNullException("section");
+            }
+
+            UrlPrefix = section.SectionInformation.Name;
+        }
+
+        public AccountSettings(Configuration config, string sectionName, string url, string userName, SecureString password) {
             if (config == null) {
                 throw new ArgumentNullException("config");
             }
@@ -70,8 +83,26 @@ namespace DataSpace.Common.Settings.Connection.W32 {
             if (string.IsNullOrWhiteSpace(sectionName)) {
                 throw new ArgumentNullException("sectionName");
             }
-            
-            UrlPrefix = config.GetOrCreateSection<AccountSettingsSection>(sectionName).SectionInformation.Name;
+
+            if (string.IsNullOrWhiteSpace(url)) {
+                throw new ArgumentNullException("url");
+            }
+
+            if (string.IsNullOrWhiteSpace(userName)) {
+                throw new ArgumentNullException("userName");
+            }
+
+            if (password == null) {
+                throw new ArgumentNullException("password");
+            }
+
+
+            var section = config.GetOrCreateSection<AccountSettingsSection>(sectionName);
+            UrlPrefix = section.SectionInformation.Name;
+            Url = url;
+            UserName = userName;
+            Password = password.Copy();
+            Load();
         }
 
         /// <summary>
@@ -105,6 +136,12 @@ namespace DataSpace.Common.Settings.Connection.W32 {
             get; private set;
         }
 
+        public string Id {
+            get {
+                return string.Format("{0}@{1}", UserName, Url);
+            }
+        }
+
         public SecureString Password {
             get {
                 lock (_Lock) {
@@ -132,7 +169,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
                 }
             }
 
-            set {
+            private set {
                 lock (_Lock) {
                     value = value ?? string.Empty;
                     value.Trim();
@@ -152,7 +189,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
                 }
             }
 
-            set {
+            private set {
                 lock (_Lock) {
                     value = value ?? string.Empty;
                     value.Trim();

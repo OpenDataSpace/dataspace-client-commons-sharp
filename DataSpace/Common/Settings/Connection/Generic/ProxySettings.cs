@@ -37,7 +37,7 @@ namespace DataSpace.Common.Settings.Connection.Generic {
         private readonly Configuration config;
         private ProxyConfigSection section;
         private IAccountSettings account;
-        private readonly string SectionName = "DataSpaceProxy";
+        private IAccountSettingsFactory accountFactory;
 
         /// <summary>
         /// Constructor
@@ -48,8 +48,8 @@ namespace DataSpace.Common.Settings.Connection.Generic {
             }
 
             this.config = config;
-            IAccountSettingsFactory factory = accountFactory ?? new AccountSettingsFactory();
-            account = factory.CreateInstance(config, SectionName + "Account");
+            this.accountFactory = accountFactory ?? new AccountSettingsFactory();
+            account = config.GetProxyAccount(this.accountFactory);
             Load();
         }
 
@@ -140,7 +140,7 @@ namespace DataSpace.Common.Settings.Connection.Generic {
             set {
                 lock (l) {
                     if (!account.Url.Equals(value)) {
-                        account.Url = value;
+                        UpdateAccountInformations(value, account.UserName, account.Password);
                         OnPropertyChanged(Property.NameOf(() => Url));
                     }
                 }
@@ -157,7 +157,7 @@ namespace DataSpace.Common.Settings.Connection.Generic {
             set {
                 lock (l) {
                     if (!account.UserName.Equals(value)) {
-                        account.UserName = value;
+                        UpdateAccountInformations(account.Url, value, account.Password);
                         OnPropertyChanged(Property.NameOf(() => UserName));
                     }
                 }
@@ -167,6 +167,7 @@ namespace DataSpace.Common.Settings.Connection.Generic {
         public event PropertyChangedEventHandler PropertyChanged;
         public event EventHandler SettingsLoaded = delegate { };
         public event EventHandler SettingsSaved = delegate { };
+        public event EventHandler SettingsDeleted = delegate { };
 
         public void Delete() {
             lock (l) {
@@ -175,7 +176,7 @@ namespace DataSpace.Common.Settings.Connection.Generic {
                 config.Save();
             }
 
-            SettingsSaved.Invoke(this, new EventArgs());
+            SettingsDeleted.Invoke(this, new EventArgs());
         }
 
         public void Load() {
@@ -195,6 +196,12 @@ namespace DataSpace.Common.Settings.Connection.Generic {
                 SettingsSaved.Invoke(this, new EventArgs());
                 IsDirty = false;
             }
+        }
+
+        private void UpdateAccountInformations(string url, string userName, SecureString password) {
+            account.Delete();
+            account = accountFactory.CreateInstance(config, account.Id, url, userName, password);
+            account.Save();
         }
 
         private void OnPropertyChanged(string property) {

@@ -21,6 +21,7 @@ namespace Tests.Common.Settings.Connection {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Security;
 
     using DataSpace.Common.Crypto;
     using DataSpace.Common.Settings.Connection;
@@ -40,7 +41,7 @@ namespace Tests.Common.Settings.Connection {
         [SetUp]
         public void CreateAccountInstance() {
             accountName = "DataSpaceAccount" + Guid.NewGuid().ToString();
-            underTest = new AccountSettingsFactory().CreateInstance(config, accountName);
+            underTest = new AccountSettingsFactory().CreateInstance(config, accountName, _Url, _UserName, new SecureString().Init(_Password));
         }
 
         [TearDown]
@@ -65,8 +66,6 @@ namespace Tests.Common.Settings.Connection {
         public void PropertyGetSet() {
             underTest.Load();
             // act
-            underTest.Url = _Url;
-            underTest.UserName = _UserName;
             underTest.Password = new System.Security.SecureString().Init(_Password);
             // assert
             Assert.That(underTest.Url, Is.EqualTo(_Url));
@@ -78,12 +77,10 @@ namespace Tests.Common.Settings.Connection {
         [Test]
         public void WriteAndRead() {
             underTest.Load();
-            underTest.Url = _Url;
-            underTest.UserName = _UserName;
             underTest.Password = new System.Security.SecureString().Init(_Password);
             underTest.Save();
 
-            underTest = new AccountSettingsFactory().CreateInstance(config, accountName);
+            underTest = new AccountSettingsFactory().LoadInstance(config, config.GetSection(accountName) as AbstractAccountSettingsSection);
             underTest.Load();
             Assert.That(underTest.Password.ConvertToUnsecureString(), Is.EqualTo(_Password));
             Assert.That(underTest.Url, Is.EqualTo(_Url));
@@ -93,8 +90,6 @@ namespace Tests.Common.Settings.Connection {
         [Test]
         public void CreateNew() {
             underTest.Load();
-            underTest.Url = _Url;
-            underTest.UserName = _UserName;
             underTest.Password = new System.Security.SecureString().Init(_Password);
             underTest.Save();
         }
@@ -108,8 +103,6 @@ namespace Tests.Common.Settings.Connection {
                 ReceivedEvents.Add(args.PropertyName);
             };
             // Act
-            underTest.Url = _Url;
-            underTest.UserName = _UserName;
             underTest.Password = new System.Security.SecureString().Init(_Password);
 
             // Assert

@@ -42,10 +42,6 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         /// </summary>
         private readonly Configuration config;
         /// <summary>
-        /// The account factory to create the account credentials.
-        /// </summary>
-        private readonly IAccountSettingsFactory accountFactory;
-        /// <summary>
         /// Time of last load/save call
         /// </summary>
         private DateTime _LastRefreshTime = DateTime.Now;
@@ -56,11 +52,9 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         /// <summary>
         /// Proxy Account login data
         /// </summary>
-        private IAccountSettings _ProxyAccount = null;
-        /// <summary>
-        /// delegate -- must retrieve the config file loction
-        /// </summary>
-        internal Func<string> GetConfigFilePath;
+        private IAccountSettings account;
+
+        private IAccountSettingsFactory accountFactory;
         /// <summary>
         /// Section name in config file
         /// </summary>
@@ -83,18 +77,10 @@ namespace DataSpace.Common.Settings.Connection.W32 {
                 throw new ArgumentNullException("config");
             }
 
-            this.config = config;
             this.accountFactory = accountFactory ?? new AccountSettingsFactory();
-            _ProxyAccount = this.accountFactory.CreateInstance(config, SectionName + "Account");
+            this.config = config;
+            account = config.GetProxyAccount(accountFactory);
             Load();
-            // catch property change events and relay them
-            // we can do this because we have identical property names
-            _ProxyAccount.PropertyChanged += (sender, e) => {
-                // filter out "IsDirty"; preventing double notification
-                if (string.Compare(Property.NameOf((AccountSettings  t) => t.IsDirty), e.PropertyName) != 0) {
-                    OnPropertyChanged(e.PropertyName);
-                }
-            };
         }
 
         /// <summary>
@@ -160,10 +146,10 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         public SecureString Password {
             get {
                 RefreshProps();
-                return _ProxyAccount.Password;
+                return account.Password;
             }
 
-            set { _ProxyAccount.Password = value; }
+            set { account.Password = value; }
         }
 
         public ProxyType ProxyType {
@@ -187,30 +173,50 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         public string Url {
             get {
                 RefreshProps();
-                return _ProxyAccount.Url;
+                return account.Url;
             }
 
-            set { _ProxyAccount.Url = value; }
+            set {
+                if (!account.Url.Equals(value)) {
+                    lock (_Lock) {
+                        UpdateAccountInformations(value, account.UserName, account.Password);
+                        OnPropertyChanged(Property.NameOf(() => Url));
+                    }
+                }
+            }
         }
 
         public string UserName {
             get {
                 RefreshProps();
-                return _ProxyAccount.UserName;
+                return account.UserName;
             }
-            set { _ProxyAccount.UserName = value; }
+
+            set {
+                if (!account.UserName.Equals(UserName)) {
+                    UpdateAccountInformations(account.Url, value, account.Password);
+                    OnPropertyChanged(Property.NameOf(() => UserName));
+                }
+            }
+        }
+
+        private void UpdateAccountInformations(string url, string userName, SecureString password) {
+            account.Delete();
+            account = accountFactory.CreateInstance(config, account.Id, url, userName, password);
+            account.Save();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
         public event EventHandler SettingsLoaded = delegate { };
         public event EventHandler SettingsSaved = delegate { };
+        public event EventHandler SettingsDeleted = delegate { };
 
         public void Delete() {
             lock (_Lock) {
                 // find our Section in Collection and delete it
                 config.Sections.Remove(ProxyConfigSection.SectionName);
                 // delete the Accountinformation part
-                _ProxyAccount.Delete();
+                account.Delete();
                 // save changes
                 config.Save();
                 // reinit our properties
@@ -221,7 +227,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
                 IsDirty = false;
             }
 
-            SettingsSaved.Invoke(this, new EventArgs());
+            SettingsDeleted.Invoke(this, new EventArgs());
         }
 
         public void Load() {
@@ -242,7 +248,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
                 ProxyType = NewProxyType;
                 NeedLogin = NewNeedLogin;
                 //  Load the Accountinformation part
-                _ProxyAccount.Load();
+                account.Load();
                 IsDirty = false;
             }
 
@@ -261,7 +267,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
                     StoredSection.NeedLogin = _NeedLogin;
                     config.Save();
                     // save the Accountinformation part
-                    _ProxyAccount.Save();
+                    account.Save();
                     // update refresh time
                     _LastRefreshTime = DateTime.Now;
 
@@ -295,8 +301,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
                 }
 
                 // Don't try loading if config path delegate isn't set
-                if (GetConfigFilePath != null &&
-                    IsDirty == false &&
+                if (IsDirty == false &&
                     (DateTime.Now - _LastRefreshTime > PropsRefreshSpan))
                 {
                     Load();

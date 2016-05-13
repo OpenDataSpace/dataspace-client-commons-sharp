@@ -20,19 +20,40 @@
 ﻿namespace DataSpace.Common.Settings.Connection {
     using System;
     using System.Configuration;
+    using System.Security;
 
     /// <summary>
     /// Account settings factory is used to initialize platform depedend IAccountSettings instances.
     /// </summary>
     public class AccountSettingsFactory : IAccountSettingsFactory {
-        public IAccountSettings CreateInstance(Configuration config, string sectionName) {
+        public IAccountSettings CreateInstance(Configuration config, string sectionName, string url, string userName, SecureString password) {
+            switch (Environment.OSVersion.Platform) {
+                case PlatformID.WinCE:
+                    goto case PlatformID.Win32Windows;
+                case PlatformID.Win32S:
+                    goto case PlatformID.Win32Windows;
+                case PlatformID.Win32NT:
+                    goto case PlatformID.Win32Windows;
+                case PlatformID.Win32Windows:
+                    return new W32.AccountSettings(config, sectionName, url, userName, password);
+                default:
+                    var defaultSection = config.GetOrCreateSection<Generic.AccountSettingsSection>(sectionName);
+                    defaultSection.Url = url;
+                    defaultSection.UserName = userName;
+                    var defaultAccount = LoadInstance(config, defaultSection);
+                    defaultAccount.Password = password;
+                    return defaultAccount;
+            }
+        }
+
+        public IAccountSettings LoadInstance(Configuration config, AbstractAccountSettingsSection section) {
             switch (Environment.OSVersion.Platform) {
                 case PlatformID.Unix:
-                    return new Generic.AccountSettings(config, sectionName);
+                    return new Generic.AccountSettings(config, section as Generic.AccountSettingsSection);
                 case PlatformID.MacOSX:
                     throw new NotImplementedException();
                 default:
-                    return new W32.AccountSettings(config, sectionName);
+                    return new W32.AccountSettings(config, section as W32.AccountSettingsSection);
             }
         }
     }

@@ -19,6 +19,6 @@
 ﻿
 namespace DataSpace.Common.Settings.Connection.W32 {
 
-    class AccountSettingsSection : AbstractAccountSettingsSection {
+    public class AccountSettingsSection : AbstractAccountSettingsSection {
     }
 }

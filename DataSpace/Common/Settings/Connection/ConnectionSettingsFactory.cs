@@ -35,7 +35,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
         /// <summary>
         /// the only one AccountSettings object
         /// </summary>
-        private static DataSpaceAccountCollection accounts;
+        private static IAccountSettings[] accounts;
         private static object AccLock = new object();
 
         static ConnectionSettingsFactory() {
@@ -62,8 +62,7 @@ namespace DataSpace.Common.Settings.Connection.W32 {
                 lock (_ProxyLock) {
                     if (_ProxySettings == null) {
                         _ProxySettings = new ProxySettings(new ConfigurationLoader(ConfigFilePath).Configuration) {
-                            SectionName = "ProxySettings",
-                            GetConfigFilePath = () => { return ConfigFilePath.CreatePath(); }
+                            SectionName = "ProxySettings"
                         };
                         _ProxySettings.Load();
                     }
@@ -73,17 +72,11 @@ namespace DataSpace.Common.Settings.Connection.W32 {
             return _ProxySettings;
         }
 
-        public DataSpaceAccountCollection DataSpaceAccounts {
+        public IDictionary<string, IAccountSettings> DataSpaceAccounts {
             get {
-                if (accounts == null) {
-                    lock(AccLock) {
-                        if (accounts == null) {
-                            accounts = new DataSpaceAccountCollection(new ConfigurationLoader(ConfigFilePath).Configuration, null);
-                        }
-                    }
+                lock(AccLock) {
+                    return new ConfigurationLoader(ConfigFilePath).Configuration.GetDataSpaceAccounts();
                 }
-
-                return accounts;
             }
         }
     }

@@ -109,7 +109,6 @@
     <Compile Include="Common\Settings\Connection\Generic\ProxySettings.cs" />
     <Compile Include="Common\Settings\Connection\DataSpaceAccountSectionGroup.cs" />
     <Compile Include="Common\Settings\Connection\DataSpaceBindingType.cs" />
-    <Compile Include="Common\Settings\Connection\DataSpaceAccountCollection.cs" />
     <Compile Include="Common\NativeKeyStore\NativeKeyStore.cs" />
     <Compile Include="Common\NativeKeyStore\INativeKeyStoreFactory.cs" />
     <Compile Include="Common\NativeKeyStore\NativeKeyStoreFactory.cs" />
